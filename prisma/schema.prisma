@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId         String     @id @default(uuid())
+  userName       String     @unique
+  email          String?    @unique
+  hashedPassword String
+  role           Role       @default(USER)
+  createdAt      DateTime?  @default(now())
+  editedAt       DateTime?  @updatedAt
+  locations      Location[]
+  adoptions      Adoption[]
+}
+
+model Location {
+  locationId   Int     @id
+  userId       String
+  name         String?
+  country      String
+  state        String?
+  city         String
+  zipCode      Int
+  address      String
+  addressExtra String?
+  user         User    @relation(fields: [userId], references: [userId])
+}
+
+model Adoption {
+  adoptionId Int    @id
+  userId     String
+  petId      Int
+  user       User   @relation(fields: [userId], references: [userId])
+  pet        Pet    @relation(fields: [petId], references: [petId])
+}
+
+model Pet {
+  petId     Int         @id @default(autoincrement())
+  name      String?
+  sex       Sex         @default(OTHER)
+  breedId   Int
+  breed     Breed       @relation(fields: [breedId], references: [breedId])
+  adoptions Adoption[]
+  petStatus PetStatus[]
+}
+
+model PetStatus {
+  petStatusId Int      @id @default(autoincrement())
+  newStatus   Status   @default(UNKNOWN)
+  from        DateTime @default(now())
+  petId       Int
+  pet         Pet      @relation(fields: [petId], references: [petId])
+}
+
+model Breed {
+  breedId     Int     @id
+  name        String
+  description String?
+  pets        Pet[]
+}
+
+enum Role {
+  ADMIN
+  USER
+  SHELTER_WORKER
+}
+
+enum Sex {
+  FEMALE
+  MALE
+  OTHER
+}
+
+enum Status {
+  UNKNOWN
+  INCOMING
+  INSHELTER
+  ADOPTED
+  ILL
+  DECEASED
+}
