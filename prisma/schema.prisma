@@ -62,7 +62,7 @@ model PetStatus {
 }
 
 model Breed {
-  breedId     Int     @id
+  breedId     Int     @id @default(autoincrement())
   name        String
   description String?
   pets        Pet[]
@@ -84,6 +84,7 @@ enum Status {
   UNKNOWN
   INCOMING
   INSHELTER
+  ADOPTING
   ADOPTED
   ILL
   DECEASED

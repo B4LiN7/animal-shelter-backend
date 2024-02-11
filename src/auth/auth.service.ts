@@ -19,7 +19,7 @@ export class AuthService {
   // Login the user
   async login(dto: AuthDto, req: Request, res: Response) {
     //  Extract username, password, and email from the DTO
-    const { username, password, email } = dto;
+    const { username, password } = dto;
 
     //  Check if the user exists in the database
     const foundUser = await this.prisma.user.findUnique({
