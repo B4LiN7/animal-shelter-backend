@@ -16,7 +16,7 @@ export class PetController {
   }
 
   @Get('all')
-  @Roles('admin')
+  @Roles('admin', 'shelter_worker')
   async getAllPets() {
     return this.petService.getAllPets();
   }
@@ -29,5 +29,10 @@ export class PetController {
   @Post('update')
   async updatePet(@Body() dto: EditPetDto) {
     return this.petService.updatePet(dto);
+  }
+
+  @Get('delete/:id')
+  async deletePet(@Param('id') id: number) {
+    return this.petService.deletePet(id);
   }
 }

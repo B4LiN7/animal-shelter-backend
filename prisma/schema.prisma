@@ -23,7 +23,7 @@ model User {
 }
 
 model Location {
-  locationId   Int     @id
+  locationId   Int     @id @default(autoincrement())
   userId       String
   name         String?
   country      String
@@ -36,7 +36,7 @@ model Location {
 }
 
 model Adoption {
-  adoptionId Int    @id
+  adoptionId Int    @id @default(autoincrement())
   userId     String
   petId      Int
   user       User   @relation(fields: [userId], references: [userId])
@@ -55,7 +55,7 @@ model Pet {
 
 model PetStatus {
   petStatusId Int      @id @default(autoincrement())
-  newStatus   Status   @default(UNKNOWN)
+  status      Status   @default(UNKNOWN)
   from        DateTime @default(now())
   petId       Int
   pet         Pet      @relation(fields: [petId], references: [petId])

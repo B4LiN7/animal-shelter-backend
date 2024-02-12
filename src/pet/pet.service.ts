@@ -33,26 +33,14 @@ export class PetService {
       },
     });
 
-    if (status) {
-      let statusEnum: Status = Status.UNKNOWN;
-      if (status in Status) {
-        statusEnum = Status[status as keyof typeof Status];
-      }
+    const statusEnum: Status = await this.getStatusEnum(status);
 
-      await this.prisma.petStatus.create({
-        data: {
-          newStatus: statusEnum,
-          petId: pet.petId,
-        },
-      });
-    } else {
-      await this.prisma.petStatus.create({
-        data: {
-          newStatus: Status.UNKNOWN,
-          petId: pet.petId,
-        },
-      });
-    }
+    await this.prisma.petStatus.create({
+      data: {
+        status: statusEnum,
+        petId: pet.petId,
+      },
+    });
 
     return pet;
   }
@@ -68,7 +56,7 @@ export class PetService {
 
     await this.prisma.petStatus.create({
       data: {
-        newStatus: statusEnum,
+        status: statusEnum,
         petId: id,
       },
     });
@@ -89,11 +77,7 @@ export class PetService {
     const pets = await this.prisma.pet.findMany();
     const petsWithLatestStatus = await Promise.all(
       pets.map(async (pet) => {
-        const latestStatus = await this.prisma.petStatus.findFirst({
-          where: { petId: pet.petId },
-          orderBy: { from: 'desc' },
-        });
-        const status = latestStatus ? latestStatus.newStatus : Status.UNKNOWN;
+        const status = await this.getLatestStatusForPet(pet.petId);
         return { ...pet, status };
       }),
     );
@@ -101,23 +85,46 @@ export class PetService {
   }
 
   async getPet(id: number) {
-    id = parseInt(id as any);
-    const pet = await this.prisma.pet.findUnique({
+    id = Number(id);
+    const pet = this.getPetById(id);
+    if (!pet) throw new BadRequestException('Pet not found');
+    const latestStatus = await this.getLatestStatusForPet(id);
+    return { ...pet, latestStatus };
+  }
+
+  async deletePet(id: number) {
+    id = Number(id);
+    return this.deletePetById(id);
+  }
+
+  /*
+   Helper functions:
+    - deletePetById, getPetById, getLatestStatusForPet, getStatusEnum, getSexEnum
+  */
+
+  private async deletePetById(id: number) {
+    // Delete associated PetStatus records
+    await this.prisma.petStatus.deleteMany({
       where: { petId: id },
     });
-    if (!pet) throw new BadRequestException('Pet not found');
+    // Delete the Pet
+    return this.prisma.pet.delete({
+      where: { petId: id },
+    });
+  }
+
+  private async getPetById(id: number) {
+    return await this.prisma.pet.findUnique({
+      where: { petId: id },
+    });
+  }
+
+  private async getLatestStatusForPet(id: number) {
     const latestStatus = await this.prisma.petStatus.findFirst({
       where: { petId: id },
       orderBy: { from: 'desc' },
     });
-    const status = latestStatus ? latestStatus.newStatus : Status.UNKNOWN;
-    return { ...pet, status };
-  }
-
-  private getPetById(id: number) {
-    return this.prisma.pet.findUnique({
-      where: { petId: id },
-    });
+    return latestStatus ? latestStatus.status : Status.UNKNOWN;
   }
 
   private getStatusEnum(status: string) {
