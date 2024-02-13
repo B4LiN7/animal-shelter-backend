@@ -16,7 +16,7 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  async login(dto: AuthDto, req: Request, res: Response) {
+  async login(dto: AuthDto, res: Response) {
     const { username, password } = dto;
 
     if (!username) {
@@ -55,7 +55,7 @@ export class AuthService {
     }
 
     const foundUser = await this.prisma.user.findUnique({
-      where: { userName: username },
+      where: { userName: username ? username : email },
     });
     if (foundUser) {
       throw new BadRequestException(
@@ -85,13 +85,11 @@ export class AuthService {
 
   private async hashPassword(password: string) {
     const saltOrRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltOrRounds);
-    return hashedPassword;
+    return await bcrypt.hash(password, saltOrRounds);
   }
 
   private async comparePassword(password: string, hashedPassword: string) {
-    const isMatch = await bcrypt.compare(password, hashedPassword);
-    return isMatch;
+    return bcrypt.compare(password, hashedPassword);
   }
 
   private async signToken(id: string) {
