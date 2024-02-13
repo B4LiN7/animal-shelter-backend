@@ -4,11 +4,11 @@ import { PetController } from './pet.controller';
 import { BreedService } from './breed.service';
 import { BreedController } from './breed.controller';
 import { PrismaModule } from 'prisma/prisma.module';
-import { AuthModule } from 'src/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UtilityModule } from 'src/utility/utility.module';
 
 @Module({
-  imports: [PrismaModule, JwtModule],
+  imports: [PrismaModule, JwtModule, UtilityModule],
   controllers: [PetController, BreedController],
   providers: [PetService, BreedService],
 })

@@ -47,8 +47,8 @@ model Pet {
   petId     Int         @id @default(autoincrement())
   name      String?
   sex       Sex         @default(OTHER)
-  breedId   Int
-  breed     Breed       @relation(fields: [breedId], references: [breedId])
+  breedId   Int?
+  breed     Breed?       @relation(fields: [breedId], references: [breedId])
   adoptions Adoption[]
   petStatus PetStatus[]
 }

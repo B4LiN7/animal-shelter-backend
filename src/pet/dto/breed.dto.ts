@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class AddBreedDto {
+export class BreedDto {
   @IsNotEmpty()
   @IsString()
   name: string;

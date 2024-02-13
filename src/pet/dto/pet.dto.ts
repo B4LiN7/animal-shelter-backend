@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class AddPetDto {
+export class PetDto {
   @IsOptional()
   @IsString()
   name: string;

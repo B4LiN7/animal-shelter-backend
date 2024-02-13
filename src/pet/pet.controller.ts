@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { PetService } from './pet.service';
-import { AddPetDto } from './dto/addPet.dto';
-import { EditPetDto } from './dto/editPet.dto';
+import { PetDto } from './dto/pet.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 
@@ -10,29 +18,31 @@ import { Roles } from 'src/auth/decorator/roles.decorator';
 export class PetController {
   constructor(private readonly petService: PetService) {}
 
-  @Post('add')
-  async addPet(@Body() dto: AddPetDto) {
+  @Post()
+  @Roles('admin', 'shelter_worker')
+  async addPet(@Body() dto: PetDto) {
     return this.petService.addPet(dto);
   }
 
-  @Get('all')
-  @Roles('admin', 'shelter_worker')
+  @Get()
   async getAllPets() {
     return this.petService.getAllPets();
   }
 
-  @Get('/:id')
-  async getPet(@Param('id') id: number) {
+  @Get(':id')
+  async getPet(@Param('id') id: string) {
     return this.petService.getPet(id);
   }
 
-  @Post('update')
-  async updatePet(@Body() dto: EditPetDto) {
-    return this.petService.updatePet(dto);
+  @Put(':id')
+  @Roles('admin', 'shelter_worker')
+  async updatePet(@Param('id') id: string, @Body() dto: PetDto) {
+    return this.petService.updatePet(id, dto);
   }
 
-  @Get('delete/:id')
-  async deletePet(@Param('id') id: number) {
+  @Delete(':id')
+  @Roles('admin', 'shelter_worker')
+  async deletePet(@Param('id') id: string) {
     return this.petService.deletePet(id);
   }
 }
