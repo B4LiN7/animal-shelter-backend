@@ -1,10 +1,34 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { Sex, Status, Role } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UtilityService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+  ) {}
+
+  async validateUser(id: string, req: Request) {
+    const token = req.cookies.token;
+    if (!token) {
+      throw new ForbiddenException('No token provided. Please log in.');
+    }
+    const decodedToken = await this.jwt.verifyAsync(token, {
+      secret: process.env.JWT_SECRET,
+    });
+    if (decodedToken.id !== id) {
+      throw new ForbiddenException('Invalid token. Please log in.');
+    }
+    return true;
+  }
+
   tryParseId(value: string) {
     const id = parseInt(value.toString());
     if (isNaN(id)) {
@@ -24,12 +48,16 @@ export class UtilityService {
   }
 
   async deletePetById(id: number) {
-    await this.prisma.petStatus.deleteMany({
-      where: { petId: id },
-    });
-    return this.prisma.pet.delete({
-      where: { petId: id },
-    });
+    try {
+      await this.prisma.petStatus.deleteMany({
+        where: { petId: id },
+      });
+      return this.prisma.pet.delete({
+        where: { petId: id },
+      });
+    } catch (err) {
+      return 'Error while deleting pet: ' + err;
+    }
   }
 
   getRoleEnum(role: string) {

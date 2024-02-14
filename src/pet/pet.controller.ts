@@ -5,13 +5,14 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, UploadedFile,
   UseGuards,
 } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { PetDto } from './dto/pet.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
+
 
 @Controller('pet')
 @UseGuards(RolesGuard)

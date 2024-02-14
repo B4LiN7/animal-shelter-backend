@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsIn,
   IsNotEmpty,
   IsNumber,
@@ -32,4 +33,16 @@ export class PetDto {
     'deceased',
   ])
   status: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  @IsOptional()
+  @IsDate()
+  birthDate: Date;
+
+  @IsOptional()
+  @IsString()
+  imageUrl: string;
 }

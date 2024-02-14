@@ -44,13 +44,16 @@ model Adoption {
 }
 
 model Pet {
-  petId     Int         @id @default(autoincrement())
-  name      String?
-  sex       Sex         @default(OTHER)
-  breedId   Int?
-  breed     Breed?       @relation(fields: [breedId], references: [breedId])
-  adoptions Adoption[]
-  petStatus PetStatus[]
+  petId       Int         @id @default(autoincrement())
+  name        String?
+  sex         Sex         @default(OTHER)
+  description String?
+  birthDate   DateTime?
+  imageUrl    String?
+  breedId     Int?
+  breed       Breed?      @relation(fields: [breedId], references: [breedId])
+  adoptions   Adoption[]
+  petStatus   PetStatus[]
 }
 
 model PetStatus {

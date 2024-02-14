@@ -16,8 +16,8 @@ export class PetService {
   ) {}
 
   async addPet(dto: PetDto) {
-    const { name, sex, breedId, status } = dto;
-    const sexEnum: Sex = this.utility.getSexEnum(sex);
+    const { name, sex, breedId, status, description, birthDate, imageUrl } =
+      dto;
 
     const breed = await this.prisma.breed.findUnique({
       where: { breedId },
@@ -26,9 +26,13 @@ export class PetService {
       throw new NotFoundException('Breed does not exist');
     }
 
+    const sexEnum: Sex = this.utility.getSexEnum(sex);
     const pet = await this.prisma.pet.create({
       data: {
         name: name ? name : null,
+        description: description ? description : null,
+        birthDate: birthDate ? birthDate : null,
+        imageUrl: imageUrl ? imageUrl : null,
         sex: sexEnum,
         breedId,
       },
