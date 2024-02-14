@@ -16,6 +16,13 @@ export class UtilityService {
   ) {}
 
   async validateUser(id: string, req: Request) {
+    const decodedToken = await this.decodeToken(req);
+    if (decodedToken.id !== id) {
+      throw new ForbiddenException('Invalid token. Please log in.');
+    }
+  }
+
+  async decodeToken(req: Request) {
     const token = req.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
@@ -23,10 +30,7 @@ export class UtilityService {
     const decodedToken = await this.jwt.verifyAsync(token, {
       secret: process.env.JWT_SECRET,
     });
-    if (decodedToken.id !== id) {
-      throw new ForbiddenException('Invalid token. Please log in.');
-    }
-    return true;
+    return decodedToken;
   }
 
   tryParseId(value: string) {

@@ -36,7 +36,7 @@ export class RolesGuard implements CanActivate {
     if (!user) {
       throw new ForbiddenException('Invalid token. Please log in.');
     }
-    //return roles.includes(user.role);
+
     return roles
       .map((role) => role.toLowerCase())
       .includes(user.role.toLowerCase());
