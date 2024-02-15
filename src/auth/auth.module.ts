@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from 'prisma/prisma.module';
+import { AuthHelperService } from './authHelper.service';
 
 // Nest.js - full authentication course
 // https://youtu.be/4JyBeN69wq4?si=5ry-mv3BMvrpcQAM&t=694
@@ -11,6 +12,6 @@ import { PrismaModule } from 'prisma/prisma.module';
 @Module({
   imports: [PrismaModule, JwtModule, PassportModule],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthHelperService],
 })
 export class AuthModule {}

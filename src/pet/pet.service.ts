@@ -7,11 +7,13 @@ import { PrismaService } from 'prisma/prisma.service';
 import { PetDto } from './dto/pet.dto';
 import { Sex, Status } from '@prisma/client';
 import { UtilityService } from 'src/utility/utility.service';
+import { PrismaHelperService } from '../../prisma/prismaHelper.service';
 
 @Injectable()
 export class PetService {
   constructor(
     private prisma: PrismaService,
+    private prismaHelper: PrismaHelperService,
     private utility: UtilityService,
   ) {}
 
@@ -26,7 +28,7 @@ export class PetService {
       throw new NotFoundException('Breed does not exist');
     }
 
-    const sexEnum: Sex = this.utility.getSexEnum(sex);
+    const sexEnum: Sex = this.prismaHelper.getSexEnum(sex);
     const pet = await this.prisma.pet.create({
       data: {
         name: name ? name : null,
@@ -38,7 +40,7 @@ export class PetService {
       },
     });
 
-    const statusEnum: Status = await this.utility.getStatusEnum(status);
+    const statusEnum: Status = await this.prismaHelper.getStatusEnum(status);
     await this.prisma.petStatus.create({
       data: {
         status: statusEnum,
@@ -75,8 +77,8 @@ export class PetService {
 
     if (!id) throw new BadRequestException('Pet ID is required');
 
-    const statusEnum: Status = this.utility.getStatusEnum(status);
-    const sexEnum: Sex = this.utility.getSexEnum(sex);
+    const statusEnum: Status = this.prismaHelper.getStatusEnum(status);
+    const sexEnum: Sex = this.prismaHelper.getSexEnum(sex);
 
     await this.prisma.petStatus.create({
       data: {

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { PetDto } from './dto/pet.dto';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 
 

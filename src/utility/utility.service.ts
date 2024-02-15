@@ -3,10 +3,11 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Sex, Status, Role } from '@prisma/client';
+import { Status } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UtilityService {
@@ -15,11 +16,9 @@ export class UtilityService {
     private jwt: JwtService,
   ) {}
 
-  async validateUser(id: string, req: Request) {
+  async getUserId(req: Request): Promise<string> {
     const decodedToken = await this.decodeToken(req);
-    if (decodedToken.id !== id) {
-      throw new ForbiddenException('Invalid token. Please log in.');
-    }
+    return decodedToken.id.toString();
   }
 
   async decodeToken(req: Request) {
@@ -31,6 +30,11 @@ export class UtilityService {
       secret: process.env.JWT_SECRET,
     });
     return decodedToken;
+  }
+
+  async hashPassword(password: string) {
+    const saltOrRounds = 10;
+    return await bcrypt.hash(password, saltOrRounds);
   }
 
   tryParseId(value: string) {
@@ -62,35 +66,5 @@ export class UtilityService {
     } catch (err) {
       return 'Error while deleting pet: ' + err;
     }
-  }
-
-  getRoleEnum(role: string) {
-    let roleEnum: Role = Role.USER;
-    if (!role) return roleEnum;
-    role = role.toUpperCase();
-    if (role in Role) {
-      roleEnum = Role[role as keyof typeof Role];
-    }
-    return roleEnum;
-  }
-
-  getStatusEnum(status: string) {
-    let statusEnum: Status = Status.UNKNOWN;
-    if (!status) return statusEnum;
-    status = status.toUpperCase();
-    if (status in Status) {
-      statusEnum = Status[status as keyof typeof Status];
-    }
-    return statusEnum;
-  }
-
-  getSexEnum(sex: string) {
-    let sexEnum: Sex = Sex.OTHER;
-    if (!sex) return sexEnum;
-    sex = sex.toUpperCase();
-    if (sex in Sex) {
-      sexEnum = Sex[sex as keyof typeof Sex];
-    }
-    return sexEnum;
   }
 }

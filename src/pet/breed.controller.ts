@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BreedService } from './breed.service';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { BreedDto } from './dto/breed.dto';
 import { Roles } from '../auth/decorator/roles.decorator';
 

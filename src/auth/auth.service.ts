@@ -4,16 +4,15 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'prisma/prisma.service';
 import { AuthDto } from './dto/auth.dto';
-import { JwtService } from '@nestjs/jwt';
+import { AuthHelperService } from './authHelper.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwt: JwtService,
+    private authHelper: AuthHelperService,
   ) {}
 
   async login(dto: AuthDto, res: Response) {
@@ -30,7 +29,7 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const isPasswordMatch = await this.comparePassword(
+    const isPasswordMatch = await this.authHelper.comparePassword(
       password,
       foundUser.hashedPassword,
     );
@@ -38,7 +37,7 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const token = await this.signToken(foundUser.userId);
+    const token = await this.authHelper.signToken(foundUser.userId);
     if (!token) {
       throw new ForbiddenException('Token could not be generated');
     }
@@ -63,7 +62,7 @@ export class AuthService {
       );
     }
 
-    const hashedPassword = await this.hashPassword(password);
+    const hashedPassword = await this.authHelper.hashPassword(password);
     await this.prisma.user.create({
       data: {
         userName: username ? username : email,
@@ -80,20 +79,6 @@ export class AuthService {
       throw new ForbiddenException('You are not logged in');
     }
     res.clearCookie('token');
-    return res.send({ message: 'You have been logged out' });
-  }
-
-  private async hashPassword(password: string) {
-    const saltOrRounds = 10;
-    return await bcrypt.hash(password, saltOrRounds);
-  }
-
-  private async comparePassword(password: string, hashedPassword: string) {
-    return bcrypt.compare(password, hashedPassword);
-  }
-
-  private async signToken(id: string) {
-    const payload = { id };
-    return this.jwt.signAsync(payload, { secret: process.env.JWT_SECRET });
+    return res.status(200).send({ message: 'You have been logged out' });
   }
 }

@@ -1,8 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
 import { Roles } from 'src/auth/decorator/roles.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { AdoptionDto } from './dto/adoption.dto';
 
 @Controller('adoption')
@@ -11,15 +21,15 @@ export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
   @Post('adopt/:petId')
-  @Roles('user')
+  @Roles('user', 'shelter_worker', 'admin')
   startAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
 
-  @Post('adopt/:petId')
-  @Roles('admin', 'shelter_worker')
+  @Post('adoptf/:petId')
+  @Roles('shelter_worker', 'admin')
   finishAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
-    return this.adoptionService.startAdoptionProcess(petId, req);
+    return this.adoptionService.finishAdoptionProcess(petId, req);
   }
 
   @Post()
