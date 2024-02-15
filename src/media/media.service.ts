@@ -26,7 +26,6 @@ export class MediaService {
     }
 
     const randomName = Date.now().toString(36);
-
     const regex = /[^A-Za-z0-9.]/g;
     const newFileName =
       randomName + '_' + file.originalname.replace(regex, '0');

@@ -4,18 +4,20 @@ import { UtilityService } from 'src/utility/utility.service';
 import { Request } from 'express';
 import { Status } from '@prisma/client';
 import { AdoptionDto } from './dto/adoption.dto';
+import { AuthHelperService } from '../auth/authHelper.service';
 
 @Injectable()
 export class AdoptionService {
   constructor(
     private prisma: PrismaService,
     private utility: UtilityService,
+    private authHelper: AuthHelperService,
   ) {}
 
   async startAdoptionProcess(petIdStr: string, req: Request) {
     const petId = await this.utility.tryParseId(petIdStr);
 
-    const decodeToken = await this.utility.decodeToken(req);
+    const decodeToken = await this.authHelper.decodeToken(req);
     if (!decodeToken) {
       throw new Error('User not authenticated');
     }

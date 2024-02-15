@@ -20,7 +20,7 @@ COPY .envdocker .env
 COPY . .
 
 RUN pnpm prisma generate
-#RUN pnpm prisma migrate dev --create-only # The DB needed
+#RUN pnpm prisma migrate dev --name init
 RUN pnpm build
 
 FROM build as deploy
@@ -30,6 +30,5 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 
-
-
-CMD [ "node", "dist/src/main.js" ]
+CMD pnpm prisma migrate deploy && pnpm node dist/src/main.js
+#CMD [ "node", "dist/src/main.js" ]

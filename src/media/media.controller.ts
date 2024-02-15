@@ -16,7 +16,7 @@ export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
   @Get('*')
-  serveMedia(@Param('0') path: string, @Res() res) {
+  serveMedia(@Param('0') path: string, @Res() res: Response) {
     return this.mediaService.serveMedia(path, res);
   }
 

@@ -6,9 +6,10 @@ import { LocationController } from './location.controller';
 import { LocationService } from './location.service';
 import { UtilityModule } from 'src/utility/utility.module';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [PrismaModule, UtilityModule, JwtModule],
+  imports: [PrismaModule, UtilityModule, AuthModule, JwtModule],
   controllers: [UserController, LocationController],
   providers: [UserService, LocationService],
 })

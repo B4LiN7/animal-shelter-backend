@@ -13,5 +13,6 @@ import { AuthHelperService } from './authHelper.service';
   imports: [PrismaModule, JwtModule, PassportModule],
   controllers: [AuthController],
   providers: [AuthService, AuthHelperService],
+  exports: [AuthHelperService],
 })
 export class AuthModule {}

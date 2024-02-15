@@ -11,7 +11,7 @@ export class PrismaHelperService {
    * @param role - The role as a string.
    * @returns {Role} The role as an enum. If the role is not found, it returns Role.USER.
    */
-  getRoleEnum(role: string) {
+  getRoleEnum(role: string): Role {
     let roleEnum: Role = Role.USER;
     if (!role) return roleEnum;
     role = role.toUpperCase();
@@ -26,7 +26,7 @@ export class PrismaHelperService {
    * @param status - The status as a string.
    * @returns {Status} The status as an enum. If the status is not found, it returns Status.UNKNOWN.
    */
-  getStatusEnum(status: string) {
+  getStatusEnum(status: string): Status {
     let statusEnum: Status = Status.UNKNOWN;
     if (!status) return statusEnum;
     status = status.toUpperCase();
@@ -41,7 +41,7 @@ export class PrismaHelperService {
    * @param sex - The sex/gender as a string.
    * @returns {Sex} The sex as an enum. If the sex is not found, it returns Sex.OTHER.
    */
-  getSexEnum(sex: string) {
+  getSexEnum(sex: string): Sex {
     let sexEnum: Sex = Sex.OTHER;
     if (!sex) return sexEnum;
     sex = sex.toUpperCase();
@@ -56,7 +56,7 @@ export class PrismaHelperService {
    * @param {number} id - The ID of the pet.
    * @returns {Promise<Status>} The latest status of the pet.
    */
-  async getLatestStatusForPet(id: number) {
+  async getLatestStatusForPet(id: number): Promise<Status> {
     const latestStatus = await this.prisma.petStatus.findFirst({
       where: { petId: id },
       orderBy: { from: 'desc' },

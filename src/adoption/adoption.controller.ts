@@ -46,7 +46,10 @@ export class AdoptionController {
 
   @Put(':id')
   @Roles('admin')
-  async updateAdoption(@Param('id') id: number, @Body() adoptionDto: AdoptionDto) {
+  async updateAdoption(
+    @Param('id') id: number,
+    @Body() adoptionDto: AdoptionDto,
+  ) {
     return this.adoptionService.updateAdoption(id, adoptionDto);
   }
 

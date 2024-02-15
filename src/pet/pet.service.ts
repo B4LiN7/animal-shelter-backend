@@ -55,7 +55,7 @@ export class PetService {
     const pets = await this.prisma.pet.findMany();
     return await Promise.all(
       pets.map(async (pet) => {
-        const status = await this.utility.getLatestStatusForPet(pet.petId);
+        const status = await this.prismaHelper.getLatestStatusForPet(pet.petId);
         return { ...pet, status };
       }),
     );
@@ -67,7 +67,7 @@ export class PetService {
       where: { petId: id },
     });
     if (!pet) throw new BadRequestException('Pet not found');
-    const latestStatus = await this.utility.getLatestStatusForPet(pet.petId);
+    const latestStatus = await this.prismaHelper.getLatestStatusForPet(pet.petId);
     return { ...pet, latestStatus };
   }
 
@@ -102,6 +102,6 @@ export class PetService {
 
   async deletePet(idStr: string) {
     const id = this.utility.tryParseId(idStr);
-    return this.utility.deletePetById(id);
+    return this.prismaHelper.deletePetById(id);
   }
 }
