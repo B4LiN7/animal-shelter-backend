@@ -1,21 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { BreedDto } from './dto/breed.dto';
-import { UtilityService } from 'src/utility/utility.service';
 
 @Injectable()
 export class BreedService {
-  constructor(
-    private prisma: PrismaService,
-    private utility: UtilityService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getAllBreeds() {
     return this.prisma.breed.findMany();
   }
 
-  async getBreed(idStr: string) {
-    const id = this.utility.tryParseId(idStr);
+  async getBreed(id: number) {
     const breed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -34,8 +29,7 @@ export class BreedService {
     });
   }
 
-  async updateBreed(idStr: string, dto: BreedDto) {
-    const id = this.utility.tryParseId(idStr);
+  async updateBreed(id: number, dto: BreedDto) {
     return this.prisma.breed.update({
       where: { breedId: id },
       data: {
@@ -45,9 +39,7 @@ export class BreedService {
     });
   }
 
-  async deleteBreed(idStr: string) {
-    const id = this.utility.tryParseId(idStr);
-
+  async deleteBreed(id: number) {
     const petsWithBreed = await this.prisma.pet.findMany({
       where: { breedId: id },
     });

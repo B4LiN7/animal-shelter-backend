@@ -6,7 +6,6 @@ import {
 import { PrismaService } from 'prisma/prisma.service';
 import { PetDto } from './dto/pet.dto';
 import { Sex, Status } from '@prisma/client';
-import { UtilityService } from 'src/utility/utility.service';
 import { PrismaHelperService } from '../../prisma/prismaHelper.service';
 
 @Injectable()
@@ -14,7 +13,6 @@ export class PetService {
   constructor(
     private prisma: PrismaService,
     private prismaHelper: PrismaHelperService,
-    private utility: UtilityService,
   ) {}
 
   async addPet(dto: PetDto) {
@@ -61,19 +59,19 @@ export class PetService {
     );
   }
 
-  async getPet(idStr: string) {
-    const id = this.utility.tryParseId(idStr);
+  async getPet(id: number) {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });
     if (!pet) throw new BadRequestException('Pet not found');
-    const latestStatus = await this.prismaHelper.getLatestStatusForPet(pet.petId);
+    const latestStatus = await this.prismaHelper.getLatestStatusForPet(
+      pet.petId,
+    );
     return { ...pet, latestStatus };
   }
 
-  async updatePet(idStr: string, dto: PetDto) {
+  async updatePet(id: number, dto: PetDto) {
     const { name, sex, breedId, status } = dto;
-    const id = this.utility.tryParseId(idStr);
 
     if (!id) throw new BadRequestException('Pet ID is required');
 
@@ -100,8 +98,7 @@ export class PetService {
     });
   }
 
-  async deletePet(idStr: string) {
-    const id = this.utility.tryParseId(idStr);
+  async deletePet(id: number) {
     return this.prismaHelper.deletePetById(id);
   }
 }

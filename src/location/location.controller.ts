@@ -20,7 +20,7 @@ export class LocationController {
   }
 
   @Get(':id')
-  async getLocation(@Param('id') id: string) {
+  async getLocation(@Param('id') id: number) {
     return this.locationService.getLocation(id);
   }
 
@@ -30,12 +30,12 @@ export class LocationController {
   }
 
   @Put(':id')
-  async updateLocation(@Param('id') id: string, @Body() dto: LocationDto) {
+  async updateLocation(@Param('id') id: number, @Body() dto: LocationDto) {
     return this.locationService.updateLocation(id, dto);
   }
 
   @Delete(':id')
-  async deleteLocation(@Param('id') id: string) {
+  async deleteLocation(@Param('id') id: number) {
     return this.locationService.deleteLocation(id);
   }
 }

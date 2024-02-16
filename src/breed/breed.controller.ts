@@ -9,17 +9,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BreedService } from './breed.service';
-import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { RoleGuard } from 'src/auth/guard/role.guard';
 import { BreedDto } from './dto/breed.dto';
-import { Roles } from '../auth/decorator/roles.decorator';
+import { Role } from '../auth/decorator/role.decorator';
 
 @Controller('breed')
-@UseGuards(RolesGuard)
+@UseGuards(RoleGuard)
 export class BreedController {
   constructor(private readonly breedService: BreedService) {}
 
   @Post()
-  @Roles('admin')
+  @Role('admin')
   async addBreed(@Body() dto: BreedDto) {
     return this.breedService.addBreed(dto);
   }
@@ -30,19 +30,19 @@ export class BreedController {
   }
 
   @Get(':id')
-  async getBreed(@Param('id') id: string) {
+  async getBreed(@Param('id') id: number) {
     return this.breedService.getBreed(id);
   }
 
   @Put(':id')
-  @Roles('admin')
-  async updateBreed(@Param('id') id: string, @Body() dto: BreedDto) {
+  @Role('admin')
+  async updateBreed(@Param('id') id: number, @Body() dto: BreedDto) {
     return this.breedService.updateBreed(id, dto);
   }
 
   @Delete(':id')
-  @Roles('admin')
-  async deleteBreed(@Param('id') id: string) {
+  @Role('admin')
+  async deleteBreed(@Param('id') id: number) {
     return this.breedService.deleteBreed(id);
   }
 }

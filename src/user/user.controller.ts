@@ -10,18 +10,18 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
-import { RolesGuard } from 'src/auth/guard/roles.guard';
-import { Roles } from 'src/auth/decorator/roles.decorator';
+import { RoleGuard } from 'src/auth/guard/role.guard';
+import { Role } from 'src/auth/decorator/role.decorator';
 import { Request } from 'express';
 import { UserGuard } from '../auth/guard/user.guard';
 
 @Controller('user')
-@UseGuards(RolesGuard)
+@UseGuards(RoleGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @Roles('admin')
+  @Role('admin')
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
@@ -39,8 +39,12 @@ export class UserController {
 
   @Put(':id')
   @UseGuards(UserGuard)
-  async updatePet(@Param('id') id: string, @Body() dto: UserDto) {
-    return this.userService.updateUser(id, dto);
+  async updatePet(
+    @Param('id') id: string,
+    @Body() dto: UserDto,
+    @Req() req: Request,
+  ) {
+    return this.userService.updateUser(id, dto, req);
   }
 
   @Delete(':id')

@@ -2,20 +2,19 @@
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER', 'SHELTER_WORKER');
 
 -- CreateEnum
-CREATE TYPE "Sex" AS ENUM ('female', 'male');
+CREATE TYPE "Sex" AS ENUM ('FEMALE', 'MALE', 'OTHER');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('INCOMING', 'INSHELTER', 'ADOPTED', 'ILL', 'DECEASED');
+CREATE TYPE "Status" AS ENUM ('UNKNOWN', 'INCOMING', 'INSHELTER', 'ADOPTING', 'ADOPTED', 'ILL', 'DECEASED');
 
 -- CreateTable
 CREATE TABLE "User" (
     "userId" TEXT NOT NULL,
     "userName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "role" "Role" NOT NULL,
-    "locationId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3),
+    "email" TEXT,
+    "hashedPassword" TEXT NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "editedAt" TIMESTAMP(3),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("userId")
@@ -23,7 +22,8 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Location" (
-    "locationId" INTEGER NOT NULL,
+    "locationId" SERIAL NOT NULL,
+    "userId" TEXT NOT NULL,
     "name" TEXT,
     "country" TEXT NOT NULL,
     "state" TEXT,
@@ -37,7 +37,7 @@ CREATE TABLE "Location" (
 
 -- CreateTable
 CREATE TABLE "Adoption" (
-    "adoptionId" INTEGER NOT NULL,
+    "adoptionId" SERIAL NOT NULL,
     "userId" TEXT NOT NULL,
     "petId" INTEGER NOT NULL,
 
@@ -46,19 +46,22 @@ CREATE TABLE "Adoption" (
 
 -- CreateTable
 CREATE TABLE "Pet" (
-    "petId" INTEGER NOT NULL,
+    "petId" SERIAL NOT NULL,
     "name" TEXT,
-    "sex" "Sex" NOT NULL,
-    "breedId" INTEGER NOT NULL,
+    "sex" "Sex" NOT NULL DEFAULT 'OTHER',
+    "description" TEXT,
+    "birthDate" TIMESTAMP(3),
+    "imageUrl" TEXT,
+    "breedId" INTEGER,
 
     CONSTRAINT "Pet_pkey" PRIMARY KEY ("petId")
 );
 
 -- CreateTable
 CREATE TABLE "PetStatus" (
-    "petStatusId" INTEGER NOT NULL,
-    "newStatus" "Status" NOT NULL,
-    "from" TIMESTAMP(3),
+    "petStatusId" SERIAL NOT NULL,
+    "status" "Status" NOT NULL DEFAULT 'UNKNOWN',
+    "from" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "petId" INTEGER NOT NULL,
 
     CONSTRAINT "PetStatus_pkey" PRIMARY KEY ("petStatusId")
@@ -66,7 +69,7 @@ CREATE TABLE "PetStatus" (
 
 -- CreateTable
 CREATE TABLE "Breed" (
-    "breedId" INTEGER NOT NULL,
+    "breedId" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
 
@@ -76,11 +79,8 @@ CREATE TABLE "Breed" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("locationId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Location" ADD CONSTRAINT "Location_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Adoption" ADD CONSTRAINT "Adoption_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -89,7 +89,7 @@ ALTER TABLE "Adoption" ADD CONSTRAINT "Adoption_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "Adoption" ADD CONSTRAINT "Adoption_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("petId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Pet" ADD CONSTRAINT "Pet_breedId_fkey" FOREIGN KEY ("breedId") REFERENCES "Breed"("breedId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Pet" ADD CONSTRAINT "Pet_breedId_fkey" FOREIGN KEY ("breedId") REFERENCES "Breed"("breedId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PetStatus" ADD CONSTRAINT "PetStatus_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("petId") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -5,22 +5,21 @@ import {
   Get,
   Param,
   Post,
-  Put, UploadedFile,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { PetDto } from './dto/pet.dto';
-import { RolesGuard } from 'src/auth/guard/roles.guard';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-
+import { RoleGuard } from 'src/auth/guard/role.guard';
+import { Role } from 'src/auth/decorator/role.decorator';
 
 @Controller('pet')
-@UseGuards(RolesGuard)
 export class PetController {
   constructor(private readonly petService: PetService) {}
 
   @Post()
-  @Roles('admin', 'shelter_worker')
+  @UseGuards(RoleGuard)
+  @Role('admin', 'shelter_worker')
   async addPet(@Body() dto: PetDto) {
     return this.petService.addPet(dto);
   }
@@ -31,19 +30,21 @@ export class PetController {
   }
 
   @Get(':id')
-  async getPet(@Param('id') id: string) {
+  async getPet(@Param('id') id: number) {
     return this.petService.getPet(id);
   }
 
   @Put(':id')
-  @Roles('admin', 'shelter_worker')
-  async updatePet(@Param('id') id: string, @Body() dto: PetDto) {
+  @UseGuards(RoleGuard)
+  @Role('admin', 'shelter_worker')
+  async updatePet(@Param('id') id: number, @Body() dto: PetDto) {
     return this.petService.updatePet(id, dto);
   }
 
   @Delete(':id')
-  @Roles('admin', 'shelter_worker')
-  async deletePet(@Param('id') id: string) {
+  @UseGuards(RoleGuard)
+  @Role('admin', 'shelter_worker')
+  async deletePet(@Param('id') id: number) {
     return this.petService.deletePet(id);
   }
 }

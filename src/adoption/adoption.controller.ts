@@ -5,57 +5,35 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Role } from 'src/auth/decorator/role.decorator';
+import { RoleGuard } from 'src/auth/guard/role.guard';
 import { AdoptionDto } from './dto/adoption.dto';
 
 @Controller('adoption')
-@UseGuards(RolesGuard)
+@UseGuards(RoleGuard)
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
-  @Post('adopt/:petId')
-  @Roles('user', 'shelter_worker', 'admin')
-  startAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
+  @Get('adopt/:petId')
+  @Role('user')
+  startAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
 
-  @Post('adoptf/:petId')
-  @Roles('shelter_worker', 'admin')
-  finishAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
-    return this.adoptionService.finishAdoptionProcess(petId, req);
+  @Post('adopt')
+  @Role('shelter_worker', 'admin')
+  finishAdoptionProcess(@Body() dto: AdoptionDto) {
+    return this.adoptionService.finishAdoptionProcess(dto);
   }
 
-  @Post()
-  @Roles('admin')
-  async createAdoption(@Body() adoptionDto: AdoptionDto) {
-    return this.adoptionService.addAdoption(adoptionDto);
-  }
-
-  @Get(':id')
-  @Roles('admin')
-  async getAdoptionById(@Param('id') id: number) {
-    return this.adoptionService.getAdoption(id);
-  }
-
-  @Put(':id')
-  @Roles('admin')
-  async updateAdoption(
-    @Param('id') id: number,
-    @Body() adoptionDto: AdoptionDto,
-  ) {
-    return this.adoptionService.updateAdoption(id, adoptionDto);
-  }
-
-  @Delete(':id')
-  @Roles('admin')
-  async deleteAdoption(@Param('id') id: number) {
-    return this.adoptionService.deleteAdoption(id);
+  @Delete('adopt/:petId')
+  @Role()
+  cancelAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
+    return this.adoptionService.cancelAdoptionProcess(petId, req);
   }
 }

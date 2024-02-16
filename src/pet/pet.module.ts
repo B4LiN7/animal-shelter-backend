@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { PetController } from './pet.controller';
-import { BreedService } from './breed.service';
-import { BreedController } from './breed.controller';
 import { PrismaModule } from 'prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
-import { UtilityModule } from 'src/utility/utility.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [PrismaModule, JwtModule, UtilityModule],
-  controllers: [PetController, BreedController],
-  providers: [PetService, BreedService],
+  imports: [PrismaModule, AuthModule, JwtModule],
+  controllers: [PetController],
+  providers: [PetService],
 })
 export class PetModule {}

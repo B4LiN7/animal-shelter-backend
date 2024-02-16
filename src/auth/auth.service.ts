@@ -37,7 +37,7 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const token = await this.authHelper.signToken(foundUser.userId);
+    const token = await this.authHelper.signTokenWithId(foundUser.userId);
     if (!token) {
       throw new ForbiddenException('Token could not be generated');
     }
@@ -48,13 +48,16 @@ export class AuthService {
 
   async register(dto: AuthDto) {
     const { username, password, email } = dto;
+    let newUsername = username;
 
     if (!username && !email) {
       throw new BadRequestException('Either username or email is required');
+    } else if (!username) {
+      newUsername = email;
     }
 
     const foundUser = await this.prisma.user.findUnique({
-      where: { userName: username ? username : email },
+      where: { userName: newUsername ? newUsername : email },
     });
     if (foundUser) {
       throw new BadRequestException(
@@ -65,13 +68,13 @@ export class AuthService {
     const hashedPassword = await this.authHelper.hashPassword(password);
     await this.prisma.user.create({
       data: {
-        userName: username ? username : email,
-        email: email ? email : null,
+        userName: newUsername,
+        email: email,
         hashedPassword: hashedPassword,
       },
     });
 
-    return `User with username ${username ? username : email} has been created`;
+    return `User with username "${newUsername}" has been created`;
   }
 
   logout(req: Request, res: Response) {

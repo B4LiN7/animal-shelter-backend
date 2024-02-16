@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthHelperService {
@@ -10,6 +11,31 @@ export class AuthHelperService {
     private prisma: PrismaService,
     private jwt: JwtService,
   ) {}
+
+  /**
+   * Checks if a user exists
+   * @param username - The username to check
+   * @returns Whether the user exists
+   */
+  async isUserExists(username: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { userName: username },
+    });
+    return !!user;
+  }
+
+  /**
+   * Checks if the user is an admin
+   * @param req - The request object
+   * @returns Whether the user is an admin
+   */
+  async isAdmin(req: Request) {
+    const userId = await this.getUserIdFromReq(req);
+    const user = await this.prisma.user.findUnique({
+      where: { userId: userId },
+    });
+    return user.role === Role.ADMIN;
+  }
 
   /**
    * Hashes a password using bcrypt
@@ -35,7 +61,7 @@ export class AuthHelperService {
    * @param id - The user's ID
    * @returns The signed JWT token
    */
-  async signToken(id: string) {
+  async signTokenWithId(id: string) {
     const payload = { id };
     return this.jwt.signAsync(payload, { secret: process.env.JWT_SECRET });
   }
@@ -45,9 +71,12 @@ export class AuthHelperService {
    * @param req - The request object
    * @returns The user's ID
    */
-  async getUserIdFromReq(req: Request): Promise<string> {
+  async getUserIdFromReq(req: Request) {
     const decodedToken = await this.decodeToken(req);
-    return decodedToken.id.toString();
+    if (!decodedToken.id) {
+      throw new ForbiddenException('No user ID found in token.');
+    }
+    return decodedToken.id;
   }
 
   /**
@@ -60,9 +89,8 @@ export class AuthHelperService {
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    const decodedToken = await this.jwt.verifyAsync(token, {
+    return await this.jwt.verifyAsync(token, {
       secret: process.env.JWT_SECRET,
     });
-    return decodedToken;
   }
 }
