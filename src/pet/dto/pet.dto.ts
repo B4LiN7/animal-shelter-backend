@@ -2,7 +2,6 @@ import { Sex, Status } from '@prisma/client';
 import {
   IsDate,
   IsEnum,
-  IsIn,
   IsNotEmpty,
   IsNumber,
   IsOptional,
