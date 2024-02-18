@@ -2,32 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { UserDto } from './dto/user.dto';
-import { PrismaHelperService } from 'prisma/prismaHelper.service';
 import { AuthHelperService } from 'src/auth/authHelper.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
-    private prismaHelper: PrismaHelperService,
     private authHelper: AuthHelperService,
   ) {}
 
   async getAllUsers() {
     return this.prisma.user.findMany({
-      select: {
-        userId: true,
-        userName: true,
-      },
-    });
-  }
-
-  async getMyUser(req: Request) {
-    const userId = await this.authHelper.getUserIdFromReq(req);
-    return this.prisma.user.findUnique({
-      where: {
-        userId: userId,
-      },
       select: {
         userId: true,
         userName: true,
@@ -43,8 +28,17 @@ export class UserService {
     });
   }
 
+  async getMyUser(req: Request) {
+    const userId = await this.authHelper.getUserIdFromReq(req);
+    return this.prisma.user.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
   async updateUser(id: string, dto: UserDto, req: Request) {
-    if (!dto.username && !dto.email && !dto.role && !dto.password) {
+    if (!dto) {
       throw new BadRequestException('No data to update');
     }
 
@@ -61,15 +55,15 @@ export class UserService {
       throw new BadRequestException('User with this username already exists');
     }
 
-    dto.email ? (newUser.email = dto.email) : newUser.email;
-    dto.username ? (newUser.userName = dto.username) : newUser.userName;
+    newUser.email = dto.email ?? newUser.email;
+    newUser.userName = dto.username ?? newUser.userName;
+
     if (dto.password) {
       newUser.hashedPassword = await this.authHelper.hashPassword(dto.password);
     }
+
     if (await this.authHelper.isAdmin(req)) {
-      dto.role
-        ? (newUser.role = this.prismaHelper.getRoleEnum(dto.role))
-        : newUser.role;
+      dto.role = dto.role ?? newUser.role;
     } else if (dto.role) {
       throw new BadRequestException('You are not allowed to change the role');
     }
@@ -78,9 +72,7 @@ export class UserService {
       where: {
         userId: id,
       },
-      data: {
-        ...newUser,
-      },
+      data: newUser,
     });
   }
 

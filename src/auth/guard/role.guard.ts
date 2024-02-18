@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'prisma/prisma.service';
-import { PrismaHelperService } from 'prisma/prismaHelper.service';
 import { AuthHelperService } from '../authHelper.service';
 import { Role } from '@prisma/client';
 
@@ -18,12 +17,14 @@ export class RoleGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private prisma: PrismaService,
-    private prismHelper: PrismaHelperService,
     private authHelper: AuthHelperService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    const roles: Role[] = this.reflector.get<Role[]>(
+      'roles',
+      context.getHandler(),
+    );
 
     const request = context.switchToHttp().getRequest();
     const userId = await this.authHelper.getUserIdFromReq(request);
@@ -40,11 +41,7 @@ export class RoleGuard implements CanActivate {
     }
 
     const userRole: Role = user.role;
-    const neededRoles: Role[] = [];
-    for (const role of roles) {
-      neededRoles.push(this.prismHelper.getRoleEnum(role));
-    }
 
-    return neededRoles.includes(userRole);
+    return roles.includes(userRole);
   }
 }

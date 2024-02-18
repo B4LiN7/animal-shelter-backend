@@ -8,13 +8,13 @@ import { Request } from 'express';
 import { Status } from '@prisma/client';
 import { AuthHelperService } from 'src/auth/authHelper.service';
 import { AdoptionDto } from './dto/adoption.dto';
-import { PrismaHelperService } from '../../prisma/prismaHelper.service';
+import { PetHelperService } from 'src/pet/petHelper.service';
 
 @Injectable()
 export class AdoptionService {
   constructor(
     private prisma: PrismaService,
-    private prismaHelper: PrismaHelperService,
+    private petHelper: PetHelperService,
     private authHelper: AuthHelperService,
   ) {}
 
@@ -25,7 +25,7 @@ export class AdoptionService {
       where: { petId: petId },
     });
     if (!pet) {
-      throw new NotFoundException(`Pet with ID ${petId} not found`);
+      throw new NotFoundException(`Pet with ID ${petId} not found.`);
     }
 
     this.setAdoptionStatus(petId, userId);
@@ -56,21 +56,21 @@ export class AdoptionService {
     this.setAdoptionStatus(petId, userId, false, true);
   }
 
-  private async getAdoptionStatusForPet(petDd: number) {
+  private async getAdoptionStatusForPet(petId: number) {
     const adoption = await this.prisma.adoption.findFirst({
       where: {
-        petId: petDd,
+        petId: petId,
       },
     });
     if (!adoption) {
       throw new NotFoundException(
-        `Adoption for pet with ID ${petDd} not found`,
+        `Adoption for pet with ID ${petId} not found`,
       );
     }
 
-    const latestStatus = await this.prismaHelper.getLatestStatusForPet(petDd);
+    const latestStatus = await this.petHelper.getLatestStatusForPet(petId);
     if (!latestStatus) {
-      throw new NotFoundException(`Status for pet with ID ${petDd} not found`);
+      throw new NotFoundException(`Status for pet with ID ${petId} not found`);
     }
 
     return { ...adoption, latestStatus };

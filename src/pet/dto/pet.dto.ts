@@ -1,5 +1,7 @@
+import { Sex, Status } from '@prisma/client';
 import {
   IsDate,
+  IsEnum,
   IsIn,
   IsNotEmpty,
   IsNumber,
@@ -14,8 +16,13 @@ export class PetDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['female', 'male', 'other'])
-  sex: string;
+  /*@IsIn([
+  'female', 
+  'male', 
+  'other',
+  ])*/
+  @IsEnum(Sex)
+  sex: Sex;
 
   @IsNotEmpty()
   @IsNumber()
@@ -23,7 +30,7 @@ export class PetDto {
 
   @IsOptional()
   @IsString()
-  @IsIn([
+  /*@IsIn([
     'unknown',
     'incoming',
     'inshelter',
@@ -31,8 +38,9 @@ export class PetDto {
     'adopted',
     'ill',
     'deceased',
-  ])
-  status: string;
+  ])*/
+  @IsEnum(Status)
+  status: Status;
 
   @IsOptional()
   @IsString()

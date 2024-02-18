@@ -12,8 +12,9 @@ import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/auth/decorator/role.decorator';
+import { Role as RoleEnum } from '@prisma/client';
 import { Request } from 'express';
-import { UserGuard } from '../auth/guard/user.guard';
+import { UserGuard } from 'src/auth/guard/user.guard';
 
 @Controller('user')
 @UseGuards(RoleGuard)
@@ -21,7 +22,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @Role('admin')
+  @Role(RoleEnum.ADMIN)
   async getAllUsers() {
     return this.userService.getAllUsers();
   }

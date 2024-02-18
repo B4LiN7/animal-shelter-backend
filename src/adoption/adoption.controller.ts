@@ -11,6 +11,7 @@ import {
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
 import { Role } from 'src/auth/decorator/role.decorator';
+import { Role as RoleEnum } from '@prisma/client';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { AdoptionDto } from './dto/adoption.dto';
 
@@ -20,13 +21,13 @@ export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
   @Get('adopt/:petId')
-  @Role('user')
+  @Role(RoleEnum.USER)
   startAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
 
   @Post('adopt')
-  @Role('shelter_worker', 'admin')
+  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
   finishAdoptionProcess(@Body() dto: AdoptionDto) {
     return this.adoptionService.finishAdoptionProcess(dto);
   }

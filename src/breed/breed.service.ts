@@ -7,7 +7,11 @@ export class BreedService {
   constructor(private prisma: PrismaService) {}
 
   async getAllBreeds() {
-    return this.prisma.breed.findMany();
+    const breeds = await this.prisma.breed.findMany();
+    if (breeds.length === 0) {
+      throw new NotFoundException('No breeds found');
+    }
+    return breeds;
   }
 
   async getBreed(id: number) {
@@ -21,22 +25,11 @@ export class BreedService {
   }
 
   async addBreed(dto: BreedDto) {
-    return this.prisma.breed.create({
-      data: {
-        name: dto.name,
-        description: dto.description ? dto.description : null,
-      },
-    });
+    return this.addOrUpdateBreed(dto);
   }
 
   async updateBreed(id: number, dto: BreedDto) {
-    return this.prisma.breed.update({
-      where: { breedId: id },
-      data: {
-        name: dto.name,
-        description: dto.description ? dto.description : null,
-      },
-    });
+    return this.addOrUpdateBreed(dto, id);
   }
 
   async deleteBreed(id: number) {
@@ -53,6 +46,33 @@ export class BreedService {
 
     return this.prisma.breed.delete({
       where: { breedId: id },
+    });
+  }
+
+  /**
+   * Update or create a breed
+   * @param id Breed ID
+   * @param dto Breed DTO
+   * @returns Prisma response
+   */
+  private async addOrUpdateBreed(dto: BreedDto, id: number | null = null) {
+    const breed = await this.prisma.breed.findUnique({
+      where: { breedId: id },
+    });
+    if (!breed || !id) {
+      return this.prisma.breed.create({
+        data: {
+          name: dto.name,
+          description: dto.description ? dto.description : null,
+        },
+      });
+    }
+    return this.prisma.breed.update({
+      where: { breedId: id },
+      data: {
+        name: dto.name,
+        description: dto.description ? dto.description : null,
+      },
     });
   }
 }

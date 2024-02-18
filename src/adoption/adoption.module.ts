@@ -3,10 +3,11 @@ import { AdoptionService } from './adoption.service';
 import { AdoptionController } from './adoption.controller';
 import { PrismaModule } from 'prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { PetModule } from 'src/pet/pet.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, JwtModule],
+  imports: [PrismaModule, AuthModule, JwtModule, PetModule],
   controllers: [AdoptionController],
   providers: [AdoptionService],
 })

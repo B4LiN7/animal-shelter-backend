@@ -52,7 +52,8 @@ export class AuthService {
 
     if (!username && !email) {
       throw new BadRequestException('Either username or email is required');
-    } else if (!username) {
+    }
+    else if (!username) {
       newUsername = email;
     }
 
