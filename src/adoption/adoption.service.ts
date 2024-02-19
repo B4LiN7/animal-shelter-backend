@@ -7,7 +7,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { Status } from '@prisma/client';
 import { AuthHelperService } from 'src/auth/authHelper.service';
-import { AdoptionDto } from './dto/adoption.dto';
+import { AdoptionDto, AdoptionStatus } from './dto/adoption.dto';
 import { PetHelperService } from 'src/pet/petHelper.service';
 
 @Injectable()
@@ -28,41 +28,46 @@ export class AdoptionService {
       throw new NotFoundException(`Pet with ID ${petId} not found.`);
     }
 
-    this.setAdoptionStatus(petId, userId);
+    const dto: AdoptionDto = {
+      petId: petId,
+      userId: userId,
+      status: AdoptionStatus.ADOPTING,
+    };
+
+    this.setAdoptionStatus(dto);
 
     return;
   }
 
-  async finishAdoptionProcess(dto: AdoptionDto) {
-    const pet = await this.prisma.pet.findUnique({
-      where: { petId: dto.petId },
-    });
-    if (!pet) {
-      throw new NotFoundException(`Pet with ID ${dto.petId} not found`);
-    }
-
-    this.setAdoptionStatus(dto.petId, dto.userId, true);
-  }
-
   async cancelAdoptionProcess(petId: number, req: Request) {
-    const adoptionStatus = await this.getAdoptionStatusForPet(petId);
     const userId = await this.authHelper.getUserIdFromReq(req);
-    if (adoptionStatus.userId !== userId && !this.authHelper.isAdmin(req)) {
-      throw new ForbiddenException(
-        'You are not allowed to cancel the adoption',
-      );
-    }
+    const asAdmin: boolean = await this.authHelper.isAdmin(req);
 
-    this.setAdoptionStatus(petId, userId, false, true);
+    const dto: AdoptionDto = {
+      petId: petId,
+      userId: userId,
+      status: AdoptionStatus.CANCELLED,
+    };
+
+    this.setAdoptionStatus(dto, asAdmin);
   }
 
+  async setAdoptionProcess(dto: AdoptionDto) {
+    this.setAdoptionStatus(dto, true);
+  }
+
+  /**
+   * Get the adoption status for a pet
+   * @param petId - The ID of the pet
+   * @returns The adoption status for the pet: userId, petId, latestStatus
+   */
   private async getAdoptionStatusForPet(petId: number) {
-    const adoption = await this.prisma.adoption.findFirst({
+    const runningAdoption = await this.prisma.adoption.findFirst({
       where: {
         petId: petId,
       },
     });
-    if (!adoption) {
+    if (!runningAdoption) {
       throw new NotFoundException(
         `Adoption for pet with ID ${petId} not found`,
       );
@@ -73,55 +78,96 @@ export class AdoptionService {
       throw new NotFoundException(`Status for pet with ID ${petId} not found`);
     }
 
-    return { ...adoption, latestStatus };
+    return { ...runningAdoption, latestStatus };
   }
 
-  private async setAdoptionStatus(
-    petId: number,
-    userId: string,
-    isFinished: boolean = false,
-    cancel: boolean = false,
-  ) {
-    let status: Status = isFinished ? Status.ADOPTED : Status.ADOPTING;
-    if (cancel) {
-      status = Status.INSHELTER;
-    }
+  /**
+   * Set the adoption status for a pet
+   * @param dto - The adoption DTO which contains the pet ID, user ID and the new status
+   * @param asAdmin - If the function is called by an admin
+   */
+  private async setAdoptionStatus(dto: AdoptionDto, asAdmin = false) {
+    const { petId, userId, status } = dto;
 
-    const adoption = await this.prisma.adoption.findFirst({
-      where: {
-        petId: petId,
-        userId: userId,
-      },
+    // Check if the pet and user exist
+    const pet = await this.prisma.pet.findUnique({
+      where: { petId: petId },
     });
-
-    if (adoption.userId !== userId) {
-      throw new Error('You are not allowed to change the adoption status');
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${petId} not found.`);
+    }
+    const user = await this.prisma.user.findUnique({
+      where: { userId: userId },
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
     }
 
+    // Set the new status for the pet then create a new status entry for pet
+    let newStatus: Status = Status.UNKNOWN;
+    switch (status) {
+      case AdoptionStatus.ADOPTING:
+        newStatus = Status.ADOPTING;
+        break;
+      case AdoptionStatus.ADOPTED:
+        newStatus = Status.ADOPTED;
+        break;
+      case AdoptionStatus.CANCELLED:
+        newStatus = Status.INSHELTER;
+        break;
+    }
     await this.prisma.petStatus.create({
       data: {
         petId: petId,
-        status: status,
+        status: newStatus,
       },
     });
 
-    if (cancel && adoption) {
-      await this.prisma.adoption.delete({
-        where: { adoptionId: adoption.adoptionId },
-      });
-      return;
-    }
+    // Search for an existing adoption entry for the pet
+    const runningAdoption = await this.prisma.adoption.findFirst({
+      where: {
+        petId: petId,
+      },
+    });
 
-    if (!adoption) {
-      await this.prisma.adoption.create({
+    // If there is no running adoption, create a new adoption entry
+    if (runningAdoption) {
+      // Check if the user is allowed to change the status
+      if (runningAdoption.userId !== userId && !asAdmin) {
+        throw new ForbiddenException(
+          'You are not allowed to change the adoption status of this pet',
+        );
+      }
+
+      // If the status is cancelled, delete the adoption entry
+      if (status === AdoptionStatus.CANCELLED) {
+        await this.prisma.adoption.delete({
+          where: {
+            userId_petId: {
+              userId: runningAdoption.userId,
+              petId: runningAdoption.petId,
+            },
+          },
+        });
+        return;
+      }
+
+      // Update the adoption entry
+      await this.prisma.adoption.update({
+        where: {
+          userId_petId: {
+            userId: runningAdoption.userId,
+            petId: runningAdoption.petId,
+          },
+        },
         data: {
           petId: petId,
           userId: userId,
         },
       });
     } else {
-      await this.prisma.adoption.update({
-        where: { adoptionId: adoption.adoptionId },
+      // If there is no running adoption, create a new adoption entry
+      await this.prisma.adoption.create({
         data: {
           petId: petId,
           userId: userId,

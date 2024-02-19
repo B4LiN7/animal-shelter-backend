@@ -36,11 +36,12 @@ model Location {
 }
 
 model Adoption {
-  adoptionId Int    @id @default(autoincrement())
-  userId     String
-  petId      Int
-  user       User   @relation(fields: [userId], references: [userId])
-  pet        Pet    @relation(fields: [petId], references: [petId])
+  userId String
+  petId  Int
+  user   User   @relation(fields: [userId], references: [userId])
+  pet    Pet    @relation(fields: [petId], references: [petId])
+
+  @@id([userId, petId])
 }
 
 model Pet {

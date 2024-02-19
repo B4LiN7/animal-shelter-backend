@@ -43,7 +43,7 @@ export class AuthService {
     }
 
     res.cookie('token', token, { httpOnly: true });
-    return res.send({ message: 'You have been logged in' });
+    return { message: 'You have been logged in' };
   }
 
   async register(dto: AuthDto) {
@@ -74,7 +74,7 @@ export class AuthService {
       },
     });
 
-    return `User with username "${newUsername}" has been created`;
+    return { message: `User with username "${newUsername}" has been created` };
   }
 
   logout(req: Request, res: Response) {
@@ -82,6 +82,6 @@ export class AuthService {
       throw new ForbiddenException('You are not logged in');
     }
     res.clearCookie('token');
-    return res.status(200).send({ message: 'You have been logged out' });
+    return { message: 'You have been logged out' };
   }
 }
