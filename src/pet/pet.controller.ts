@@ -27,12 +27,12 @@ export class PetController {
 
   @Get()
   async readAllPets() {
-    return this.petService.readAllPets();
+    return this.petService.getAllPets();
   }
 
   @Get(':id')
   async readPet(@Param('id') id: number) {
-    return this.petService.readPet(id);
+    return this.petService.getPet(id);
   }
 
   @Put(':id')
@@ -53,6 +53,6 @@ export class PetController {
   @UseGuards(RoleGuard)
   @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
   async readPetStatus(@Param('id') id: number) {
-    return this.petService.readPetStatus(id);
+    return this.petService.getPetStatus(id);
   }
 }

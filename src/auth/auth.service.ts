@@ -17,7 +17,6 @@ export class AuthService {
 
   async login(dto: AuthDto, res: Response) {
     const { username, password } = dto;
-
     if (!username) {
       throw new BadRequestException('Username is required');
     }
@@ -29,7 +28,7 @@ export class AuthService {
       throw new BadRequestException('User does not exist');
     }
 
-    const isPasswordMatch = await this.authHelper.comparePassword(
+    const isPasswordMatch = await this.authHelper.comparePasswords(
       password,
       foundUser.hashedPassword,
     );
@@ -37,7 +36,7 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const token = await this.authHelper.signTokenWithId(foundUser.userId);
+    const token = await this.authHelper.signToken(foundUser.userId);
     if (!token) {
       throw new ForbiddenException('Token could not be generated');
     }

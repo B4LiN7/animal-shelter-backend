@@ -55,7 +55,7 @@ export class BreedService {
    * @param dto Breed DTO
    * @returns Prisma response
    */
-  private async addOrUpdateBreed(dto: BreedDto, id: number | null = null) {
+  private async addOrUpdateBreed(dto: BreedDto, id: number = -1) {
     const breed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });

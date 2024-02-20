@@ -13,9 +13,9 @@ export class AuthHelperService {
   ) {}
 
   /**
-   * Checks if a user exists
-   * @param username - The username to check
-   * @returns Whether the user exists
+   * Checks if a user exists in the database
+   * @param username - The username to check (string)
+   * @returns True or false, depending on whether the user exists
    */
   async isUserExists(username: string) {
     const user = await this.prisma.user.findUnique({
@@ -26,8 +26,8 @@ export class AuthHelperService {
 
   /**
    * Checks if the user is an admin
-   * @param req - The request object
-   * @returns Whether the user is an admin
+   * @param req - The Request object
+   * @returns True or false, depending on whether the user is an admin
    */
   async isAdmin(req: Request) {
     const userId = await this.getUserIdFromReq(req);
@@ -35,6 +35,44 @@ export class AuthHelperService {
       where: { userId: userId },
     });
     return user.role === Role.ADMIN;
+  }
+
+  /**
+   * Gets the user's ID from the request
+   * @param req - The Request object
+   * @returns The user's ID
+   */
+  async getUserIdFromReq(req: Request) {
+    const decodedToken = await this.decodeToken(req);
+    if (!decodedToken.id) {
+      throw new ForbiddenException('No user ID found in token.');
+    }
+    return decodedToken.id;
+  }
+
+  /**
+   * Signs a JWT token with the user's ID (Secret is stored in .env)
+   * @param id - The user's ID
+   * @returns The signed JWT token
+   */
+  async signToken(id: string) {
+    const payload = { id };
+    return this.jwt.signAsync(payload, { secret: process.env.JWT_SECRET });
+  }
+
+  /**
+   * Decodes a JWT token from the request
+   * @param req - The Request object
+   * @returns The decoded JWT token
+   */
+  async decodeToken(req: Request) {
+    const token = req.cookies.token;
+    if (!token) {
+      throw new ForbiddenException('No token provided. Please log in.');
+    }
+    return await this.jwt.verifyAsync(token, {
+      secret: process.env.JWT_SECRET,
+    });
   }
 
   /**
@@ -51,46 +89,9 @@ export class AuthHelperService {
    * Compares a password to a hashed password
    * @param password - The password to compare
    * @param hashedPassword - The hashed password to compare
+   * @returns True or false, depending on whether the passwords match
    */
-  async comparePassword(password: string, hashedPassword: string) {
-    return bcrypt.compare(password, hashedPassword);
-  }
-
-  /**
-   * Signs a JWT token with the user's ID
-   * @param id - The user's ID
-   * @returns The signed JWT token
-   */
-  async signTokenWithId(id: string) {
-    const payload = { id };
-    return this.jwt.signAsync(payload, { secret: process.env.JWT_SECRET });
-  }
-
-  /**
-   * Gets the user's ID from the request
-   * @param req - The request object
-   * @returns The user's ID
-   */
-  async getUserIdFromReq(req: Request) {
-    const decodedToken = await this.decodeToken(req);
-    if (!decodedToken.id) {
-      throw new ForbiddenException('No user ID found in token.');
-    }
-    return decodedToken.id;
-  }
-
-  /**
-   * Decodes a JWT token from the request
-   * @param req - The request object
-   * @returns The decoded JWT token
-   */
-  async decodeToken(req: Request) {
-    const token = req.cookies.token;
-    if (!token) {
-      throw new ForbiddenException('No token provided. Please log in.');
-    }
-    return await this.jwt.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
-    });
+  async comparePasswords(password: string, hashedPassword: string) {
+    return await bcrypt.compare(password, hashedPassword);
   }
 }

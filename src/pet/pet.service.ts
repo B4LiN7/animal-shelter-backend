@@ -47,7 +47,7 @@ export class PetService {
     return await this.petHelper.getPetWithLatestStatus(pet.petId);
   }
 
-  async readAllPets() {
+  async getAllPets() {
     const pets = await this.prisma.pet.findMany();
     if (pets.length === 0) {
       throw new BadRequestException('No pets found');
@@ -59,7 +59,7 @@ export class PetService {
     );
   }
 
-  async readPet(id: number) {
+  async getPet(id: number) {
     if (!id) throw new BadRequestException('Pet ID is required');
     return await this.petHelper.getPetWithLatestStatus(id);
   }
@@ -89,9 +89,15 @@ export class PetService {
     return await this.petHelper.deletePet(id);
   }
 
-  async readPetStatus(id: number) {
+  async getPetStatus(id: number) {
     return this.prisma.petStatus.findMany({
       where: { petId: id },
+      orderBy: { from: 'desc' },
+      select: {
+        petId: true,
+        status: true,
+        from: true,
+      },
     });
   }
 }

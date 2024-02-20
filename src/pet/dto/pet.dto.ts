@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class PetDto {
   @IsOptional()
@@ -15,13 +16,8 @@ export class PetDto {
 
   @IsOptional()
   @IsString()
-  /*@IsIn([
-  'female', 
-  'male', 
-  'other',
-  ])*/
   @IsEnum(Sex)
-  sex: Sex;
+  sex: Sex = Sex.OTHER;
 
   @IsNotEmpty()
   @IsNumber()
@@ -29,24 +25,16 @@ export class PetDto {
 
   @IsOptional()
   @IsString()
-  /*@IsIn([
-    'unknown',
-    'incoming',
-    'inshelter',
-    'adopting',
-    'adopted',
-    'ill',
-    'deceased',
-  ])*/
   @IsEnum(Status)
-  status: Status;
+  status: Status = Status.UNKNOWN;
 
   @IsOptional()
   @IsString()
   description: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsDate()
+  @Transform(({ value }) => new Date(value))
   birthDate: Date;
 
   @IsOptional()
