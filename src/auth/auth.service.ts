@@ -26,7 +26,7 @@ export class AuthService {
       where: { userName: username },
     });
     if (!foundUser) {
-      throw new BadRequestException('Wrong credentials');
+      throw new BadRequestException('User does not exist');
     }
 
     const isPasswordMatch = await this.authHelper.comparePassword(
@@ -41,9 +41,9 @@ export class AuthService {
     if (!token) {
       throw new ForbiddenException('Token could not be generated');
     }
-
-    res.cookie('token', token, { httpOnly: true });
-    return { message: 'You have been logged in' };
+    res
+      .cookie('token', token, { httpOnly: true })
+      .json({ message: 'You have been logged in' });
   }
 
   async register(dto: AuthDto) {
@@ -61,7 +61,7 @@ export class AuthService {
     });
     if (foundUser) {
       throw new BadRequestException(
-        `User with username ${username} already exists`,
+        `User with username '${username}' already exists`,
       );
     }
 
@@ -74,14 +74,13 @@ export class AuthService {
       },
     });
 
-    return { message: `User with username "${newUsername}" has been created` };
+    return { message: `User with username '${newUsername}' has been created` };
   }
 
   logout(req: Request, res: Response) {
     if (!req.cookies.token) {
       throw new ForbiddenException('You are not logged in');
     }
-    res.clearCookie('token');
-    return { message: 'You have been logged out' };
+    res.clearCookie('token').json({ message: 'You have been logged out' });
   }
 }

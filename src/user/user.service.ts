@@ -46,6 +46,12 @@ export class UserService {
       where: {
         userId: id,
       },
+      select: {
+        email: true,
+        userName: true,
+        hashedPassword: true,
+        role: true,
+      },
     });
     if (!newUser) {
       throw new BadRequestException('User with this ID does not exist');
@@ -63,7 +69,7 @@ export class UserService {
     }
 
     if (await this.authHelper.isAdmin(req)) {
-      dto.role = dto.role ?? newUser.role;
+      newUser.role = dto.role ?? newUser.role;
     } else if (dto.role) {
       throw new BadRequestException('You are not allowed to change the role');
     }

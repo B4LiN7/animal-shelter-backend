@@ -8,6 +8,10 @@ export class UserDto {
 
   @IsOptional()
   @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
   password: string;
 
   @IsOptional()
