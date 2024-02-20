@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsNumber, IsIn } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsEnum } from 'class-validator';
+
+export enum AdoptionStatus {
+  ADOPTING = 'ADOPTING',
+  ADOPTED = 'ADOPTED',
+  CANCELLED = 'CANCELLED',
+}
 
 export class AdoptionDto {
   @IsNotEmpty()
@@ -10,6 +16,6 @@ export class AdoptionDto {
   userId: string;
 
   @IsNotEmpty()
-  @IsIn(['adopting', 'adopted'])
-  status: string;
+  @IsEnum(AdoptionStatus)
+  status: AdoptionStatus;
 }

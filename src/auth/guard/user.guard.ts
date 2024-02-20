@@ -8,13 +8,13 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'prisma/prisma.service';
 import { Role } from '@prisma/client';
 
+@Injectable()
 /**
  * Guard to check if the user is allowed to access the resource.
  * The user can access the resource if:
  * - The user is an ADMIN, or
  * - The user is the owner of the resource
  */
-@Injectable()
 export class UserGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,

@@ -13,6 +13,7 @@ datasource db {
 model User {
   userId         String     @id @default(uuid())
   userName       String     @unique
+  name           String?
   email          String?
   hashedPassword String
   role           Role       @default(USER)
@@ -36,11 +37,12 @@ model Location {
 }
 
 model Adoption {
-  adoptionId Int    @id @default(autoincrement())
-  userId     String
-  petId      Int
-  user       User   @relation(fields: [userId], references: [userId])
-  pet        Pet    @relation(fields: [petId], references: [petId])
+  userId String
+  petId  Int
+  user   User   @relation(fields: [userId], references: [userId])
+  pet    Pet    @relation(fields: [petId], references: [petId])
+
+  @@id([userId, petId])
 }
 
 model Pet {

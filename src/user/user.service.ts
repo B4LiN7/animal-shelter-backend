@@ -11,6 +11,9 @@ export class UserService {
     private authHelper: AuthHelperService,
   ) {}
 
+  /**
+   * Get all users (for admin)
+   */
   async getAllUsers() {
     return this.prisma.user.findMany({
       select: {
@@ -20,6 +23,10 @@ export class UserService {
     });
   }
 
+  /**
+   * Get user by id (for admin)
+   * @param id - userId
+   */
   async getUser(id: string) {
     return this.prisma.user.findUnique({
       where: {
@@ -28,6 +35,10 @@ export class UserService {
     });
   }
 
+  /**
+   * Get user who is currently logged in
+   * @param req - Request object
+   */
   async getMyUser(req: Request) {
     const userId = await this.authHelper.getUserIdFromReq(req);
     return this.prisma.user.findUnique({
@@ -37,6 +48,12 @@ export class UserService {
     });
   }
 
+  /**
+   * Update user
+   * @param id - userId
+   * @param dto - UserDto with new data
+   * @param req - Request object
+   */
   async updateUser(id: string, dto: UserDto, req: Request) {
     if (!dto) {
       throw new BadRequestException('No data to update');
@@ -45,6 +62,12 @@ export class UserService {
     const newUser = await this.prisma.user.findUnique({
       where: {
         userId: id,
+      },
+      select: {
+        email: true,
+        userName: true,
+        hashedPassword: true,
+        role: true,
       },
     });
     if (!newUser) {
@@ -63,7 +86,7 @@ export class UserService {
     }
 
     if (await this.authHelper.isAdmin(req)) {
-      dto.role = dto.role ?? newUser.role;
+      newUser.role = dto.role ?? newUser.role;
     } else if (dto.role) {
       throw new BadRequestException('You are not allowed to change the role');
     }
@@ -76,6 +99,10 @@ export class UserService {
     });
   }
 
+  /**
+   * Delete user
+   * @param id - userId
+   */
   async deleteUser(id: string) {
     return this.prisma.user.delete({
       where: {

@@ -9,10 +9,10 @@ import { PrismaService } from 'prisma/prisma.service';
 import { AuthHelperService } from '../authHelper.service';
 import { Role } from '@prisma/client';
 
+@Injectable()
 /**
  * Guard to check if the user is a member of the role required to access the resource.
  */
-@Injectable()
 export class RoleGuard implements CanActivate {
   constructor(
     private reflector: Reflector,

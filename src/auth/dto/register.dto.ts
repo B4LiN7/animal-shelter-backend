@@ -6,7 +6,7 @@ import {
   Length,
 } from 'class-validator';
 
-export class AuthDto {
+export class RegisterDto {
   @IsOptional()
   @IsString()
   username: string;

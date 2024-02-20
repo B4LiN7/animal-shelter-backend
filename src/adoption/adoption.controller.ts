@@ -20,21 +20,21 @@ import { AdoptionDto } from './dto/adoption.dto';
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
-  @Get('adopt/:petId')
+  @Get('pet/:petId')
   @Role(RoleEnum.USER)
   startAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
 
-  @Post('adopt')
-  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
-  finishAdoptionProcess(@Body() dto: AdoptionDto) {
-    return this.adoptionService.finishAdoptionProcess(dto);
-  }
-
-  @Delete('adopt/:petId')
+  @Delete('pet/:petId')
   @Role()
   cancelAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
+  }
+
+  @Post()
+  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  setAdoptionProcess(@Body() dto: AdoptionDto) {
+    return this.adoptionService.setAdoptionProcess(dto);
   }
 }
