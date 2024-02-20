@@ -12,7 +12,8 @@ import { PetService } from './pet.service';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/auth/decorator/role.decorator';
 import { Role as RoleEnum } from '@prisma/client';
-import { PetDto } from './dto/pet.dto';
+import { CreatePetDto } from './dto/createPet.dto';
+import { UpdatePetDto } from './dto/updatePet.dto';
 
 @Controller('pet')
 export class PetController {
@@ -21,7 +22,7 @@ export class PetController {
   @Post()
   @UseGuards(RoleGuard)
   @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
-  async createPet(@Body() dto: PetDto) {
+  async createPet(@Body() dto: CreatePetDto) {
     return this.petService.createPet(dto);
   }
 
@@ -38,7 +39,7 @@ export class PetController {
   @Put(':id')
   @UseGuards(RoleGuard)
   @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
-  async updatePet(@Param('id') id: number, @Body() dto: PetDto) {
+  async updatePet(@Param('id') id: number, @Body() dto: UpdatePetDto) {
     return this.petService.updatePet(id, dto);
   }
 

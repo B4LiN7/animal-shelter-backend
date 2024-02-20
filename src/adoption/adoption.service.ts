@@ -18,6 +18,11 @@ export class AdoptionService {
     private authHelper: AuthHelperService,
   ) {}
 
+  /**
+   * Start the adoption process for a pet
+   * @param petId - The ID of the pet
+   * @param req - The Request object for userId
+   */
   async startAdoptionProcess(petId: number, req: Request) {
     const userId = await this.authHelper.getUserIdFromReq(req);
 
@@ -39,6 +44,11 @@ export class AdoptionService {
     return;
   }
 
+  /**
+   * Finish the adoption process for a pet
+   * @param petId - The ID of the pet
+   * @param req - The Request object for userId
+   */
   async cancelAdoptionProcess(petId: number, req: Request) {
     const userId = await this.authHelper.getUserIdFromReq(req);
     const asAdmin: boolean = await this.authHelper.isAdmin(req);
@@ -52,6 +62,10 @@ export class AdoptionService {
     this.setAdoptionStatus(dto, asAdmin);
   }
 
+  /**
+   * Set the adoption process for a pet (for admin or shelter worker only)
+   * @param dto - The adoption DTO
+   */
   async setAdoptionProcess(dto: AdoptionDto) {
     this.setAdoptionStatus(dto, true);
   }

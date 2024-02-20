@@ -11,6 +11,9 @@ export class UserService {
     private authHelper: AuthHelperService,
   ) {}
 
+  /**
+   * Get all users (for admin)
+   */
   async getAllUsers() {
     return this.prisma.user.findMany({
       select: {
@@ -20,6 +23,10 @@ export class UserService {
     });
   }
 
+  /**
+   * Get user by id (for admin)
+   * @param id - userId
+   */
   async getUser(id: string) {
     return this.prisma.user.findUnique({
       where: {
@@ -28,6 +35,10 @@ export class UserService {
     });
   }
 
+  /**
+   * Get user who is currently logged in
+   * @param req - Request object
+   */
   async getMyUser(req: Request) {
     const userId = await this.authHelper.getUserIdFromReq(req);
     return this.prisma.user.findUnique({
@@ -37,6 +48,12 @@ export class UserService {
     });
   }
 
+  /**
+   * Update user
+   * @param id - userId
+   * @param dto - UserDto with new data
+   * @param req - Request object
+   */
   async updateUser(id: string, dto: UserDto, req: Request) {
     if (!dto) {
       throw new BadRequestException('No data to update');
@@ -82,6 +99,10 @@ export class UserService {
     });
   }
 
+  /**
+   * Delete user
+   * @param id - userId
+   */
   async deleteUser(id: string) {
     return this.prisma.user.delete({
       where: {

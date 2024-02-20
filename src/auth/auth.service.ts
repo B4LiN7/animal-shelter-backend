@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { PrismaService } from 'prisma/prisma.service';
-import { AuthDto } from './dto/auth.dto';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 import { AuthHelperService } from './authHelper.service';
 
 @Injectable()
@@ -15,11 +16,13 @@ export class AuthService {
     private authHelper: AuthHelperService,
   ) {}
 
-  async login(dto: AuthDto, res: Response) {
+  /**
+   * Logs in the user and sets the token cookie
+   * @param dto LoginDto object containing username and password
+   * @param res Response object
+   */
+  async login(dto: LoginDto, res: Response) {
     const { username, password } = dto;
-    if (!username) {
-      throw new BadRequestException('Username is required');
-    }
 
     const foundUser = await this.prisma.user.findUnique({
       where: { userName: username },
@@ -40,12 +43,17 @@ export class AuthService {
     if (!token) {
       throw new ForbiddenException('Token could not be generated');
     }
+
     res
       .cookie('token', token, { httpOnly: true })
       .json({ message: 'You have been logged in' });
   }
 
-  async register(dto: AuthDto) {
+  /**
+   * Registers a new user
+   * @param dto RegisterDto object containing username, password and email
+   */
+  async register(dto: RegisterDto) {
     const { username, password, email } = dto;
     let newUsername = username;
 
@@ -56,7 +64,7 @@ export class AuthService {
     }
 
     const foundUser = await this.prisma.user.findUnique({
-      where: { userName: newUsername ? newUsername : email },
+      where: { userName: newUsername },
     });
     if (foundUser) {
       throw new BadRequestException(
@@ -76,6 +84,11 @@ export class AuthService {
     return { message: `User with username '${newUsername}' has been created` };
   }
 
+  /**
+   * Logs out the user by clearing the token cookie
+   * @param req Request object
+   * @param res Response object
+   */
   logout(req: Request, res: Response) {
     if (!req.cookies.token) {
       throw new ForbiddenException('You are not logged in');

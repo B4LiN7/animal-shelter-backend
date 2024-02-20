@@ -2,26 +2,33 @@ import { Sex, Status } from '@prisma/client';
 import {
   IsDate,
   IsEnum,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class PetDto {
+export class UpdatePetDto {
   @IsOptional()
   @IsString()
   name: string;
 
   @IsOptional()
   @IsString()
-  @IsEnum(Sex)
-  sex: Sex = Sex.OTHER;
+  description: string;
 
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  imageUrl: string;
+
+  @IsOptional()
   @IsNumber()
   breedId: number;
+
+  @IsOptional()
+  @IsString()
+  @IsEnum(Sex)
+  sex: Sex = Sex.OTHER;
 
   @IsOptional()
   @IsString()
@@ -29,15 +36,7 @@ export class PetDto {
   status: Status = Status.UNKNOWN;
 
   @IsOptional()
-  @IsString()
-  description: string;
-
-  @IsNotEmpty()
   @IsDate()
   @Transform(({ value }) => new Date(value))
   birthDate: Date;
-
-  @IsOptional()
-  @IsString()
-  imageUrl: string;
 }

@@ -6,6 +6,9 @@ import { Request } from 'express';
 import { Role } from '@prisma/client';
 
 @Injectable()
+/**
+ * The AuthHelperService provides helper functions for authentication
+ */
 export class AuthHelperService {
   constructor(
     private prisma: PrismaService,
