@@ -10,7 +10,14 @@ import { AuthHelperService } from './authHelper.service';
 // https://youtu.be/4JyBeN69wq4?si=5ry-mv3BMvrpcQAM&t=694
 
 @Module({
-  imports: [PrismaModule, JwtModule, PassportModule],
+  imports: [
+    PrismaModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1d' },
+    }),
+    PassportModule,
+],
   controllers: [AuthController],
   providers: [AuthService, AuthHelperService],
   exports: [AuthHelperService],

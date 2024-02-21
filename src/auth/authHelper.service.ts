@@ -60,7 +60,7 @@ export class AuthHelperService {
    */
   async signToken(id: string) {
     const payload = { id };
-    return this.jwt.signAsync(payload, { secret: process.env.JWT_SECRET });
+    return this.jwt.signAsync(payload);
   }
 
   /**
@@ -73,9 +73,7 @@ export class AuthHelperService {
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    return await this.jwt.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
-    });
+    return await this.jwt.verifyAsync(token);
   }
 
   /**

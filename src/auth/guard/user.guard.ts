@@ -27,9 +27,7 @@ export class UserGuard implements CanActivate {
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    const decodedToken = await this.jwtService.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
-    });
+    const decodedToken = await this.jwtService.verifyAsync(token);
     const requestedId = request.params.id;
 
     const userRole = await this.prisma.user.findUnique({
