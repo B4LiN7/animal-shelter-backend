@@ -68,6 +68,7 @@ export class UserService {
         userName: true,
         hashedPassword: true,
         role: true,
+        name: true,
       },
     });
     if (!newUser) {
@@ -80,6 +81,7 @@ export class UserService {
 
     newUser.email = dto.email ?? newUser.email;
     newUser.userName = dto.username ?? newUser.userName;
+    newUser.name = dto.name ?? newUser.name;
 
     if (dto.password) {
       newUser.hashedPassword = await this.authHelper.hashPassword(dto.password);
