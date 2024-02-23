@@ -15,7 +15,7 @@ export class UserService {
    * Get all users (for admin)
    */
   async getAllUsers() {
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       select: {
         userId: true,
         userName: true,
@@ -28,7 +28,7 @@ export class UserService {
    * @param id - userId
    */
   async getUser(id: string) {
-    return this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         userId: id,
       },
@@ -41,7 +41,7 @@ export class UserService {
    */
   async getMyUser(req: Request) {
     const userId = await this.authHelper.getUserIdFromReq(req);
-    return this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         userId: userId,
       },
@@ -93,7 +93,7 @@ export class UserService {
       throw new BadRequestException('You are not allowed to change the role');
     }
 
-    return this.prisma.user.update({
+    return await this.prisma.user.update({
       where: {
         userId: id,
       },
@@ -106,7 +106,7 @@ export class UserService {
    * @param id - userId
    */
   async deleteUser(id: string) {
-    return this.prisma.user.delete({
+    return await this.prisma.user.delete({
       where: {
         userId: id,
       },

@@ -54,7 +54,7 @@ export class AuthService {
    * @param dto RegisterDto object containing username, password and email
    */
   async register(dto: RegisterDto) {
-    const { username, password, email } = dto;
+    const { username, password, email, name } = dto;
     let newUsername = username;
 
     if (!username && !email) {
@@ -78,6 +78,7 @@ export class AuthService {
         userName: newUsername,
         email: email,
         hashedPassword: hashedPassword,
+        name: name,
       },
     });
 

@@ -87,7 +87,7 @@ export class AuthHelperService {
   }
 
   /**
-   * Compares a password to a hashed password
+   * Compares a password to a hashed password using bcrypt
    * @param password - The password to compare
    * @param hashedPassword - The hashed password to compare
    * @returns True or false, depending on whether the passwords match

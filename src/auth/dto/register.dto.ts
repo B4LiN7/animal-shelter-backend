@@ -22,4 +22,8 @@ export class RegisterDto {
   @IsOptional()
   @IsEmail()
   email: string;
+
+  @IsOptional()
+  @IsString()
+  name: string;
 }
