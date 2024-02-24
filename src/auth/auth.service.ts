@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { PrismaService } from 'prisma/prisma.service';
@@ -14,6 +15,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private authHelper: AuthHelperService,
+    private logger: Logger,
   ) {}
 
   /**
@@ -47,6 +49,8 @@ export class AuthService {
     res
       .cookie('token', token, { httpOnly: true })
       .json({ message: 'You have been logged in' });
+
+    this.logger.log(`User with username '${username}' has been logged in at ${new Date()}`);
   }
 
   /**
@@ -82,6 +86,8 @@ export class AuthService {
       },
     });
 
+    this.logger.log(`User with username '${newUsername}' has been created at ${new Date()}`);
+
     return { message: `User with username '${newUsername}' has been created` };
   }
 
@@ -91,9 +97,12 @@ export class AuthService {
    * @param res Response object
    */
   logout(req: Request, res: Response) {
+    const username = this.authHelper.getUserIdFromReq(req.cookies.token);
     if (!req.cookies.token) {
       throw new ForbiddenException('You are not logged in');
     }
     res.clearCookie('token').json({ message: 'You have been logged out' });
+
+    this.logger.log(`User with username '${username}' has been logged out at ${new Date()}`);
   }
 }

@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'prisma/prisma.service';
@@ -19,10 +20,12 @@ export class UserGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
+    private logger: Logger,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+    const requestedUrl = request.url;
     const token = request.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
@@ -40,10 +43,14 @@ export class UserGuard implements CanActivate {
     });
 
     if (userRole.role === Role.ADMIN) {
+      this.logger.log(
+        `User with ID ${decodedToken.id} is an admin and is allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+      );
       return true;
     }
 
     if (decodedToken.id !== requestedId) {
+      this.logger.log(`User with ID ${decodedToken.id} is not allowed to access the resource '${requestedUrl}' at ${new Date()}`);
       throw new ForbiddenException('Invalid token.');
     }
     return true;
