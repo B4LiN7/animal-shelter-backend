@@ -25,12 +25,34 @@ $ docker compose up --build
 {
   username: string,
   password: string,
-  email: string
+  email: string,
+  name: string
 }
 ```
 - POST /login
 - POST /register
 - GET /logout
+
+### User (/user)
+```
+{
+  username: string,
+  password: string,
+  email: string,
+  name: string,
+  role: Role enum in string
+}
+```
+- GET / (összes felhasználó (id + felhasználónév) listázása, csak admin fér hozzá)
+- GET /me (bejelentkezet felhasználó adatait irja ki)
+- GET /:id (egy specifikus felhasználó adatait irja ki, csak saját vagy admin)
+- POST / (felhasználó létrehozása, lehet Role-t is adni, csak admin fér hozzá)
+- PUT /:id (egy specifikus felhasználó adatait módositja ki, csak saját vagy admin)
+- DELETE /:id (egy specifikus felhasználót töröl, csak saját vagy admin)
+
+### Media (/media)
+- POST / (fájl feltöltése, mezőnév legyen: file)
+- GET /* (public mappa gyökér) (Pl. /media/uploads/lt2wqej2_dog1.jpg)
 
 ### Breed (/breed)
 ```
