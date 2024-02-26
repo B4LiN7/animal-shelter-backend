@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Post,
   Put,
   Req,
   UseGuards,
@@ -17,11 +18,11 @@ import { Request } from 'express';
 import { UserGuard } from 'src/auth/guard/user.guard';
 
 @Controller('user')
-@UseGuards(RoleGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @UseGuards(RoleGuard)
   @Role(RoleEnum.ADMIN)
   async getAllUsers() {
     return this.userService.getAllUsers();
@@ -36,6 +37,13 @@ export class UserController {
   @UseGuards(UserGuard)
   async getUser(@Param('id') id: string) {
     return this.userService.getUser(id);
+  }
+
+  @Post()
+  @UseGuards(RoleGuard)
+  @Role(RoleEnum.ADMIN)
+  async createUser(@Body() dto: UserDto) {
+    return this.userService.createUser(dto);
   }
 
   @Put(':id')

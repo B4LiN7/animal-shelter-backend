@@ -18,8 +18,8 @@ import { Role } from '@prisma/client';
  */
 export class UserGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
     private prisma: PrismaService,
+    private jwt: JwtService,
     private logger: Logger,
   ) {}
 
@@ -30,7 +30,7 @@ export class UserGuard implements CanActivate {
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    const decodedToken = await this.jwtService.verifyAsync(token);
+    const decodedToken = await this.jwt.verifyAsync(token);
     const requestedId = request.params.id;
 
     const userRole = await this.prisma.user.findUnique({
@@ -50,7 +50,9 @@ export class UserGuard implements CanActivate {
     }
 
     if (decodedToken.id !== requestedId) {
-      this.logger.log(`User with ID ${decodedToken.id} is not allowed to access the resource '${requestedUrl}' at ${new Date()}`);
+      this.logger.log(
+        `User with ID ${decodedToken.id} is not allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+      );
       throw new ForbiddenException('Invalid token.');
     }
     return true;

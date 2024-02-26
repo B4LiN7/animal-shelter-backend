@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { Status } from '@prisma/client';
-import { AuthHelperService } from 'src/auth/authHelper.service';
+import { UserHelperService } from 'src/user/userHelper.service';
 import { AdoptionDto, AdoptionStatus } from './dto/adoption.dto';
 import { PetHelperService } from 'src/pet/petHelper.service';
 
@@ -15,8 +15,25 @@ export class AdoptionService {
   constructor(
     private prisma: PrismaService,
     private petHelper: PetHelperService,
-    private authHelper: AuthHelperService,
+    private userHelper: UserHelperService,
   ) {}
+
+  /**
+   * Get the adoption status for a pet
+   * @param petId - The ID of the pet
+   * @returns The adoption status for the pet: userId, petId, latestStatus
+   */
+  async getAllAdoptionProcesses() {
+    const adoptions = await this.prisma.adoption.findMany();
+    const adoptionsWithStatus: any[] = [];
+    for (const adoption of adoptions) {
+      const latestStatus = await this.petHelper.getLatestStatusForPet(
+        adoption.petId,
+      );
+      adoptionsWithStatus.push({ latestStatus });
+    }
+    return adoptionsWithStatus;
+  }
 
   /**
    * Start the adoption process for a pet
@@ -24,7 +41,7 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async startAdoptionProcess(petId: number, req: Request) {
-    const userId = await this.authHelper.getUserIdFromReq(req);
+    const userId = await this.userHelper.getUserIdFromReq(req);
 
     const pet = await this.prisma.pet.findUnique({
       where: { petId: petId },
@@ -38,10 +55,12 @@ export class AdoptionService {
       userId: userId,
       status: AdoptionStatus.ADOPTING,
     };
-
-    this.setAdoptionStatus(dto);
-
-    return;
+    try {
+      this.setAdoptionStatus(dto);
+      return await this.getAdoptionStatusForPet(petId);
+    } catch (e) {
+      throw new ForbiddenException(e);
+    }
   }
 
   /**
@@ -50,8 +69,8 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async cancelAdoptionProcess(petId: number, req: Request) {
-    const userId = await this.authHelper.getUserIdFromReq(req);
-    const asAdmin: boolean = await this.authHelper.isAdmin(req);
+    const userId = await this.userHelper.getUserIdFromReq(req);
+    const asAdmin: boolean = await this.userHelper.isReqAdmin(req);
 
     const dto: AdoptionDto = {
       petId: petId,
@@ -60,6 +79,8 @@ export class AdoptionService {
     };
 
     this.setAdoptionStatus(dto, asAdmin);
+
+    return await this.getAdoptionStatusForPet(petId);
   }
 
   /**
@@ -117,7 +138,7 @@ export class AdoptionService {
       throw new NotFoundException(`User with ID ${userId} not found.`);
     }
 
-    // Set the new status for the pet then create a new status entry for pet
+    // Set the new status for the pet
     let newStatus: Status = Status.UNKNOWN;
     switch (status) {
       case AdoptionStatus.ADOPTING:
@@ -130,12 +151,6 @@ export class AdoptionService {
         newStatus = Status.INSHELTER;
         break;
     }
-    await this.prisma.petStatus.create({
-      data: {
-        petId: petId,
-        status: newStatus,
-      },
-    });
 
     // Search for an existing adoption entry for the pet
     const runningAdoption = await this.prisma.adoption.findFirst({
@@ -188,5 +203,13 @@ export class AdoptionService {
         },
       });
     }
+
+    // Create a new status entry for the pet
+    await this.prisma.petStatus.create({
+      data: {
+        petId: petId,
+        status: newStatus,
+      },
+    });
   }
 }

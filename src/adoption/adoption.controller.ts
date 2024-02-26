@@ -20,6 +20,12 @@ import { AdoptionDto } from './dto/adoption.dto';
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
+  @Get('')
+  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  getAllAdoptionProcesses() {
+    return this.adoptionService.getAllAdoptionProcesses();
+  }
+
   @Get('pet/:petId')
   @Role(RoleEnum.USER)
   startAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {

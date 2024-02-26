@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'prisma/prisma.service';
-import { AuthHelperService } from '../authHelper.service';
+import { UserHelperService } from '../../user/userHelper.service';
 import { Role } from '@prisma/client';
 
 @Injectable()
@@ -15,9 +15,9 @@ import { Role } from '@prisma/client';
  */
 export class RoleGuard implements CanActivate {
   constructor(
-    private reflector: Reflector,
     private prisma: PrismaService,
-    private authHelper: AuthHelperService,
+    private reflector: Reflector,
+    private userHelper: UserHelperService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -27,7 +27,7 @@ export class RoleGuard implements CanActivate {
     );
 
     const request = context.switchToHttp().getRequest();
-    const userId = await this.authHelper.getUserIdFromReq(request);
+    const userId = await this.userHelper.getUserIdFromReq(request);
 
     const user = await this.prisma.user.findUnique({
       where: { userId: userId },
@@ -36,7 +36,7 @@ export class RoleGuard implements CanActivate {
       throw new ForbiddenException('User not found');
     }
 
-    if (!roles) {
+    if (roles === undefined || roles.length === 0) {
       return true;
     }
 

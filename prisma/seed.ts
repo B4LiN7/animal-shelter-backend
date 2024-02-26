@@ -32,47 +32,42 @@ const dogBreeds: { name: string; description: string }[] = [
   { name: "Bichon Frise", description: "Playful, cheerful, and hypoallergenic, known for their white, fluffy coat and gentle personality. They require regular grooming and are well-suited for apartment living." },
 ];
 
-export async function main() {
-  for (const breed of dogBreeds) {
-    await prisma.breed.create({
-      data: {
-        name: breed.name,
-        description: breed.description,
-      },
-    });
-  }
-
+async function addAdminUser() {
   const admin = await prisma.user.findFirst({
     where: {
-      userName: 'admin',
+      username: 'admin',
       role: Role.ADMIN,
     },
   });
-  if (!admin) {
+  if (admin) {
     console.log('Admin user already exists');
     return;
   }
 
   const user = await prisma.user.create({
     data: {
-      userName: 'admin',
+      username: 'admin',
       hashedPassword: await hashPassword('password'),
       role: Role.ADMIN,
     },
   });
+  console.log('Admin user created with id:', user.userId);
+}
 
-  const location = await prisma.location.create({
-    data: {
-      userId: user.userId,
-      name: 'Test Location',
-      country: 'Test Country',
-      city: 'Test City',
-      zipCode: 1234,
-      address: 'Test Address',
-    },
-  });
+export async function main() {
+  await addAdminUser();
 
-  console.log({ user, location });
+  for (const breed of dogBreeds) {
+    const addedBreed = await prisma.breed.create({
+      data: {
+        name: breed.name,
+        description: breed.description,
+      },
+    });
+    console.log(
+      `Breed ${addedBreed.name} created with id: ${addedBreed.breedId}`,
+    );
+  }
 }
 
 main()
