@@ -48,7 +48,7 @@ export class AuthService {
 
     res
       .cookie('token', token, { httpOnly: true })
-      .json({ message: 'You have been logged in' });
+      .json({ message: 'You have been logged in', token: token });
 
     this.logger.log(`User with username '${username}' has been logged in at ${new Date()}`);
   }

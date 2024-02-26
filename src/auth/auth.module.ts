@@ -6,16 +6,13 @@ import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from 'prisma/prisma.module';
 import { AuthHelperService } from './authHelper.service';
 
-// Nest.js - full authentication course
-// https://youtu.be/4JyBeN69wq4?si=5ry-mv3BMvrpcQAM&t=694
-
 @Module({
   imports: [
     PrismaModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '2d' },
     }),
     PassportModule,
   ],
