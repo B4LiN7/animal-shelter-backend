@@ -55,12 +55,10 @@ export class AdoptionService {
       userId: userId,
       status: AdoptionStatus.ADOPTING,
     };
-    try {
-      this.setAdoptionStatus(dto);
-      return await this.getAdoptionStatusForPet(petId);
-    } catch (e) {
-      throw new ForbiddenException(e);
-    }
+
+    await this.setAdoptionStatus(dto);
+
+    return await this.getAdoptionStatusForPet(petId);
   }
 
   /**
