@@ -27,10 +27,8 @@ export class AdoptionService {
     const adoptions = await this.prisma.adoption.findMany();
     const adoptionsWithStatus: any[] = [];
     for (const adoption of adoptions) {
-      const latestStatus = await this.petHelper.getLatestStatusForPet(
-        adoption.petId,
-      );
-      adoptionsWithStatus.push({ latestStatus });
+      const latestStatus = await this.getAdoptionStatus(adoption.petId);
+      adoptionsWithStatus.push(latestStatus);
     }
     return adoptionsWithStatus;
   }
@@ -58,7 +56,7 @@ export class AdoptionService {
 
     await this.setAdoptionStatus(dto);
 
-    return await this.getAdoptionStatusForPet(petId);
+    return await this.getAdoptionStatus(petId);
   }
 
   /**
@@ -76,9 +74,9 @@ export class AdoptionService {
       status: AdoptionStatus.CANCELLED,
     };
 
-    this.setAdoptionStatus(dto, asAdmin);
+    await this.setAdoptionStatus(dto, asAdmin);
 
-    return await this.getAdoptionStatusForPet(petId);
+    return await this.getAdoptionStatus(petId);
   }
 
   /**
@@ -86,7 +84,7 @@ export class AdoptionService {
    * @param dto - The adoption DTO
    */
   async setAdoptionProcess(dto: AdoptionDto) {
-    this.setAdoptionStatus(dto, true);
+    await this.setAdoptionStatus(dto, true);
   }
 
   /**
@@ -94,7 +92,7 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @returns The adoption status for the pet: userId, petId, latestStatus
    */
-  private async getAdoptionStatusForPet(petId: number) {
+  private async getAdoptionStatus(petId: number) {
     const runningAdoption = await this.prisma.adoption.findFirst({
       where: {
         petId: petId,

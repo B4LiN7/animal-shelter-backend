@@ -12,6 +12,7 @@ import { Role } from '@prisma/client';
 @Injectable()
 /**
  * Guard to check if the user is a member of the role required to access the resource.
+ * If roles not given, it will allow access to all users.
  */
 export class RoleGuard implements CanActivate {
   constructor(
@@ -31,6 +32,7 @@ export class RoleGuard implements CanActivate {
 
     const user = await this.prisma.user.findUnique({
       where: { userId: userId },
+      select: { role: true },
     });
     if (!user) {
       throw new ForbiddenException('User not found');

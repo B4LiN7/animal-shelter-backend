@@ -6,6 +6,7 @@ import { MediaModule } from './media/media.module';
 import { AdoptionModule } from './adoption/adoption.module';
 import { BreedModule } from './breed/breed.module';
 import { LocationModule } from './location/location.module';
+import { JwtGlobalModule } from './jwtGlobal.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LocationModule } from './location/location.module';
     AdoptionModule,
     BreedModule,
     LocationModule,
+    JwtGlobalModule,
   ],
 })
 export class AppModule {}
