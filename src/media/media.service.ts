@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import * as path from 'path';
 import { writeFile } from 'fs/promises';
 
 @Injectable()
 export class MediaService {
+  constructor(private logger: Logger) {}
+
   serveMedia(path: string, res: Response) {
     res.sendFile(path, { root: './public' });
+    this.logger.log(`Media served from: ${path}`);
   }
 
   uploadFile(file: Express.Multer.File, res: Response) {
@@ -38,6 +41,7 @@ export class MediaService {
           message: 'Error uploading file',
           error: err,
         });
+        this.logger.error(`Error uploading file: ${err}`);
       })
       .then(() => {
         res.status(200).json({
@@ -46,6 +50,7 @@ export class MediaService {
           name: newFileName,
           size: file.size + ' bytes',
         });
+        this.logger.log(`File uploaded: ${newFileName}`);
       });
   }
 }

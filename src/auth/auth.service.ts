@@ -2,18 +2,26 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { PrismaService } from 'prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthHelperService } from './authHelper.service';
+import { UserHelperService } from '../user/userHelper.service';
+import { UserService } from '../user/user.service';
+import { CreateUserDto } from '../user/dto/createUser.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private authHelper: AuthHelperService,
+    private jwt: JwtService,
+    private logger: Logger,
+    private user: UserService,
+    private userHelper: UserHelperService,
   ) {}
 
   /**
@@ -21,17 +29,21 @@ export class AuthService {
    * @param dto LoginDto object containing username and password
    * @param res Response object
    */
-  async login(dto: LoginDto, res: Response) {
+  async login(dto: LoginDto, req: Request, res: Response) {
+    if (req.cookies.token) {
+      throw new BadRequestException('You are already logged in');
+    }
+
     const { username, password } = dto;
 
     const foundUser = await this.prisma.user.findUnique({
-      where: { userName: username },
+      where: { username: username },
     });
     if (!foundUser) {
       throw new BadRequestException('User does not exist');
     }
 
-    const isPasswordMatch = await this.authHelper.comparePasswords(
+    const isPasswordMatch = await bcrypt.compare(
       password,
       foundUser.hashedPassword,
     );
@@ -39,22 +51,23 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const token = await this.authHelper.signToken(foundUser.userId);
-    if (!token) {
-      throw new ForbiddenException('Token could not be generated');
-    }
+    const token = await this.signToken(foundUser.userId);
 
     res
       .cookie('token', token, { httpOnly: true })
-      .json({ message: 'You have been logged in' });
+      .json({ message: 'You have been logged in', token: token });
+
+    this.logger.log(
+      `User with username '${username}' has been logged in at ${new Date()}`,
+    );
   }
 
   /**
    * Registers a new user
    * @param dto RegisterDto object containing username, password and email
    */
-  async register(dto: RegisterDto) {
-    const { username, password, email } = dto;
+  async register(dto: RegisterDto, res: Response) {
+    const { username, password, email, name } = dto;
     let newUsername = username;
 
     if (!username && !email) {
@@ -63,25 +76,19 @@ export class AuthService {
       newUsername = email;
     }
 
-    const foundUser = await this.prisma.user.findUnique({
-      where: { userName: newUsername },
-    });
-    if (foundUser) {
-      throw new BadRequestException(
-        `User with username '${username}' already exists`,
-      );
-    }
+    const newUser = await this.user.createUser({
+      username: newUsername,
+      password,
+      email,
+      name,
+    } as CreateUserDto);
 
-    const hashedPassword = await this.authHelper.hashPassword(password);
-    await this.prisma.user.create({
-      data: {
-        userName: newUsername,
-        email: email,
-        hashedPassword: hashedPassword,
-      },
-    });
+    const token = await this.signToken(newUser.userId);
 
-    return { message: `User with username '${newUsername}' has been created` };
+    res.cookie('token', token, { httpOnly: true }).json({
+      message: `User with username '${newUsername}' has been created`,
+      token: token,
+    });
   }
 
   /**
@@ -89,10 +96,29 @@ export class AuthService {
    * @param req Request object
    * @param res Response object
    */
-  logout(req: Request, res: Response) {
+  async logout(req: Request, res: Response) {
     if (!req.cookies.token) {
       throw new ForbiddenException('You are not logged in');
     }
     res.clearCookie('token').json({ message: 'You have been logged out' });
+    const user = await this.userHelper.getUserFromReq(req);
+
+    this.logger.log(
+      `User with username '${user.username}' has been logged out at ${new Date()}`,
+    );
+  }
+
+  /**
+   * Signs a JWT token with the user's ID (Secret is stored in .env)
+   * @param id The user's ID
+   * @returns The signed JWT token
+   */
+  private async signToken(id: string) {
+    const payload = { id };
+    const token = await this.jwt.signAsync(payload);
+    if (!token) {
+      throw new ForbiddenException('Token could not be generated');
+    }
+    return token;
   }
 }

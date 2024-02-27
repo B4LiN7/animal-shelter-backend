@@ -1,24 +1,27 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { UserDto } from './dto/user.dto';
-import { AuthHelperService } from 'src/auth/authHelper.service';
+import { UserHelperService } from 'src/user/userHelper.service';
+import { CreateUserDto } from './dto/createUser.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
-    private authHelper: AuthHelperService,
+    private userHelper: UserHelperService,
+    private logger: Logger,
   ) {}
 
   /**
    * Get all users (for admin)
    */
   async getAllUsers() {
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       select: {
         userId: true,
-        userName: true,
+        username: true,
       },
     });
   }
@@ -28,7 +31,7 @@ export class UserService {
    * @param id - userId
    */
   async getUser(id: string) {
-    return this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         userId: id,
       },
@@ -40,12 +43,49 @@ export class UserService {
    * @param req - Request object
    */
   async getMyUser(req: Request) {
-    const userId = await this.authHelper.getUserIdFromReq(req);
-    return this.prisma.user.findUnique({
+    const userId = await this.userHelper.getUserIdFromReq(req);
+    return await this.prisma.user.findUnique({
       where: {
         userId: userId,
       },
     });
+  }
+
+  /**
+   * Create user (for admin)
+   * @param dto - CreateUserDto with user data
+   */
+  async createUser(dto: CreateUserDto) {
+    const { username, password, email, name, role } = dto;
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { username: username },
+    });
+    if (foundUser) {
+      this.logger.warn(
+        `Somebody tried to create user with already used username '${username}'`,
+      );
+      throw new BadRequestException(
+        `User with username '${username}' already exists`,
+      );
+    }
+
+    const hashedPassword = await this.hashPassword(password);
+    const newUser = await this.prisma.user.create({
+      data: {
+        username: username,
+        email: email,
+        hashedPassword: hashedPassword,
+        name: name,
+        role: role,
+      },
+    });
+
+    this.logger.log(
+      `User with username '${username}' has been created at ${new Date()}`,
+    );
+
+    return newUser;
   }
 
   /**
@@ -65,7 +105,7 @@ export class UserService {
       },
       select: {
         email: true,
-        userName: true,
+        username: true,
         hashedPassword: true,
         role: true,
         name: true,
@@ -75,25 +115,25 @@ export class UserService {
       throw new BadRequestException('User with this ID does not exist');
     }
 
-    if (dto.username && (await this.authHelper.isUserExists(dto.username))) {
+    if (dto.username && (await this.isUserExists(dto.username))) {
       throw new BadRequestException('User with this username already exists');
     }
 
     newUser.email = dto.email ?? newUser.email;
-    newUser.userName = dto.username ?? newUser.userName;
+    newUser.username = dto.username ?? newUser.username;
     newUser.name = dto.name ?? newUser.name;
 
     if (dto.password) {
-      newUser.hashedPassword = await this.authHelper.hashPassword(dto.password);
+      newUser.hashedPassword = await this.hashPassword(dto.password);
     }
 
-    if (await this.authHelper.isAdmin(req)) {
+    if (await this.userHelper.isReqAdmin(req)) {
       newUser.role = dto.role ?? newUser.role;
     } else if (dto.role) {
       throw new BadRequestException('You are not allowed to change the role');
     }
 
-    return this.prisma.user.update({
+    return await this.prisma.user.update({
       where: {
         userId: id,
       },
@@ -106,10 +146,32 @@ export class UserService {
    * @param id - userId
    */
   async deleteUser(id: string) {
-    return this.prisma.user.delete({
+    return await this.prisma.user.delete({
       where: {
         userId: id,
       },
     });
+  }
+
+  /**
+   * Hashes a password using bcrypt
+   * @param password - The password to hash
+   * @returns The hashed password
+   */
+  private async hashPassword(password: string) {
+    const saltOrRounds = 10;
+    return await bcrypt.hash(password, saltOrRounds);
+  }
+
+  /**
+   * Checks if a user exists in the database
+   * @param username - The username to check (string)
+   * @returns True or false, depending on whether the user exists
+   */
+  private async isUserExists(username: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { username: username },
+    });
+    return !!user;
   }
 }

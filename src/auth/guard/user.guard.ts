@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'prisma/prisma.service';
@@ -17,18 +18,21 @@ import { Role } from '@prisma/client';
  */
 export class UserGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
     private prisma: PrismaService,
+    private jwt: JwtService,
+    private logger: Logger,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+    const requestedUrl = request.url;
+    const requestedId = request.params.id;
+
     const token = request.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    const decodedToken = await this.jwtService.verifyAsync(token);
-    const requestedId = request.params.id;
+    const decodedToken = await this.jwt.verifyAsync(token);
 
     const userRole = await this.prisma.user.findUnique({
       where: {
@@ -40,12 +44,26 @@ export class UserGuard implements CanActivate {
     });
 
     if (userRole.role === Role.ADMIN) {
+      this.logger.log(
+        `User with ID '${decodedToken.id}' is an ${userRole.role} and is allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+      );
       return true;
     }
 
     if (decodedToken.id !== requestedId) {
-      throw new ForbiddenException('Invalid token.');
+      this.logger.log(
+        `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+      );
+      throw new ForbiddenException('Not allowed to access the resource');
     }
-    return true;
+
+    if (decodedToken.id === requestedId) {
+      this.logger.log(
+        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+      );
+      return true;
+    }
+
+    return false; // In theory, this line should never be reached
   }
 }
