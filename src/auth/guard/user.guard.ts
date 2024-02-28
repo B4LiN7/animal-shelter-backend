@@ -33,6 +33,9 @@ export class UserGuard implements CanActivate {
       throw new ForbiddenException('No token provided. Please log in.');
     }
     const decodedToken = await this.jwt.verifyAsync(token);
+    if (!decodedToken) {
+      throw new ForbiddenException('Invalid token. Please log in.');
+    }
 
     const userRole = await this.prisma.user.findUnique({
       where: {
@@ -42,7 +45,6 @@ export class UserGuard implements CanActivate {
         role: true,
       },
     });
-
     if (userRole.role === Role.ADMIN) {
       this.logger.log(
         `User with ID '${decodedToken.id}' is an ${userRole.role} and is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
@@ -55,9 +57,7 @@ export class UserGuard implements CanActivate {
         `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       throw new ForbiddenException('Not allowed to access the resource');
-    }
-
-    if (decodedToken.id === requestedId) {
+    } else {
       this.logger.log(
         `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );

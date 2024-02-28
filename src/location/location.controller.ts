@@ -6,15 +6,21 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { LocationDto } from './dto/location.dto';
+import { RoleGuard } from 'src/auth/guard/role.guard';
+import { Role } from 'src/auth/decorator/role.decorator';
+import { Role as RoleEnum } from '@prisma/client';
 
 @Controller('location')
+@UseGuards(RoleGuard)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
   @Get()
+  @Role(RoleEnum.ADMIN)
   async getAllLocations() {
     return this.locationService.getAllLocations();
   }

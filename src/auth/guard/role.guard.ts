@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'prisma/prisma.service';
 import { UserHelperService } from '../../user/userHelper.service';
 import { Role } from '@prisma/client';
+import { ROLES_KEY } from '../decorator/role.decorator';
 
 @Injectable()
 /**
@@ -23,9 +24,13 @@ export class RoleGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const roles: Role[] = this.reflector.get<Role[]>(
-      'roles',
+      ROLES_KEY,
       context.getHandler(),
     );
+
+    if (roles === undefined || roles.length === 0) {
+      return true;
+    }
 
     const request = context.switchToHttp().getRequest();
     const userId = await this.userHelper.getUserIdFromReq(request);
@@ -36,10 +41,6 @@ export class RoleGuard implements CanActivate {
     });
     if (!user) {
       throw new ForbiddenException('User not found');
-    }
-
-    if (roles === undefined || roles.length === 0) {
-      return true;
     }
 
     const userRole: Role = user.role;

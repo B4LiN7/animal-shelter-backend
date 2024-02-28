@@ -53,9 +53,19 @@ export class AuthService {
 
     const token = await this.signToken(foundUser.userId);
 
-    res
-      .cookie('token', token, { httpOnly: true })
-      .json({ message: 'You have been logged in', token: token });
+    res.cookie('token', token, { httpOnly: true }).json({
+      message: `You have been logged in as ${foundUser.username}`,
+      token: token,
+    });
+
+    this.prisma.loginHistory.create({
+      data: {
+        userId: foundUser.userId,
+        loginTime: new Date(),
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+      },
+    });
 
     this.logger.log(
       `User with username '${username}' has been logged in at ${new Date().toISOString()}`,
