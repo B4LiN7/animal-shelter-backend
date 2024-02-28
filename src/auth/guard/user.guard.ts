@@ -45,21 +45,21 @@ export class UserGuard implements CanActivate {
 
     if (userRole.role === Role.ADMIN) {
       this.logger.log(
-        `User with ID '${decodedToken.id}' is an ${userRole.role} and is allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+        `User with ID '${decodedToken.id}' is an ${userRole.role} and is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       return true;
     }
 
     if (decodedToken.id !== requestedId) {
       this.logger.log(
-        `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+        `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       throw new ForbiddenException('Not allowed to access the resource');
     }
 
     if (decodedToken.id === requestedId) {
       this.logger.log(
-        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date()}`,
+        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       return true;
     }

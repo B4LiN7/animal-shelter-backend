@@ -82,7 +82,7 @@ export class UserService {
     });
 
     this.logger.log(
-      `User with username '${username}' has been created at ${new Date()}`,
+      `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created at ${new Date().toISOString()}`,
     );
 
     return newUser;

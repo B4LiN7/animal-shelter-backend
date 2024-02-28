@@ -58,7 +58,7 @@ export class AuthService {
       .json({ message: 'You have been logged in', token: token });
 
     this.logger.log(
-      `User with username '${username}' has been logged in at ${new Date()}`,
+      `User with username '${username}' has been logged in at ${new Date().toISOString()}`,
     );
   }
 
@@ -86,7 +86,7 @@ export class AuthService {
     const token = await this.signToken(newUser.userId);
 
     res.cookie('token', token, { httpOnly: true }).json({
-      message: `User with username '${newUsername}' has been created`,
+      message: `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
       token: token,
     });
   }
@@ -104,7 +104,7 @@ export class AuthService {
     const user = await this.userHelper.getUserFromReq(req);
 
     this.logger.log(
-      `User with username '${user.username}' has been logged out at ${new Date()}`,
+      `User with user ID '${user.userId}' has been logged out using /logout at ${new Date().toISOString()}`,
     );
   }
 
