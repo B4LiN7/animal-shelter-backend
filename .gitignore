@@ -1,7 +1,9 @@
 # compiled output
 /dist
 /node_modules
+
 /public/uploads
+/prisma/migrations
 
 # Logs
 logs

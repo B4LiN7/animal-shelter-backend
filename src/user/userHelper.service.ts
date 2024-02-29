@@ -49,7 +49,7 @@ export class UserHelperService {
    * @param req - The Request object
    * @returns The user's ID
    */
-  async getUserIdFromReq(req: Request) {
+  async getUserIdFromReq(req: Request): Promise<string> {
     const decodedToken = await this.decodeToken(req);
     if (!decodedToken.id) {
       throw new ForbiddenException('No user ID found in token.');

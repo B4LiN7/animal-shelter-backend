@@ -48,6 +48,9 @@ export class AuthService {
       foundUser.hashedPassword,
     );
     if (!isPasswordMatch) {
+      this.logger.log(
+        `Somebody with username '${username}' has entered a wrong password at ${new Date().toISOString()} from IP address ${req.ip} and user agent '${req.headers['user-agent']}'`,
+      );
       throw new BadRequestException('Wrong credentials');
     }
 
@@ -58,7 +61,7 @@ export class AuthService {
       token: token,
     });
 
-    this.prisma.loginHistory.create({
+    const loginHistory = await this.prisma.loginHistory.create({
       data: {
         userId: foundUser.userId,
         loginTime: new Date(),
@@ -68,7 +71,7 @@ export class AuthService {
     });
 
     this.logger.log(
-      `User with username '${username}' has been logged in at ${new Date().toISOString()}`,
+      `User with username '${username}' has been logged in at ${new Date().toISOString()} from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
   }
 

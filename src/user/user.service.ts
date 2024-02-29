@@ -22,6 +22,8 @@ export class UserService {
       select: {
         userId: true,
         username: true,
+        name: true,
+        role: true,
       },
     });
   }
@@ -34,6 +36,15 @@ export class UserService {
     return this.prisma.user.findUnique({
       where: {
         userId: id,
+      },
+      select: {
+        userId: true,
+        username: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        editedAt: true,
       },
     });
   }
@@ -48,7 +59,21 @@ export class UserService {
       where: {
         userId: userId,
       },
+      select: {
+        userId: true,
+        username: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        editedAt: true,
+      },
     });
+  }
+
+  async updateMyUser(req: Request, dto: UserDto) {
+    const userId = await this.userHelper.getUserIdFromReq(req);
+    return this.updateUser(userId, dto, req);
   }
 
   /**
@@ -71,6 +96,7 @@ export class UserService {
     }
 
     const hashedPassword = await this.hashPassword(password);
+    delete dto.password;
     const newUser = await this.prisma.user.create({
       data: {
         hashedPassword: hashedPassword,

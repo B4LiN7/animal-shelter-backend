@@ -37,6 +37,13 @@ export class UserGuard implements CanActivate {
       throw new ForbiddenException('Invalid token. Please log in.');
     }
 
+    if (!requestedId) {
+      this.logger.log(
+        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
+      );
+      return true;
+    }
+
     const userRole = await this.prisma.user.findUnique({
       where: {
         userId: decodedToken.id,
@@ -52,18 +59,31 @@ export class UserGuard implements CanActivate {
       return true;
     }
 
-    if (decodedToken.id !== requestedId) {
-      this.logger.log(
-        `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
-      );
-      throw new ForbiddenException('Not allowed to access the resource');
-    } else {
+    if (decodedToken.id === requestedId) {
       this.logger.log(
         `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       return true;
     }
 
-    return false; // In theory, this line should never be reached
+    const location = await this.prisma.location.findUnique({
+      where: {
+        locationId: Number(requestedId),
+      },
+      select: {
+        userId: true,
+      },
+    });
+    if (location.userId === decodedToken.id) {
+      this.logger.log(
+        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
+      );
+      return true;
+    }
+
+    this.logger.log(
+      `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
+    );
+    return false;
   }
 }
