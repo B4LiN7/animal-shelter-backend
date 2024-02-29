@@ -50,7 +50,7 @@ export class MediaService {
           name: newFileName,
           size: file.size + ' bytes',
         });
-        this.logger.log(`File uploaded: ${newFileName}`);
+        this.logger.log(`File '${newFileName}' uploaded to '/public/uploads/${newFileName}' at ${new Date().toISOString()}`);
       });
   }
 }

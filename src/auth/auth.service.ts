@@ -48,17 +48,30 @@ export class AuthService {
       foundUser.hashedPassword,
     );
     if (!isPasswordMatch) {
+      this.logger.log(
+        `Somebody with username '${username}' has entered a wrong password at ${new Date().toISOString()} from IP address ${req.ip} and user agent '${req.headers['user-agent']}'`,
+      );
       throw new BadRequestException('Wrong credentials');
     }
 
     const token = await this.signToken(foundUser.userId);
 
-    res
-      .cookie('token', token, { httpOnly: true })
-      .json({ message: 'You have been logged in', token: token });
+    res.cookie('token', token, { httpOnly: true }).json({
+      message: `You have been logged in as ${foundUser.username}`,
+      token: token,
+    });
+
+    const loginHistory = await this.prisma.loginHistory.create({
+      data: {
+        userId: foundUser.userId,
+        loginTime: new Date(),
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+      },
+    });
 
     this.logger.log(
-      `User with username '${username}' has been logged in at ${new Date()}`,
+      `User with username '${username}' has been logged in at ${new Date().toISOString()} from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
   }
 
@@ -86,7 +99,7 @@ export class AuthService {
     const token = await this.signToken(newUser.userId);
 
     res.cookie('token', token, { httpOnly: true }).json({
-      message: `User with username '${newUsername}' has been created`,
+      message: `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
       token: token,
     });
   }
@@ -104,7 +117,7 @@ export class AuthService {
     const user = await this.userHelper.getUserFromReq(req);
 
     this.logger.log(
-      `User with username '${user.username}' has been logged out at ${new Date()}`,
+      `User with user ID '${user.userId}' has been logged out using /logout at ${new Date().toISOString()}`,
     );
   }
 

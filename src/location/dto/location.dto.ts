@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 
 export class LocationDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   userId: string;
 

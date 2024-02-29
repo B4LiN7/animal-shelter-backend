@@ -21,16 +21,21 @@ import { UserGuard } from 'src/auth/guard/user.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('me')
+  async getMyUser(@Req() req: Request) {
+    return this.userService.getMyUser(req);
+  }
+
+  @Put('me')
+  async updateMyUser(@Req() req: Request, @Body() dto: UserDto) {
+    return this.userService.updateMyUser(req, dto);
+  }
+
   @Get()
   @UseGuards(RoleGuard)
   @Role(RoleEnum.ADMIN)
   async getAllUsers() {
     return this.userService.getAllUsers();
-  }
-
-  @Get('me')
-  async getMyUser(@Req() req: Request) {
-    return this.userService.getMyUser(req);
   }
 
   @Get(':id')

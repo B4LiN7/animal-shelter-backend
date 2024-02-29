@@ -2,13 +2,15 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class PetHelperService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private logger: Logger) {}
+
   async getPetWithLatestStatus(id: number) {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
@@ -43,14 +45,23 @@ export class PetHelperService {
       const deletedStatuses = await this.prisma.petStatus.deleteMany({
         where: { petId: id },
       });
+
+      const deletedAdoptions = await this.prisma.adoption.deleteMany({
+        where: { petId: id },
+      });
+
       const deletedStatusesCount = deletedStatuses.count;
       const deletedPet = await this.prisma.pet.delete({
         where: { petId: id },
       });
-      return { deletedPet, deletedStatusesCount };
+      
+      this.logger.log(`Pet deleted with ID '${id}'`);
+
+      return { deletedPet, deletedStatusesCount, deletedAdoptions };
     } catch (err) {
+      this.logger.error(`Failed to delete pet with ID '${id}'`, err.stack);
       throw new InternalServerErrorException(
-        `Failed to delete pet with id ${id}.`,
+        `Failed to delete pet with ID '${id}'`,
       );
     }
   }
