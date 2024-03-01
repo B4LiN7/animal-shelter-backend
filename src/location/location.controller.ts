@@ -34,8 +34,8 @@ export class LocationController {
     return this.locationService.getAllLocations();
   }
 
-  @Get(':id')
-  async getLocation(@Param('id') id: number) {
+  @Get(':locationId')
+  async getLocation(@Param('locationId') id: number) {
     return this.locationService.getLocation(id);
   }
 
@@ -44,13 +44,13 @@ export class LocationController {
     return this.locationService.addLocation(dto, req);
   }
 
-  @Put(':id')
-  async updateLocation(@Param('id') id: number, @Body() dto: LocationDto) {
+  @Put(':locationId')
+  async updateLocation(@Param('locationId') id: number, @Body() dto: LocationDto) {
     return this.locationService.updateLocation(id, dto);
   }
 
-  @Delete(':id')
-  async deleteLocation(@Param('id') id: number) {
+  @Delete(':locationId')
+  async deleteLocation(@Param('locationId') id: number) {
     return this.locationService.deleteLocation(id);
   }
 }

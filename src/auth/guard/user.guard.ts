@@ -26,7 +26,8 @@ export class UserGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const requestedUrl = request.url;
-    const requestedId = request.params.id;
+    const reqUserId = request.params.id;
+    const reqLocationId = request.params.locationId;
 
     const token = request.cookies.token;
     if (!token) {
@@ -37,7 +38,7 @@ export class UserGuard implements CanActivate {
       throw new ForbiddenException('Invalid token. Please log in.');
     }
 
-    if (!requestedId) {
+    if (!reqUserId) {
       this.logger.log(
         `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
@@ -59,7 +60,7 @@ export class UserGuard implements CanActivate {
       return true;
     }
 
-    if (decodedToken.id === requestedId) {
+    if (decodedToken.id === reqUserId) {
       this.logger.log(
         `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
@@ -68,7 +69,7 @@ export class UserGuard implements CanActivate {
 
     const location = await this.prisma.location.findUnique({
       where: {
-        locationId: Number(requestedId),
+        locationId: Number(reqLocationId),
       },
       select: {
         userId: true,
