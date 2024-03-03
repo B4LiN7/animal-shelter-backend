@@ -38,6 +38,13 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
+  @Get('name/:id')
+  @UseGuards(RoleGuard)
+  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  async getUserName(@Param('id') id: string) {
+    return this.userService.getUserName(id);
+  }
+
   @Get(':id')
   @UseGuards(UserGuard)
   async getUser(@Param('id') id: string) {
