@@ -11,14 +11,11 @@ import {
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { LocationDto } from './dto/location.dto';
-import { UserGuard } from '../auth/guard/user.guard';
 import { Request } from 'express';
-import { RoleGuard } from '../auth/guard/role.guard';
-import { Role } from '../auth/decorator/role.decorator';
-import { Role as RoleEnum } from '@prisma/client';
+import { LocationGuard } from 'src/auth/guard/location.guard';
 
 @Controller('location')
-@UseGuards(UserGuard)
+@UseGuards(LocationGuard)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
@@ -28,8 +25,6 @@ export class LocationController {
   }
 
   @Get()
-  @UseGuards(RoleGuard)
-  @Role(RoleEnum.ADMIN)
   async getAllLocations() {
     return this.locationService.getAllLocations();
   }
@@ -40,12 +35,15 @@ export class LocationController {
   }
 
   @Post()
-  async addLocation(@Body() dto: LocationDto, @Req() req: Request){
+  async addLocation(@Body() dto: LocationDto, @Req() req: Request) {
     return this.locationService.addLocation(dto, req);
   }
 
   @Put(':locationId')
-  async updateLocation(@Param('locationId') id: number, @Body() dto: LocationDto) {
+  async updateLocation(
+    @Param('locationId') id: number,
+    @Body() dto: LocationDto,
+  ) {
     return this.locationService.updateLocation(id, dto);
   }
 

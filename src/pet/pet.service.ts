@@ -72,21 +72,18 @@ export class PetService {
     await this.prisma.pet.update({
       where: { petId: id },
       data: {
-        name: dto.name ?? undefined,
-        description: dto.description ?? undefined,
-        imageUrl: dto.imageUrl ?? undefined,
-        breedId: dto.breedId ?? undefined,
-        sex: dto.sex ?? undefined,
-        birthDate: dto.birthDate ?? undefined,
+        ...dto,
       },
     });
 
-    await this.prisma.petStatus.create({
-      data: {
-        status: status ?? Status.UNKNOWN,
-        petId: id,
-      },
-    });
+    if (status) {
+      await this.prisma.petStatus.create({
+        data: {
+          status: status,
+          petId: id,
+        },
+      });
+    }
 
     return await this.petHelper.getPetWithLatestStatus(id);
   }

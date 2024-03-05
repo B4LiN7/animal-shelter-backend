@@ -16,7 +16,7 @@ import { Role } from '@prisma/client';
  * - The user is an ADMIN, or
  * - The user is the owner of the resource
  */
-export class UserGuard implements CanActivate {
+export class LocationGuard implements CanActivate {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
@@ -26,7 +26,7 @@ export class UserGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const requestedUrl = request.url;
-    const reqUserId = request.params.id;
+    const reqLocationId = request.params.locationId;
 
     const token = request.cookies.token;
     if (!token) {
@@ -35,13 +35,6 @@ export class UserGuard implements CanActivate {
     const decodedToken = await this.jwt.verifyAsync(token);
     if (!decodedToken) {
       throw new ForbiddenException('Invalid token. Please log in.');
-    }
-
-    if (!reqUserId) {
-      this.logger.log(
-        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
-      );
-      return true;
     }
 
     const userRole = await this.prisma.user.findUnique({
@@ -59,7 +52,15 @@ export class UserGuard implements CanActivate {
       return true;
     }
 
-    if (decodedToken.id === reqUserId) {
+    const location = await this.prisma.location.findUnique({
+      where: {
+        locationId: Number(reqLocationId),
+      },
+      select: {
+        userId: true,
+      },
+    });
+    if (location.userId === decodedToken.id) {
       this.logger.log(
         `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
