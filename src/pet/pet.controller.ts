@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { PetService } from './pet.service';
@@ -14,6 +15,7 @@ import { Role } from 'src/auth/decorator/role.decorator';
 import { Role as RoleEnum } from '@prisma/client';
 import { CreatePetDto } from './dto/createPet.dto';
 import { UpdatePetDto } from './dto/updatePet.dto';
+import { SearchPetDto } from './dto/searchPet.dto';
 
 @Controller('pet')
 export class PetController {
@@ -27,7 +29,13 @@ export class PetController {
   }
 
   @Get()
-  async readAllPets() {
+  async readAllPets(
+    @Query('status') status: string,
+    @Query('breedId') breed: string,
+  ) {
+    if (status || breed) {
+      return this.petService.getAllPets({ status, breed } as SearchPetDto);
+    }
     return this.petService.getAllPets();
   }
 

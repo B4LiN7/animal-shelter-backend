@@ -49,22 +49,22 @@ export class UserService {
     });
   }
 
-   /**
+  /**
    * Get user's username and name by id (for admin and shelter worker)
    * @param id - userId
    */
-    async getUserName(id: string) {
-      return this.prisma.user.findUnique({
-        where: {
-          userId: id,
-        },
-        select: {
-          userId: true,
-          username: true,
-          name: true,
-        },
-      });
-    }
+  async getUserName(id: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        userId: id,
+      },
+      select: {
+        userId: true,
+        username: true,
+        name: true,
+      },
+    });
+  }
 
   /**
    * Get user who is currently logged in

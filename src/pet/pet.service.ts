@@ -8,6 +8,7 @@ import { Sex, Status } from '@prisma/client';
 import { CreatePetDto } from './dto/createPet.dto';
 import { UpdatePetDto } from './dto/updatePet.dto';
 import { PetHelperService } from './petHelper.service';
+import { SearchPetDto } from './dto/searchPet.dto';
 
 @Injectable()
 export class PetService {
@@ -48,7 +49,10 @@ export class PetService {
     return await this.petHelper.getPetWithLatestStatus(pet.petId);
   }
 
-  async getAllPets() {
+  async getAllPets(search?: SearchPetDto) {
+    if (search) {
+      return await this.petHelper.getPetsBySearch(search);
+    }
     const pets = await this.prisma.pet.findMany();
     if (pets.length === 0) {
       throw new BadRequestException('No pets found');
