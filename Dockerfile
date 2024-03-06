@@ -16,8 +16,8 @@ FROM dependencies as build
 WORKDIR /app
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY docker.env .env
 COPY . .
+COPY docker.env .env
 
 RUN pnpm prisma generate
 RUN pnpm build

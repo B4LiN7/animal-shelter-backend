@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
-import { UserDto } from './dto/user.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserHelperService } from 'src/user/userHelper.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
@@ -50,6 +50,23 @@ export class UserService {
   }
 
   /**
+   * Get user's username and name by id (for admin and shelter worker)
+   * @param id - userId
+   */
+  async getUserName(id: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        userId: id,
+      },
+      select: {
+        userId: true,
+        username: true,
+        name: true,
+      },
+    });
+  }
+
+  /**
    * Get user who is currently logged in
    * @param req - Request object
    */
@@ -71,7 +88,7 @@ export class UserService {
     });
   }
 
-  async updateMyUser(req: Request, dto: UserDto) {
+  async updateMyUser(req: Request, dto: UpdateUserDto) {
     const userId = await this.userHelper.getUserIdFromReq(req);
     return this.updateUser(userId, dto, req);
   }
@@ -114,10 +131,10 @@ export class UserService {
   /**
    * Update user
    * @param id - userId
-   * @param dto - UserDto with new data
+   * @param dto - UpdateUserDto with new data
    * @param req - Request object
    */
-  async updateUser(id: string, dto: UserDto, req: Request) {
+  async updateUser(id: string, dto: UpdateUserDto, req: Request) {
     if (!dto) {
       throw new BadRequestException('No data to update');
     }

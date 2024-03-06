@@ -33,7 +33,6 @@ export class AdoptionController {
   }
 
   @Delete('pet/:petId')
-  @Role()
   cancelAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
   }

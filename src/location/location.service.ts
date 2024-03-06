@@ -44,7 +44,7 @@ export class LocationService {
   async addLocation(dto: LocationDto, req: Request) {
     const userId = await this.userHelper.getUserIdFromReq(req);
     delete dto.userId;
-    return  this.prisma.location.create({
+    return this.prisma.location.create({
       data: {
         userId: userId,
         ...dto,

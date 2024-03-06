@@ -6,11 +6,57 @@ import {
 } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
+import { SearchPetDto } from 'src/pet/dto/searchPet.dto';
 
 @Injectable()
 export class PetHelperService {
-  constructor(private prisma: PrismaService, private logger: Logger) {}
+  constructor(
+    private prisma: PrismaService,
+    private logger: Logger,
+  ) {}
 
+  async getPetsBySearch(search: SearchPetDto) {
+    const { status, breed } = search;
+    const breedId = Number(breed);
+    let statusEnum;
+    if (status) {
+      statusEnum = Status[status.toUpperCase() as keyof typeof Status] ?? null;
+    }
+    const pets = await this.getPetsWithLatestStatus();
+    const foundPets = pets.filter((pet) => {
+      const statusMatch = statusEnum ? pet.status === statusEnum : true;
+      const breedMatch = breedId ? pet.breedId === breedId : true;
+      return statusMatch && breedMatch;
+    });
+
+    if (foundPets.length === 0) {
+      throw new BadRequestException(
+        `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breedId})`,
+      );
+    }
+    return foundPets;
+  }
+
+  /**
+   * This function gets all pets and their latest status.
+   * @returns {Promise<Pet>} The pets with the latest status.
+   */
+  async getPetsWithLatestStatus() {
+    const pets = await this.prisma.pet.findMany();
+    const petsWithLatestStatus = await Promise.all(
+      pets.map(async (pet) => {
+        const latestStatus = await this.getLatestStatusForPet(pet.petId);
+        return { ...pet, status: latestStatus };
+      }),
+    );
+    return petsWithLatestStatus;
+  }
+
+  /**
+   * This function gets a pet and it latest status by pet's ID.
+   * @param {number} id The ID of the pet to get.
+   * @returns {Promise<Pet>} The pet with the latest status.
+   */
   async getPetWithLatestStatus(id: number) {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
@@ -54,7 +100,7 @@ export class PetHelperService {
       const deletedPet = await this.prisma.pet.delete({
         where: { petId: id },
       });
-      
+
       this.logger.log(`Pet deleted with ID '${id}'`);
 
       return { deletedPet, deletedStatusesCount, deletedAdoptions };

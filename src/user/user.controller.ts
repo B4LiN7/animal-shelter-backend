@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from './dto/user.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/auth/decorator/role.decorator';
 import { Role as RoleEnum } from '@prisma/client';
@@ -27,7 +27,7 @@ export class UserController {
   }
 
   @Put('me')
-  async updateMyUser(@Req() req: Request, @Body() dto: UserDto) {
+  async updateMyUser(@Req() req: Request, @Body() dto: UpdateUserDto) {
     return this.userService.updateMyUser(req, dto);
   }
 
@@ -36,6 +36,13 @@ export class UserController {
   @Role(RoleEnum.ADMIN)
   async getAllUsers() {
     return this.userService.getAllUsers();
+  }
+
+  @Get('name/:id')
+  @UseGuards(RoleGuard)
+  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  async getUserName(@Param('id') id: string) {
+    return this.userService.getUserName(id);
   }
 
   @Get(':id')
@@ -47,7 +54,7 @@ export class UserController {
   @Post()
   @UseGuards(RoleGuard)
   @Role(RoleEnum.ADMIN)
-  async createUser(@Body() dto: UserDto) {
+  async createUser(@Body() dto: UpdateUserDto) {
     return this.userService.createUser(dto);
   }
 
@@ -55,7 +62,7 @@ export class UserController {
   @UseGuards(UserGuard)
   async updatePet(
     @Param('id') id: string,
-    @Body() dto: UserDto,
+    @Body() dto: UpdateUserDto,
     @Req() req: Request,
   ) {
     return this.userService.updateUser(id, dto, req);

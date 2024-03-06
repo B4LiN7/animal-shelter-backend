@@ -8,6 +8,7 @@ import { Sex, Status } from '@prisma/client';
 import { CreatePetDto } from './dto/createPet.dto';
 import { UpdatePetDto } from './dto/updatePet.dto';
 import { PetHelperService } from './petHelper.service';
+import { SearchPetDto } from './dto/searchPet.dto';
 
 @Injectable()
 export class PetService {
@@ -48,7 +49,10 @@ export class PetService {
     return await this.petHelper.getPetWithLatestStatus(pet.petId);
   }
 
-  async getAllPets() {
+  async getAllPets(search?: SearchPetDto) {
+    if (search) {
+      return await this.petHelper.getPetsBySearch(search);
+    }
     const pets = await this.prisma.pet.findMany();
     if (pets.length === 0) {
       throw new BadRequestException('No pets found');
@@ -72,21 +76,18 @@ export class PetService {
     await this.prisma.pet.update({
       where: { petId: id },
       data: {
-        name: dto.name ?? undefined,
-        description: dto.description ?? undefined,
-        imageUrl: dto.imageUrl ?? undefined,
-        breedId: dto.breedId ?? undefined,
-        sex: dto.sex ?? undefined,
-        birthDate: dto.birthDate ?? undefined,
+        ...dto,
       },
     });
 
-    await this.prisma.petStatus.create({
-      data: {
-        status: status ?? Status.UNKNOWN,
-        petId: id,
-      },
-    });
+    if (status) {
+      await this.prisma.petStatus.create({
+        data: {
+          status: status,
+          petId: id,
+        },
+      });
+    }
 
     return await this.petHelper.getPetWithLatestStatus(id);
   }
