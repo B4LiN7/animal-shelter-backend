@@ -8,6 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'prisma/prisma.service';
 import { Role } from '@prisma/client';
+import { UserHelperService } from '../../user/userHelper.service';
 
 @Injectable()
 /**
@@ -19,7 +20,7 @@ import { Role } from '@prisma/client';
 export class LocationGuard implements CanActivate {
   constructor(
     private prisma: PrismaService,
-    private jwt: JwtService,
+    private userHelper: UserHelperService,
     private logger: Logger,
   ) {}
 
@@ -28,26 +29,15 @@ export class LocationGuard implements CanActivate {
     const requestedUrl = request.url;
     const reqLocationId = request.params.locationId;
 
-    const token = request.cookies.token;
+    const token = await this.userHelper.decodeTokenFromReq(request);
     if (!token) {
-      throw new ForbiddenException('No token provided. Please log in.');
-    }
-    const decodedToken = await this.jwt.verifyAsync(token);
-    if (!decodedToken) {
       throw new ForbiddenException('Invalid token. Please log in.');
     }
+    const userRole: Role = Role[token.role];
 
-    const userRole = await this.prisma.user.findUnique({
-      where: {
-        userId: decodedToken.id,
-      },
-      select: {
-        role: true,
-      },
-    });
-    if (userRole.role === Role.ADMIN) {
+    if (userRole === Role.ADMIN) {
       this.logger.log(
-        `User with ID '${decodedToken.id}' is an ${userRole.role} and is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
+        `User with ID '${token.userId}' is an ${userRole} and is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       return true;
     }
@@ -60,15 +50,15 @@ export class LocationGuard implements CanActivate {
         userId: true,
       },
     });
-    if (location.userId === decodedToken.id) {
+    if (location.userId === token.userId) {
       this.logger.log(
-        `User with ID '${decodedToken.id}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
+        `User with ID '${token.userId}' is allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
       );
       return true;
     }
 
     this.logger.log(
-      `User with ID '${decodedToken.id}' is not allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
+      `User with ID '${token.userId}' is not allowed to access the resource '${requestedUrl}' at ${new Date().toISOString()}`,
     );
     return false;
   }

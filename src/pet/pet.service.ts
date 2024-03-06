@@ -71,12 +71,12 @@ export class PetService {
 
   async updatePet(id: number, dto: UpdatePetDto) {
     if (!id) throw new BadRequestException('Pet ID is required');
-    const { status } = dto;
+    const { status, ...newPet } = dto;
 
     await this.prisma.pet.update({
       where: { petId: id },
       data: {
-        ...dto,
+        ...newPet,
       },
     });
 

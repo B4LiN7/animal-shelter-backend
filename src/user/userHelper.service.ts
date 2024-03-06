@@ -34,7 +34,7 @@ export class UserHelperService {
    * @returns The user
    */
   async getUserFromReq(req: Request) {
-    const decodedToken = await this.decodeToken(req);
+    const decodedToken = await this.decodeTokenFromReq(req);
     if (!decodedToken.id) {
       throw new ForbiddenException('No user ID found in token.');
     }
@@ -50,7 +50,7 @@ export class UserHelperService {
    * @returns The user's ID
    */
   async getUserIdFromReq(req: Request): Promise<string> {
-    const decodedToken = await this.decodeToken(req);
+    const decodedToken = await this.decodeTokenFromReq(req);
     if (!decodedToken.id) {
       throw new ForbiddenException('No user ID found in token.');
     }
@@ -62,7 +62,7 @@ export class UserHelperService {
    * @param req - The Request object
    * @returns The decoded JWT token
    */
-  private async decodeToken(req: Request) {
+  async decodeTokenFromReq(req: Request) {
     const token = req.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');

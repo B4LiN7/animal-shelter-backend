@@ -13,6 +13,7 @@ import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +55,7 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const token = await this.signToken(foundUser.userId);
+    const token = await this.signToken(foundUser.userId, foundUser.role);
 
     res.cookie('token', token, { httpOnly: true }).json({
       message: `You have been logged in as ${foundUser.username}`,
@@ -96,7 +97,7 @@ export class AuthService {
       name,
     } as CreateUserDto);
 
-    const token = await this.signToken(newUser.userId);
+    const token = await this.signToken(newUser.userId, newUser.role);
 
     res.cookie('token', token, { httpOnly: true }).json({
       message: `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
@@ -123,11 +124,12 @@ export class AuthService {
 
   /**
    * Signs a JWT token with the user's ID (Secret is stored in .env)
-   * @param id The user's ID
+   * @param userId The user's ID
+   * @param role The user's role
    * @returns The signed JWT token
    */
-  private async signToken(id: string) {
-    const payload = { id };
+  private async signToken(userId: string, role: Role) {
+    const payload = { userId, role };
     const token = await this.jwt.signAsync(payload);
     if (!token) {
       throw new ForbiddenException('Token could not be generated');

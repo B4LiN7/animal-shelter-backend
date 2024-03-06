@@ -2,7 +2,6 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'prisma/prisma.service';
@@ -28,22 +27,14 @@ export class RoleGuard implements CanActivate {
       context.getHandler(),
     );
 
-    if (roles === undefined || roles.length === 0) {
+    if (roles === undefined) {
       return true;
     }
 
     const request = context.switchToHttp().getRequest();
-    const userId = await this.userHelper.getUserIdFromReq(request);
+    const token = await this.userHelper.decodeTokenFromReq(request);
 
-    const user = await this.prisma.user.findUnique({
-      where: { userId: userId },
-      select: { role: true },
-    });
-    if (!user) {
-      throw new ForbiddenException('User not found');
-    }
-
-    const userRole: Role = user.role;
+    const userRole: Role = Role[token.role];
 
     return roles.includes(userRole);
   }
