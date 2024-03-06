@@ -20,12 +20,9 @@ export class UserHelperService {
    * @returns True or false, depending on whether the user is an admin
    */
   async isReqAdmin(req: Request) {
-    const userId = await this.getUserIdFromReq(req);
-    const user = await this.prisma.user.findUnique({
-      where: { userId: userId },
-      select: { role: true },
-    });
-    return user.role === Role.ADMIN;
+    const token = await this.decodeTokenFromReq(req);
+    const role: Role = Role[token.role];
+    return role === Role.ADMIN;
   }
 
   /**
@@ -35,13 +32,9 @@ export class UserHelperService {
    */
   async getUserFromReq(req: Request) {
     const decodedToken = await this.decodeTokenFromReq(req);
-    if (!decodedToken.id) {
-      throw new ForbiddenException('No user ID found in token.');
-    }
-    const user = await this.prisma.user.findUnique({
-      where: { userId: decodedToken.id },
+    return await this.prisma.user.findUnique({
+      where: { userId: decodedToken.userId },
     });
-    return user;
   }
 
   /**
@@ -51,10 +44,7 @@ export class UserHelperService {
    */
   async getUserIdFromReq(req: Request): Promise<string> {
     const decodedToken = await this.decodeTokenFromReq(req);
-    if (!decodedToken.id) {
-      throw new ForbiddenException('No user ID found in token.');
-    }
-    return decodedToken.id;
+    return decodedToken.userId;
   }
 
   /**
@@ -67,6 +57,10 @@ export class UserHelperService {
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    return await this.jwt.verifyAsync(token);
+    const decodedToken = await this.jwt.verifyAsync(token);
+    if (!decodedToken) {
+      throw new ForbiddenException('Invalid token. Please log in.');
+    }
+    return decodedToken;
   }
 }

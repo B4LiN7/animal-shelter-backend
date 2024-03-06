@@ -71,6 +71,13 @@ export class AuthService {
       },
     });
 
+    await this.prisma.token.create({
+      data: {
+        token: token,
+        userId: foundUser.userId,
+      },
+    });
+
     this.logger.log(
       `User with username '${username}' has been logged in at ${new Date().toISOString()} from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
@@ -98,6 +105,13 @@ export class AuthService {
     } as CreateUserDto);
 
     const token = await this.signToken(newUser.userId, newUser.role);
+
+    await this.prisma.token.create({
+      data: {
+        token: token,
+        userId: newUser.userId,
+      },
+    });
 
     res.cookie('token', token, { httpOnly: true }).json({
       message: `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,

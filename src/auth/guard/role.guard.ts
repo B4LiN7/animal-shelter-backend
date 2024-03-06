@@ -12,7 +12,7 @@ import { ROLES_KEY } from '../decorator/role.decorator';
 @Injectable()
 /**
  * Guard to check if the user is a member of the role required to access the resource.
- * If roles not given, it will allow access to all logged-in users.
+ * If undefined (not given), the user can access the resource.
  */
 export class RoleGuard implements CanActivate {
   constructor(
