@@ -15,58 +15,67 @@ export class UserHelperService {
   ) {}
 
   /**
+   * Checks if the request is from an existing user
+   * @param req The Request object
+   */
+  async isReqExistingUser(req: Request) {
+    try {
+      const token = await this.decodeTokenFromReq(req);
+      return await this.prisma.user.findUnique({
+        where: { userId: token.userId },
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
    * Checks if the user is an admin
-   * @param req - The Request object
+   * @param req The Request object
    * @returns True or false, depending on whether the user is an admin
    */
   async isReqAdmin(req: Request) {
-    const userId = await this.getUserIdFromReq(req);
-    const user = await this.prisma.user.findUnique({
-      where: { userId: userId },
-      select: { role: true },
-    });
-    return user.role === Role.ADMIN;
+    const token = await this.decodeTokenFromReq(req);
+    const role: Role = Role[token.role];
+    return role === Role.ADMIN;
   }
 
   /**
    * Gets the user from the request
-   * @param req - The Request object
+   * @param req The Request object
    * @returns The user
    */
   async getUserFromReq(req: Request) {
-    const decodedToken = await this.decodeToken(req);
-    if (!decodedToken.id) {
-      throw new ForbiddenException('No user ID found in token.');
-    }
-    const user = await this.prisma.user.findUnique({
-      where: { userId: decodedToken.id },
+    const decodedToken = await this.decodeTokenFromReq(req);
+    return await this.prisma.user.findUnique({
+      where: { userId: decodedToken.userId },
     });
-    return user;
   }
 
   /**
    * Gets the user's ID from the request
-   * @param req - The Request object
+   * @param req The Request object
    * @returns The user's ID
    */
   async getUserIdFromReq(req: Request): Promise<string> {
-    const decodedToken = await this.decodeToken(req);
-    if (!decodedToken.id) {
-      throw new ForbiddenException('No user ID found in token.');
-    }
-    return decodedToken.id;
+    const decodedToken = await this.decodeTokenFromReq(req);
+    return decodedToken.userId;
   }
 
   /**
    * Decodes a JWT token from the request
-   * @param req - The Request object
+   * @param req The Request object
    * @returns The decoded JWT token
    */
-  private async decodeToken(req: Request) {
+  async decodeTokenFromReq(req: Request) {
     const token = req.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
-    return await this.jwt.verifyAsync(token);
+    const decodedToken = await this.jwt.verifyAsync(token);
+    if (!decodedToken) {
+      throw new ForbiddenException('Invalid token. Please log in.');
+    }
+    return decodedToken;
   }
 }

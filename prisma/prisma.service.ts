@@ -5,13 +5,14 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor(private logger: Logger) {
     super();
+    this.logger = new Logger(PrismaService.name);
   }
   async onModuleInit() {
     try {
       await this.$connect();
-      this.logger.log('Connected to the database');
+      this.logger.log('Database reachable at startup');
     } catch (err) {
-      this.logger.error(`Failed to connect to the database: ${err}`);
+      this.logger.error(`Database unreachable at startup: ${err}`);
     }
   }
 }

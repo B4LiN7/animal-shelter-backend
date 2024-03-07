@@ -171,20 +171,20 @@ async function addBreeds() {
     },
   ];
 
-  const breedCount = await prisma.breed.count();
-  if (breedCount > 0) {
-    console.log('Breeds already exist');
+  const species = await prisma.species.findMany();
+  if (species.length === 0) {
+    console.log('No species found');
     return;
   }
 
-  const species = await prisma.species.findMany();
   for (const breed of dogBreeds) {
-    const randomSpeciesIndex = Math.floor(Math.random() * species.length) - 1;
+    const randomSpeciesIndex = Math.floor(Math.random() * species.length);
+    const selectedSpecies = species[randomSpeciesIndex];
     const addedBreed = await prisma.breed.create({
       data: {
         name: breed.name,
         description: breed.description,
-        speciesId: randomSpeciesIndex,
+        speciesId: selectedSpecies.speciesId,
       },
     });
     console.log(

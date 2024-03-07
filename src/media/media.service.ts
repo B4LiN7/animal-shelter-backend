@@ -6,11 +6,12 @@ import { ResponseStatusDto } from './dto/resStatus.dto';
 
 @Injectable()
 export class MediaService {
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger) {
+    this.logger = new Logger(MediaService.name);
+  }
 
   serveMedia(path: string, res: Response) {
     res.sendFile(path, { root: './public' });
-    this.logger.log(`Media served from: ${path}`);
   }
 
   async uploadFiles(files: Express.Multer.File[], res: Response) {
@@ -67,7 +68,7 @@ export class MediaService {
       await writeFile(filePath, file.buffer);
 
       this.logger.log(
-        `File '${file.originalname}' uploaded to '/public/uploads/${newFileName}' at ${new Date().toISOString()}`,
+        `File '${file.originalname}' uploaded to '/public/uploads/${newFileName}'`,
       );
 
       return {
@@ -79,7 +80,7 @@ export class MediaService {
       };
     } catch (err) {
       this.logger.error(
-        `Error uploading file '${file.originalname}' at ${new Date().toISOString()} with error ${err}`,
+        `Error uploading file '${file.originalname}' with the following error ${err}`,
       );
 
       return {

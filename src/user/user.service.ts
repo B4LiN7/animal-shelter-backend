@@ -12,7 +12,9 @@ export class UserService {
     private prisma: PrismaService,
     private userHelper: UserHelperService,
     private logger: Logger,
-  ) {}
+  ) {
+    this.logger = new Logger(UserService.name);
+  }
 
   /**
    * Get all users (for admin)
@@ -122,7 +124,7 @@ export class UserService {
     });
 
     this.logger.log(
-      `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created at ${new Date().toISOString()}`,
+      `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
     );
 
     return newUser;
