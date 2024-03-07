@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class BreedDto {
   @IsNotEmpty()
@@ -8,4 +8,8 @@ export class BreedDto {
   @IsOptional()
   @IsString()
   description: string;
+
+  @IsOptional()
+  @IsNumber()
+  speciesId: number;
 }

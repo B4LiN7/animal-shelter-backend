@@ -51,27 +51,28 @@ export class BreedService {
 
   /**
    * Update or create a breed
+   * If ID is not found or not provided, create a new breed
    * @param id Breed ID
    * @param dto Breed DTO
    * @returns Prisma response
    */
-  private async addOrUpdateBreed(dto: BreedDto, id: number = -1) {
-    const breed = await this.prisma.breed.findUnique({
-      where: { breedId: id },
-    });
-    if (!breed || !id) {
-      return this.prisma.breed.create({
-        data: {
-          name: dto.name,
-          description: dto.description ? dto.description : null,
-        },
+  private async addOrUpdateBreed(dto: BreedDto, id: number = undefined) {
+    if (id) {
+      const breed = await this.prisma.breed.findUnique({
+        where: { breedId: id },
       });
+      if (breed) {
+        return this.prisma.breed.update({
+          where: { breedId: id },
+          data: {
+            ...dto,
+          },
+        });
+      }
     }
-    return this.prisma.breed.update({
-      where: { breedId: id },
+    return this.prisma.breed.create({
       data: {
-        name: dto.name,
-        description: dto.description ? dto.description : null,
+        ...dto,
       },
     });
   }

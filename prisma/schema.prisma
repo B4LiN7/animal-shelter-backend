@@ -79,7 +79,16 @@ model Breed {
   breedId     Int     @id @default(autoincrement())
   name        String
   description String?
+  speciesId   Int?
+  species     Species? @relation(fields: [speciesId], references: [speciesId])
   pets        Pet[]
+}
+
+model Species {
+  speciesId   Int     @id @default(autoincrement())
+  name        String
+  description String?
+  breeds      Breed[]
 }
 
 enum Role {
