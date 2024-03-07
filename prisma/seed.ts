@@ -22,12 +22,15 @@ async function addAdminUser() {
   const admin = await prisma.user.findFirst({
     where: {
       username: 'admin',
-      role: Role.ADMIN,
     },
   });
-  if (admin) {
+  if (admin && admin.role === Role.ADMIN) {
     console.log('Admin user already exists');
     return;
+  }
+  if (admin) {
+    console.log('Deleting non ADMIN role user with username:', admin.username);
+    await prisma.user.delete({ where: { userId: admin.userId } });
   }
 
   const user = await prisma.user.create({
@@ -38,6 +41,25 @@ async function addAdminUser() {
     },
   });
   console.log('Admin user created with id:', user.userId);
+}
+
+async function addSpecies() {
+  const species = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Reptile', 'Fish'];
+  const speciesCount = await prisma.species.count();
+  if (speciesCount > 0) {
+    console.log('Species already exist');
+    return;
+  }
+  for (const name of species) {
+    const addedSpecies = await prisma.species.create({
+      data: {
+        name,
+      },
+    });
+    console.log(
+      `Species '${addedSpecies.name}' created with ID ${addedSpecies.speciesId}`,
+    );
+  }
 }
 
 async function addBreeds() {
@@ -154,11 +176,15 @@ async function addBreeds() {
     console.log('Breeds already exist');
     return;
   }
+
+  const species = await prisma.species.findMany();
   for (const breed of dogBreeds) {
+    const randomSpeciesIndex = Math.floor(Math.random() * species.length) - 1;
     const addedBreed = await prisma.breed.create({
       data: {
         name: breed.name,
         description: breed.description,
+        speciesId: randomSpeciesIndex,
       },
     });
     console.log(
@@ -193,6 +219,7 @@ async function addPets() {
         name: randomName,
         breedId: randomBreed.breedId,
         birthDate: new Date(),
+        description: 'A friendly dog looking for a loving home',
       },
     });
     await prisma.petStatus.create({
@@ -208,12 +235,9 @@ async function addPets() {
 }
 
 export async function main() {
-  try {
-    await checkDatabaseConnection();
-  } catch (e) {
-    throw e;
-  }
+  await checkDatabaseConnection();
   await addAdminUser();
+  await addSpecies();
   await addBreeds();
   await addPets();
 }
