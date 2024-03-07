@@ -110,7 +110,7 @@ export class AuthService {
     });
 
     this.logger.log(
-      `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created and logged in from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}' and logged in`,
+      `Now created user with username '${username}' has been logged in from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
     res.cookie('token', token, { httpOnly: true }).json({

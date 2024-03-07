@@ -17,6 +17,7 @@ import { Role as R } from '@prisma/client';
 import { Request } from 'express';
 import { UserGuard } from 'src/auth/guard/user.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Controller('user')
 @UseGuards(AuthGuard('jwt'))
@@ -37,7 +38,7 @@ export class UserController {
   @Post()
   @UseGuards(RoleGuard)
   @Role(R.ADMIN)
-  async createUser(@Body() dto: UpdateUserDto) {
+  async createUser(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
   }
   @Get()
