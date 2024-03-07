@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Req,
@@ -39,6 +40,7 @@ export class AdoptionController {
   }
 
   @Post()
+  @HttpCode(200)
   @Role(R.ADMIN, R.SHELTER_WORKER)
   setAdoptionProcess(@Body() dto: AdoptionDto) {
     return this.adoptionService.setAdoptionProcess(dto);
