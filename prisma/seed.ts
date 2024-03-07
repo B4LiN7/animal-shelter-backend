@@ -177,9 +177,9 @@ async function addBreeds() {
     return;
   }
 
-  const species = await prisma.species.findMany();
+  const species = await prisma.species.count();
   for (const breed of dogBreeds) {
-    const randomSpeciesIndex = Math.floor(Math.random() * species.length) - 1;
+    const randomSpeciesIndex = Math.floor(Math.random() * species);
     const addedBreed = await prisma.breed.create({
       data: {
         name: breed.name,
