@@ -11,7 +11,7 @@ import {
 import { MediaService } from './media.service';
 import { Response } from 'express';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
-import { RoleGuard } from 'src/auth/guard/role.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('media')
 export class MediaController {
@@ -23,7 +23,7 @@ export class MediaController {
   }
 
   @Post()
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(AnyFilesInterceptor())
   uploadFiles(
     @UploadedFiles() files: Express.Multer.File[],

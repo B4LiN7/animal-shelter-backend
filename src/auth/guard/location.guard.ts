@@ -23,7 +23,9 @@ export class LocationGuard implements CanActivate {
     private prisma: PrismaService,
     private userHelper: UserHelperService,
     private logger: Logger,
-  ) {}
+  ) {
+    this.logger = new Logger(LocationGuard.name);
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -31,7 +33,7 @@ export class LocationGuard implements CanActivate {
     const reqLocationId = request.params.locationId;
 
     const token = await this.userHelper.decodeTokenFromReq(request);
-    
+
     const userRole: Role = Role[token.role];
     if (ALWAYS_ALLOWED_ROLES.includes(userRole)) {
       this.logger.log(

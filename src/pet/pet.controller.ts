@@ -12,22 +12,17 @@ import {
 import { PetService } from './pet.service';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/auth/decorator/role.decorator';
-import { Role as RoleEnum } from '@prisma/client';
+import { Role as R } from '@prisma/client';
 import { CreatePetDto } from './dto/createPet.dto';
 import { UpdatePetDto } from './dto/updatePet.dto';
 import { SearchPetDto } from './dto/searchPet.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('pet')
 export class PetController {
   constructor(private readonly petService: PetService) {}
 
-  @Post()
-  @UseGuards(RoleGuard)
-  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
-  async createPet(@Body() dto: CreatePetDto) {
-    return this.petService.createPet(dto);
-  }
-
+  /* Anyone can get pets */
   @Get()
   async readAllPets(
     @Query('status') status: string,
@@ -38,29 +33,36 @@ export class PetController {
     }
     return this.petService.getAllPets();
   }
-
   @Get(':id')
   async readPet(@Param('id') id: number) {
     return this.petService.getPet(id);
   }
 
+  @Post()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
+  @Role(R.ADMIN, R.SHELTER_WORKER)
+  async createPet(@Body() dto: CreatePetDto) {
+    return this.petService.createPet(dto);
+  }
+
   @Put(':id')
-  @UseGuards(RoleGuard)
-  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
+  @Role(R.ADMIN, R.SHELTER_WORKER)
   async updatePet(@Param('id') id: number, @Body() dto: UpdatePetDto) {
     return this.petService.updatePet(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(RoleGuard)
-  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
+  @Role(R.ADMIN, R.SHELTER_WORKER)
   async deletePet(@Param('id') id: number) {
     return this.petService.deletePet(id);
   }
 
+  /* Past statuses for pet */
   @Get('status/:id')
-  @UseGuards(RoleGuard)
-  @Role(RoleEnum.ADMIN, RoleEnum.SHELTER_WORKER)
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
+  @Role(R.ADMIN, R.SHELTER_WORKER)
   async readPetStatus(@Param('id') id: number) {
     return this.petService.getPetStatus(id);
   }

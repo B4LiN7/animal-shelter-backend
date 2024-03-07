@@ -32,14 +32,6 @@ model LoginHistory {
   user      User     @relation(fields: [userId], references: [userId])
 }
 
-model Token {
-  tokenId   Int       @id @default(autoincrement())
-  userId    String
-  token     String
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
-}
-
 model Location {
   locationId   Int     @id @default(autoincrement())
   userId       String

@@ -13,9 +13,10 @@ import { LocationService } from './location.service';
 import { LocationDto } from './dto/location.dto';
 import { Request } from 'express';
 import { LocationGuard } from 'src/auth/guard/location.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('location')
-@UseGuards(LocationGuard)
+@UseGuards(AuthGuard('jwt'), LocationGuard)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 

@@ -2,7 +2,6 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   Logger,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
@@ -28,7 +27,6 @@ export class UserGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-
     const request = context.switchToHttp().getRequest();
     const requestedUrl = request.url;
     const reqUserId = request.params.id;

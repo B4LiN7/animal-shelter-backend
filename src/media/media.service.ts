@@ -6,7 +6,9 @@ import { ResponseStatusDto } from './dto/resStatus.dto';
 
 @Injectable()
 export class MediaService {
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger) {
+    this.logger = new Logger('MediaService');
+  }
 
   serveMedia(path: string, res: Response) {
     res.sendFile(path, { root: './public' });
