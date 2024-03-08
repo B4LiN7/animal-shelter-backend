@@ -30,5 +30,6 @@
 **/build
 **/dist
 **/.env
+**/.env.test
 LICENSE
 README.md

@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private logger: Logger,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request) => request.cookies.token,
@@ -13,9 +16,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET,
     });
+    this.logger = new Logger(JwtStrategy.name);
   }
 
   async validate(payload: any) {
+    const user = await this.prisma.user.findUnique({
+      where: { userId: payload.userId },
+    });
+    this.logger.log(`User ${user.userId} is authenticated`);
     return this.prisma.user.findUnique({ where: { userId: payload.userId } });
   }
 }

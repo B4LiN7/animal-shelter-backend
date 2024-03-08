@@ -16,7 +16,6 @@ import { Role as R } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('breed')
-@UseGuards(AuthGuard('jwt'))
 export class BreedController {
   constructor(private readonly breedService: BreedService) {}
 
@@ -31,21 +30,21 @@ export class BreedController {
   }
 
   @Post()
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.SHELTER_WORKER, R.ADMIN)
   async addBreed(@Body() dto: BreedDto) {
     return this.breedService.addBreed(dto);
   }
 
   @Put(':id')
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.SHELTER_WORKER, R.ADMIN)
   async updateBreed(@Param('id') id: number, @Body() dto: BreedDto) {
     return this.breedService.updateBreed(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.SHELTER_WORKER, R.ADMIN)
   async deleteBreed(@Param('id') id: number) {
     return this.breedService.deleteBreed(id);
