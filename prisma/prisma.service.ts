@@ -15,4 +15,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       this.logger.error(`Database unreachable at startup: ${err}`);
     }
   }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
 }

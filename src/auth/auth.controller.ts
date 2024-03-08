@@ -5,12 +5,13 @@ import {
   HttpCode,
   Post,
   Req,
-  Res,
+  Res, UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -36,6 +37,7 @@ export class AuthController {
   }
 
   @Get('logout')
+  @UseGuards(AuthGuard('jwt'))
   async logout(@Req() req: Request, @Res() res: Response) {
     return this.authService.logout(req, res);
   }

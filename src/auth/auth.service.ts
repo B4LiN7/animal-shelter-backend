@@ -129,9 +129,6 @@ export class AuthService {
    * @param res Response object
    */
   async logout(req: Request, res: Response) {
-    if (!(await this.userHelper.isTokenValidFromReq(req))) {
-      throw new ForbiddenException('You are not logged in');
-    }
     res.clearCookie('token').json({ message: 'You have been logged out' });
     const user = await this.userHelper.getUserFromReq(req);
 

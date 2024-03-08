@@ -1,13 +1,12 @@
 import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
-
 async function hashPassword(password: string) {
   const saltOrRounds = 10;
   return await bcrypt.hash(password, saltOrRounds);
 }
-
 async function checkDatabaseConnection() {
   try {
     await prisma.$connect();
@@ -17,39 +16,79 @@ async function checkDatabaseConnection() {
     throw error;
   }
 }
+async function clearDatabase() {
+  console.log('Clearing database...');
+  await prisma.loginHistory.deleteMany();
+  await prisma.location.deleteMany();
+  await prisma.adoption.deleteMany();
+  await prisma.petStatus.deleteMany();
+  await prisma.pet.deleteMany();
+  await prisma.breed.deleteMany();
+  await prisma.species.deleteMany();
+  await prisma.user.deleteMany();
+  console.log('Database cleared.');
+}
 
 async function addAdminUser() {
+  console.log('Checking admin user...');
   const admin = await prisma.user.findFirst({
     where: {
       username: 'admin',
     },
   });
   if (admin && admin.role === Role.ADMIN) {
-    console.log('Admin user already exists');
+    console.log('admin user with ADMIN role already exists, skip.');
     return;
   }
   if (admin) {
-    console.log('Deleting non ADMIN role user with username:', admin.username);
+    console.log(`delete non ADMIN role user... `);
     await prisma.user.delete({ where: { userId: admin.userId } });
   }
 
-  const user = await prisma.user.create({
+  const newAdmin = await prisma.user.create({
     data: {
       username: 'admin',
+      name: 'Admin User',
       hashedPassword: await hashPassword('password'),
       role: Role.ADMIN,
     },
   });
-  console.log('Admin user created with id:', user.userId);
+  console.log(`admin user created with user ID ${newAdmin.userId}.`);
+}
+async function addUsers() {
+  console.log('Adding users...');
+
+  const userCount = await prisma.user.findMany();
+  if (userCount.length > 1) {
+    console.log('users already exist, skip.');
+    return;
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const newUser = await prisma.user.create({
+      data: {
+        username: faker.internet.userName(),
+        hashedPassword: await hashPassword('password'),
+        name: faker.person.fullName(),
+        role: Role.USER,
+      },
+    });
+    console.log(
+      `User with username '${newUser.username}' created with user ID ${newUser.userId}.`,
+    );
+  }
 }
 
 async function addSpecies() {
-  const species = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Reptile', 'Fish'];
+  console.log('Adding species...');
+
   const speciesCount = await prisma.species.count();
   if (speciesCount > 0) {
-    console.log('Species already exist');
+    console.log('species already exist, skip.');
     return;
   }
+
+  const species = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Fish'];
   for (const name of species) {
     const addedSpecies = await prisma.species.create({
       data: {
@@ -57,12 +96,24 @@ async function addSpecies() {
       },
     });
     console.log(
-      `Species '${addedSpecies.name}' created with ID ${addedSpecies.speciesId}`,
+      `Species '${addedSpecies.name}' created with ID ${addedSpecies.speciesId}.`,
     );
   }
 }
-
 async function addBreeds() {
+  console.log('Adding breeds... ');
+
+  const breeds = await prisma.breed.findMany();
+  if (breeds.length > 0) {
+    console.log('breeds already exist, skip.');
+    return;
+  }
+  const species = await prisma.species.findMany();
+  if (species.length === 0) {
+    console.log('no species found, skip.');
+    return;
+  }
+
   const dogBreeds: { name: string; description: string }[] = [
     {
       name: 'Labrador Retriever',
@@ -170,59 +221,64 @@ async function addBreeds() {
         'Playful, cheerful, and hypoallergenic, known for their white, fluffy coat and gentle personality. They require regular grooming and are well-suited for apartment living.',
     },
   ];
-
-  const breeds = await prisma.breed.findMany();
-  if (breeds.length > 0) {
-    console.log('Breeds already exist');
-    return;
-  }
-
-  const species = await prisma.species.findMany();
-  if (species.length === 0) {
-    console.log('No species found');
-    return;
-  }
-
   for (const breed of dogBreeds) {
     const randomSpeciesIndex = Math.floor(Math.random() * species.length);
     const selectedSpecies = species[randomSpeciesIndex];
+    const breedName = (selectedSpeciesName: string): string => {
+      switch (selectedSpeciesName) {
+        case 'Dog':
+          return faker.animal.dog();
+          break;
+        case 'Cat':
+          return faker.animal.cat();
+          break;
+        case 'Rabbit':
+          return faker.animal.rabbit();
+          break;
+        case 'Bird':
+          return faker.animal.bird();
+          break;
+        case 'Fish':
+          return faker.animal.fish();
+          break;
+        default:
+          return faker.animal.dog();
+      }
+    };
+
     const addedBreed = await prisma.breed.create({
       data: {
-        name: breed.name,
+        name: breedName(selectedSpecies.name),
         description: breed.description,
         speciesId: selectedSpecies.speciesId,
       },
     });
     console.log(
-      `Breed '${addedBreed.name}' created with ID ${addedBreed.breedId}`,
+      `Breed '${addedBreed.name}' for species ${addedBreed.speciesId} created with ID ${addedBreed.breedId}.`,
     );
   }
 }
-
 async function addPets() {
-  const dogNames = ['Buddy', 'Daisy', 'Max', 'Lucy', 'Charlie', 'Molly'];
-  const dogBreeds = await prisma.breed.findMany();
-
-  const breedCount = await prisma.breed.count();
-  if (breedCount <= 0) {
-    console.log('No breeds found');
-    return;
-  }
+  console.log('Adding pets...');
 
   const petCount = await prisma.pet.count();
   if (petCount > 0) {
-    console.log('Pets already exist');
+    console.log('pets already exist, skip.');
+    return;
+  }
+  const breedCount = await prisma.breed.count();
+  if (breedCount <= 0) {
+    console.log('no breeds found, skip.');
     return;
   }
 
+  const breeds = await prisma.breed.findMany();
   for (let i = 0; i < 10; i++) {
     const randomBreedIndex = Math.floor(Math.random() * breedCount);
-    const randomBreed = dogBreeds[randomBreedIndex];
-    const randomNameIndex = Math.floor(Math.random() * dogNames.length);
-    const randomName = dogNames[randomNameIndex];
+    const randomBreed = breeds[randomBreedIndex];
     const addedPet = await prisma.pet.create({
       data: {
-        name: randomName,
+        name: faker.person.firstName(),
         breedId: randomBreed.breedId,
         birthDate: new Date(),
         description: 'A friendly dog looking for a loving home',
@@ -235,14 +291,16 @@ async function addPets() {
       },
     });
     console.log(
-      `Pet '${addedPet.name}' created with ID ${addedPet.petId} and breed ID ${addedPet.breedId}`,
+      `Pet '${addedPet.name}' created (with breed ID ${addedPet.breedId} and) with ID ${addedPet.petId}.`,
     );
   }
 }
 
 export async function main() {
   await checkDatabaseConnection();
+  //await clearDatabase();
   await addAdminUser();
+  await addUsers();
   await addSpecies();
   await addBreeds();
   await addPets();
