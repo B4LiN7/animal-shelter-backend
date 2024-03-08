@@ -62,6 +62,16 @@ export class UserHelperService {
     return decodedToken.userId;
   }
 
+  async isTokenValidFromReq(req: Request): Promise<boolean> {
+    try {
+      const token = req.cookies.token;
+      await this.jwt.verifyAsync(token);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /**
    * Decodes a JWT token from the request
    * @param req The Request object

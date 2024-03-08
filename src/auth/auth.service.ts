@@ -36,6 +36,10 @@ export class AuthService {
   async login(dto: LoginDto, req: Request, res: Response) {
     const { username, password } = dto;
 
+    if (await this.userHelper.isTokenValidFromReq(req)) {
+      throw new BadRequestException('You are already logged in');
+    }
+
     const foundUser = await this.prisma.user.findUnique({
       where: { username: username },
     });
@@ -125,7 +129,7 @@ export class AuthService {
    * @param res Response object
    */
   async logout(req: Request, res: Response) {
-    if (!(await this.userHelper.isReqExistingUser(req))) {
+    if (!(await this.userHelper.isTokenValidFromReq(req))) {
       throw new ForbiddenException('You are not logged in');
     }
     res.clearCookie('token').json({ message: 'You have been logged out' });
