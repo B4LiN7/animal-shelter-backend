@@ -171,6 +171,12 @@ async function addBreeds() {
     },
   ];
 
+  const breeds = await prisma.breed.findMany();
+  if (breeds.length > 0) {
+    console.log('Breeds already exist');
+    return;
+  }
+
   const species = await prisma.species.findMany();
   if (species.length === 0) {
     console.log('No species found');
