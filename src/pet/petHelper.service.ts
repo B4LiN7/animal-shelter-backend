@@ -15,10 +15,14 @@ export class PetHelperService {
     private logger: Logger,
   ) {}
 
+  /**
+   * This function gets all pets. If a search is provided, it filters the pets by the search parameters.
+   * @param search The search parameters to filter the pets.
+   */
   async getPetsBySearch(search: SearchPetDto) {
     const { status, breed } = search;
     const breedId = Number(breed);
-    let statusEnum;
+    let statusEnum: Status;
     if (status) {
       statusEnum = Status[status.toUpperCase() as keyof typeof Status] ?? null;
     }
@@ -39,23 +43,22 @@ export class PetHelperService {
 
   /**
    * This function gets all pets and their latest status.
-   * @returns {Promise<Pet>} The pets with the latest status.
+   * @returns The pets with the latest status.
    */
   async getPetsWithLatestStatus() {
     const pets = await this.prisma.pet.findMany();
-    const petsWithLatestStatus = await Promise.all(
+    return await Promise.all(
       pets.map(async (pet) => {
         const latestStatus = await this.getLatestStatusForPet(pet.petId);
         return { ...pet, status: latestStatus };
       }),
     );
-    return petsWithLatestStatus;
   }
 
   /**
    * This function gets a pet and it latest status by pet's ID.
    * @param {number} id The ID of the pet to get.
-   * @returns {Promise<Pet>} The pet with the latest status.
+   * @returns The pet with the latest status.
    */
   async getPetWithLatestStatus(id: number) {
     const pet = await this.prisma.pet.findUnique({
@@ -84,7 +87,7 @@ export class PetHelperService {
   /**
    * This function deletes a pet by its ID.
    * @param {number} id - The ID of the pet to delete.
-   * @returns {Promise<void>} A promise that resolves when the pet is deleted.
+   * @returns A promise that resolves when the pet is deleted.
    */
   async deletePet(id: number) {
     try {

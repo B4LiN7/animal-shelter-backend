@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class BreedDto {
-  @IsNotEmpty()
+export class UpdateBreedDto {
+  @IsOptional()
   @IsString()
   name: string;
 

@@ -73,19 +73,30 @@ export class UserHelperService {
   }
 
   /**
-   * Decodes a JWT token from the request
+   * Decodes a JWT token from the request object (throw an error if the token is invalid or not provided)
    * @param req The Request object
    * @returns The decoded JWT token
    */
-  async decodeTokenFromReq(req: Request) {
+  async decodeTokenFromReq(
+    req: Request,
+  ): Promise<{ userId: string; role: string }> {
     const token = req.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
+
+    const tokenParts = token.split('.');
+    if (tokenParts.length !== 3) {
+      throw new ForbiddenException('Invalid token format. Please log in.');
+    }
+
     const decodedToken = await this.jwt.verifyAsync(token);
     if (!decodedToken) {
       throw new ForbiddenException('Invalid token. Please log in.');
     }
+
+    console.log('Decoded token: ', decodedToken);
+
     return decodedToken;
   }
 }

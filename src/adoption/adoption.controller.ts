@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/auth/decorator/role.decorator';
 import { Role as R } from '@prisma/client';
-import { RoleGuard } from 'src/auth/guard/role.guard';
 import { AdoptionDto } from './dto/adoption.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('adoption')
 @UseGuards(AuthGuard('jwt'), RoleGuard)

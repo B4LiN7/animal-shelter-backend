@@ -29,9 +29,9 @@ export class AuthService {
 
   /**
    * Logs in the user and sets the token cookie
-   * @param dto LoginDto object containing username and password
-   * @param req Request object
-   * @param res Response object
+   * @param dto - LoginDto object containing username and password
+   * @param req - Request object
+   * @param res - Response object
    */
   async login(dto: LoginDto, req: Request, res: Response) {
     const { username, password } = dto;
@@ -81,9 +81,9 @@ export class AuthService {
 
   /**
    * Registers a new user
-   * @param dto RegisterDto object containing username, password and email
-   * @param req Request object
-   * @param res Response object
+   * @param dto - RegisterDto object containing username, password and email
+   * @param req - Request object
+   * @param res - Response object
    */
   async register(dto: RegisterDto, req: Request, res: Response) {
     const { username, password, email, name } = dto;
@@ -125,8 +125,8 @@ export class AuthService {
 
   /**
    * Logs out the user by clearing the token cookie
-   * @param req Request object
-   * @param res Response object
+   * @param req - Request object
+   * @param res - Response object
    */
   async logout(req: Request, res: Response) {
     res.clearCookie('token').json({ message: 'You have been logged out' });
@@ -139,8 +139,8 @@ export class AuthService {
 
   /**
    * Signs a JWT token with the user's ID (Secret is stored in .env)
-   * @param userId The user's ID
-   * @param role The user's role
+   * @param userId - The user's ID
+   * @param role - The user's role
    * @returns The signed JWT token
    */
   private async signToken(userId: string, role: Role) {

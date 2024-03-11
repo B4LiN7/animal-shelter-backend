@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { BreedDto } from './dto/breed.dto';
+import { UpdateBreedDto } from './dto/updateBreed.dto';
+import { CreateBreedDto } from './dto/createBreed.dto';
 
 @Injectable()
 export class BreedService {
@@ -24,11 +25,11 @@ export class BreedService {
     return breed;
   }
 
-  async addBreed(dto: BreedDto) {
+  async addBreed(dto: CreateBreedDto) {
     return this.addOrUpdateBreed(dto);
   }
 
-  async updateBreed(id: number, dto: BreedDto) {
+  async updateBreed(id: number, dto: UpdateBreedDto) {
     return this.addOrUpdateBreed(dto, id);
   }
 
@@ -56,7 +57,10 @@ export class BreedService {
    * @param dto Breed DTO
    * @returns Prisma response
    */
-  private async addOrUpdateBreed(dto: BreedDto, id: number = undefined) {
+  private async addOrUpdateBreed(
+    dto: UpdateBreedDto | CreateBreedDto,
+    id: number = undefined,
+  ) {
     if (id) {
       const breed = await this.prisma.breed.findUnique({
         where: { breedId: id },
@@ -69,6 +73,9 @@ export class BreedService {
           },
         });
       }
+    }
+    if (dto.name === undefined) {
+      throw new NotFoundException('Name is required');
     }
     return this.prisma.breed.create({
       data: {
