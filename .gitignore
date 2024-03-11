@@ -4,6 +4,7 @@
 
 /public/uploads
 /prisma/migrations
+/docs
 
 # Logs
 logs
