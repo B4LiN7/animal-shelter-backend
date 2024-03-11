@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { BreedService } from './breed.service';
@@ -15,6 +16,7 @@ import { Role } from '../auth/decorator/role.decorator';
 import { Role as R } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateBreedDto } from './dto/createBreed.dto';
+import { PrismaExceptionFilter } from '../../prisma/prisma.exception.filter';
 
 @Controller('breed')
 export class BreedController {
@@ -33,6 +35,7 @@ export class BreedController {
   @Post()
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.SHELTER_WORKER, R.ADMIN)
+  @UseFilters(PrismaExceptionFilter)
   async addBreed(@Body() dto: CreateBreedDto) {
     return this.breedService.addBreed(dto);
   }

@@ -45,7 +45,7 @@ export class BreedService {
    * @returns {Promise<BreedDto>} - The newly created breed (return of Prisma create method)
    */
   async addBreed(dto: CreateBreedDto): Promise<BreedDto> {
-    return this.prisma.breed.create({
+    return await this.prisma.breed.create({
       data: {
         ...dto,
       },
