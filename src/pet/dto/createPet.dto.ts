@@ -30,7 +30,7 @@ export class CreatePetDto {
   @IsNotEmpty()
   @IsString()
   @IsEnum(Sex)
-  sex: Sex = Sex.OTHER;
+  sex: Sex;
 
   @IsOptional()
   @IsString()

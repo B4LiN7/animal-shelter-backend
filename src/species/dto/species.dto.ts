@@ -1,11 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-
-export class SpeciesDto {
-  @IsNotEmpty()
-  @IsString()
+export interface SpeciesDto {
+  speciesId: number;
   name: string;
-
-  @IsOptional()
-  @IsString()
   description: string;
 }

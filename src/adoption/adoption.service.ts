@@ -88,6 +88,7 @@ export class AdoptionService {
    */
   async setAdoptionProcess(dto: AdoptionDto) {
     await this.setAdoptionStatus(dto, true);
+    return await this.getAdoptionStatusForPet(dto.petId);
   }
 
   /**

@@ -28,12 +28,12 @@ export class UpdatePetDto {
   @IsOptional()
   @IsString()
   @IsEnum(Sex)
-  sex: Sex = Sex.OTHER;
+  sex: Sex;
 
   @IsOptional()
   @IsString()
   @IsEnum(Status)
-  status: Status = Status.UNKNOWN;
+  status: Status;
 
   @IsOptional()
   @IsDate()

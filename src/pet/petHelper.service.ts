@@ -3,10 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { SearchPetDto } from 'src/pet/dto/searchPet.dto';
+import { PetDto } from './dto/pet.dto';
 
 @Injectable()
 export class PetHelperService {
@@ -34,7 +36,7 @@ export class PetHelperService {
     });
 
     if (foundPets.length === 0) {
-      throw new BadRequestException(
+      throw new NotFoundException(
         `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breedId})`,
       );
     }
@@ -43,9 +45,9 @@ export class PetHelperService {
 
   /**
    * This function gets all pets and their latest status.
-   * @returns The pets with the latest status.
+   * @returns {Promise<PetDto[]>} The pets with the latest status.
    */
-  async getPetsWithLatestStatus() {
+  async getPetsWithLatestStatus(): Promise<PetDto[]> {
     const pets = await this.prisma.pet.findMany();
     return await Promise.all(
       pets.map(async (pet) => {
@@ -57,10 +59,10 @@ export class PetHelperService {
 
   /**
    * This function gets a pet and it latest status by pet's ID.
-   * @param {number} id The ID of the pet to get.
-   * @returns The pet with the latest status.
+   * @param {number} id - The ID of the pet to get.
+   * @returns {Promise<PetDto>} The pet with the latest status.
    */
-  async getPetWithLatestStatus(id: number) {
+  async getPetWithLatestStatus(id: number): Promise<PetDto> {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });
@@ -104,13 +106,17 @@ export class PetHelperService {
         where: { petId: id },
       });
 
-      this.logger.log(`Pet deleted with ID '${id}'`);
+      this.logger.log(`Pet with ID ${id} deleted successfully`);
 
-      return { deletedPet, deletedStatusesCount, deletedAdoptions };
+      return {
+        pet: deletedPet,
+        adoptions: deletedAdoptions,
+        status_count: deletedStatusesCount,
+      };
     } catch (err) {
-      this.logger.error(`Failed to delete pet with ID '${id}'`, err.stack);
+      this.logger.error(`Failed to delete pet with ID ${id}`, err.stack);
       throw new InternalServerErrorException(
-        `Failed to delete pet with ID '${id}'`,
+        `Failed to delete pet with ID ${id}`,
       );
     }
   }
