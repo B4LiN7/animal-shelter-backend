@@ -10,6 +10,7 @@ import { PetHelperService } from './petHelper.service';
 import { SearchPetDto } from './dto/searchPet.dto';
 import { PetDto } from './dto/pet.dto';
 import { PetStatusDto } from './dto/petStatus.dto';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class PetService {
@@ -99,6 +100,22 @@ export class PetService {
       );
     } else if (!existingPet) {
       return await this.createPet(dto);
+    }
+
+    const adoptingPet = await this.prisma.adoption.findFirst({
+      where: { petId: id },
+    });
+    if (adoptingPet) {
+      if (status === Status.ILL || status === Status.DECEASED) {
+        await this.prisma.adoption.delete({
+          where: {
+            userId_petId: {
+              userId: adoptingPet.userId,
+              petId: adoptingPet.petId,
+            },
+          },
+        });
+      }
     }
 
     await this.prisma.pet.update({
