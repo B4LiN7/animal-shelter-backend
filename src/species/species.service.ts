@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSpeciesDto } from './dto/create.species.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SpeciesDto } from './dto/species.dto';
@@ -26,6 +26,7 @@ export class SpeciesService {
    * @returns {Promise<SpeciesDto>} - SpeciesDto
    */
   async getSpecies(id: number): Promise<SpeciesDto> {
+    if (!id) throw new BadRequestException('Species ID is in invalid format');
     const species = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
@@ -51,6 +52,7 @@ export class SpeciesService {
    * @returns {Promise<SpeciesDto>} - The updated species (return of Prisma update method)
    */
   async updateSpecies(id: number, dto: UpdateSpeciesDto): Promise<SpeciesDto> {
+    if (!id) throw new BadRequestException('Species ID is in invalid format');
     const existingSpecies = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
@@ -76,6 +78,7 @@ export class SpeciesService {
   async deleteSpecies(
     id: number,
   ): Promise<{ removedSpecies: SpeciesDto; updatedBreeds: number }> {
+    if (!id) throw new BadRequestException('Species ID is in invalid format');
     const updatedBreeds = await this.prisma.breed.updateMany({
       where: { breedId: id },
       data: { speciesId: null },

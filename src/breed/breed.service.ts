@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { UpdateBreedDto } from './dto/update.breed.dto';
 import { CreateBreedDto } from './dto/create.breed.dto';
@@ -26,6 +30,7 @@ export class BreedService {
    * @returns {Promise<BreedDto>} - A promise of a breed
    */
   async getBreed(id: number): Promise<BreedDto> {
+    if (!id) throw new BadRequestException('Breed ID is in wrong format');
     const breed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -55,6 +60,7 @@ export class BreedService {
    * @returns {Promise<BreedDto>} - The updated (or added) breed (return of Prisma update method)
    */
   async updateBreed(id: number, dto: UpdateBreedDto): Promise<BreedDto> {
+    if (!id) throw new BadRequestException('Breed ID is in wrong format');
     const existingBreed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -82,6 +88,8 @@ export class BreedService {
   async deleteBreed(
     id: number,
   ): Promise<{ removedBreed: BreedDto; updatedPets: number }> {
+    if (!id) throw new BadRequestException('Breed ID is in wrong format');
+
     const updatedPets = await this.prisma.pet.updateMany({
       where: { breedId: id },
       data: { breedId: null },

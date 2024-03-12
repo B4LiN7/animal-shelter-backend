@@ -84,6 +84,7 @@ export class PetService {
    * @returns {Promise<PetDto>} - The updated pet
    */
   async updatePet(id: number, dto: UpdatePetDto): Promise<PetDto> {
+    if (!id) throw new BadRequestException('Pet ID is in invalid format');
     const { status, ...newPet } = dto;
 
     const existingPet = await this.prisma.pet.findUnique({
@@ -143,6 +144,7 @@ export class PetService {
    * @returns The deleted pet, adoptions and statuses
    */
   async deletePet(id: number) {
+    if (!id) throw new BadRequestException('Pet ID is in invalid format');
     return await this.petHelper.deletePet(id);
   }
 
@@ -152,6 +154,7 @@ export class PetService {
    * @returns {Promise<PetStatusDto[]>} - The status history of the pet
    */
   async getPetStatus(id: number): Promise<PetStatusDto[]> {
+    if (!id) throw new BadRequestException('Pet ID is in invalid format');
     return this.prisma.petStatus.findMany({
       where: { petId: id },
       orderBy: { from: 'desc' },
