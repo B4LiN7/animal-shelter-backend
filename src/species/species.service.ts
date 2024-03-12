@@ -22,7 +22,7 @@ export class SpeciesService {
 
   /**
    * Get a species by ID
-   * @param id - SpeciesDto ID
+   * @param id - Species' ID
    * @returns {Promise<SpeciesDto>} - SpeciesDto
    */
   async getSpecies(id: number): Promise<SpeciesDto> {

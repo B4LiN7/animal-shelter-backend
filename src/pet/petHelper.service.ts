@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -92,32 +91,24 @@ export class PetHelperService {
    * @returns A promise that resolves when the pet is deleted.
    */
   async deletePet(id: number) {
-    try {
-      const deletedStatuses = await this.prisma.petStatus.deleteMany({
-        where: { petId: id },
-      });
+    const deletedStatuses = await this.prisma.petStatus.deleteMany({
+      where: { petId: id },
+    });
 
-      const deletedAdoptions = await this.prisma.adoption.deleteMany({
-        where: { petId: id },
-      });
+    const deletedAdoptions = await this.prisma.adoption.deleteMany({
+      where: { petId: id },
+    });
 
-      const deletedStatusesCount = deletedStatuses.count;
-      const deletedPet = await this.prisma.pet.delete({
-        where: { petId: id },
-      });
+    const deletedPet = await this.prisma.pet.delete({
+      where: { petId: id },
+    });
 
-      this.logger.log(`Pet with ID ${id} deleted successfully`);
+    this.logger.log(`Pet with ID ${id} deleted successfully`);
 
-      return {
-        pet: deletedPet,
-        adoptions: deletedAdoptions,
-        status_count: deletedStatusesCount,
-      };
-    } catch (err) {
-      this.logger.error(`Failed to delete pet with ID ${id}`, err.stack);
-      throw new InternalServerErrorException(
-        `Failed to delete pet with ID ${id}`,
-      );
-    }
+    return {
+      deletedPet,
+      deletedAdoptions,
+      deletedStatuses: deletedStatuses.count,
+    };
   }
 }

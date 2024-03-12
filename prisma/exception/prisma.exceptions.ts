@@ -20,4 +20,9 @@ export const errorMappings: Record<
     status: HttpStatus.BAD_REQUEST,
     message: 'The provided value for field is not valid',
   },
+  P2025: {
+    status: HttpStatus.BAD_REQUEST,
+    message:
+      'An operation failed because it depends on one or more records that were required but not found.',
+  },
 };
