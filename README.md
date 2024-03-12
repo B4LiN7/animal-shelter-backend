@@ -35,11 +35,13 @@ $ docker compose up --build
 ### User (/user)
 ```
 {
+  userId: string,
   username: string,
-  password: string,
   email: string,
   name: string,
-  role: Role enum in string
+  role: Role enum in string,
+  createdAt: Date in string,
+  updatedAt: Date in string
 }
 ```
 - GET / (összes felhasználó (id + felhasználónév) listázása, csak admin fér hozzá)
@@ -50,25 +52,42 @@ $ docker compose up --build
 - DELETE /:id (egy specifikus felhasználót töröl, csak saját vagy admin)
 
 ### Media (/media)
-- POST / (fájl feltöltése, mezőnév legyen: file)
+- POST / (fájl(ok) feltöltése, mezőnév legyen: file)
 - GET /* (public mappa gyökér) (Pl. /media/uploads/lt2wqej2_dog1.jpg)
 
 ### Breed (/breed)
 ```
 {
+  breedId: number
   name: string,
-  description: string
+  description: string,
+  speciesId: number
 }
 ```
 - GET /
 - GET /:id
 - POST /
 - PUT /:id
-- DELETE /:id
+- DELETE /:id (Minden pet-ben null-ra állítja a breedId-t)
+
+### Species (/species)
+```
+{
+  spesciesId: number
+  name: string,
+  description: string,
+}
+```
+- GET /
+- GET /:id
+- POST /
+- PUT /:id
+- DELETE /:id (Minden breed-ben null-ra állítja a speciesId-t)
 
 ### Pet (/pet)
 ```
 {
+  petId: number,
   name: string,
   description: string,
   imageUrl: string,
