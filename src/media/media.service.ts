@@ -10,10 +10,21 @@ export class MediaService {
     this.logger = new Logger(MediaService.name);
   }
 
+  /**
+   * Serve media files
+   * @param path - path to the file
+   * @param res - Response object
+   * @returns - the file
+   */
   serveMedia(path: string, res: Response) {
     res.sendFile(path, { root: './public' });
   }
 
+  /**
+   * Upload files
+   * @param files - array of files
+   * @param res - Response object
+   */
   async uploadFiles(files: Express.Multer.File[], res: Response) {
     if (!files) {
       res.status(400).json({
@@ -38,6 +49,12 @@ export class MediaService {
     }
   }
 
+  /**
+   * Upload single file
+   * @param file - file to upload
+   * @param res - Response object
+   * @returns - status of the upload
+   */
   async uploadSingleFile(file: Express.Multer.File, res: Response) {
     const uploadFile = await this.uploadFile(file);
     if (uploadFile.status === 'success') {
@@ -47,6 +64,11 @@ export class MediaService {
     }
   }
 
+  /**
+   * Upload file
+   * @param file - file to upload
+   * @returns - status of the upload
+   */
   async uploadFile(file: Express.Multer.File): Promise<ResponseStatusDto> {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       return {
@@ -59,7 +81,7 @@ export class MediaService {
     }
 
     const randomName = Date.now().toString(36);
-    const regex = /[^A-Za-z0-9.]/g;
+    const regex = /[^A-Za-z0-9_.]/g;
     const newFileName =
       randomName + '_' + file.originalname.replace(regex, '0');
     const filePath = path.resolve('public', 'uploads', newFileName);

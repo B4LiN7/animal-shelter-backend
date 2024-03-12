@@ -36,7 +36,7 @@ export class LocationGuard implements CanActivate {
     const userRole: Role = Role[token.role];
     if (ALWAYS_ALLOWED_ROLES.includes(userRole)) {
       this.logger.log(
-        `User with ID '${token.userId}' is an ${userRole} and is allowed to access the resource '${requestedUrl}'`,
+        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user is a(n) ${userRole}`,
       );
       return true;
     }
@@ -50,14 +50,17 @@ export class LocationGuard implements CanActivate {
       },
     });
     if (location.userId === token.userId) {
+      // Disable logging this because it's too verbose
+      /*
       this.logger.log(
-        `User with ID '${token.userId}' is allowed to access the resource '${requestedUrl}' because (s)he the owner of it`,
+        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user the owner of it`,
       );
+      */
       return true;
     }
 
-    this.logger.log(
-      `User with ID '${token.userId}' is not allowed to access the resource '${requestedUrl}'`,
+    this.logger.warn(
+      `User with ID ${token.userId} is not allowed to access the resource ${requestedUrl}`,
     );
     return false;
   }

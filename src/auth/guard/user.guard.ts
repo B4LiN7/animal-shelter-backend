@@ -32,29 +32,35 @@ export class UserGuard implements CanActivate {
     const token = await this.userHelper.decodeTokenFromReq(request);
 
     if (!reqUserId) {
+      // Disable logging this because it's too verbose
+      /*
       this.logger.log(
-        `User with ID '${token.userId}' is allowed to access the resource '${requestedUrl}' because the resource does not require a user ID`,
+        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the resource does not require a user ID`,
       );
+      */
       return true;
     }
 
     const userRole: Role = Role[token.role];
     if (ALWAYS_ALLOWED_ROLES.includes(userRole)) {
       this.logger.log(
-        `User with ID '${token.userId}' is an ${userRole} and is allowed to access the resource '${requestedUrl}'`,
+        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user is a(n) ${userRole} `,
       );
       return true;
     }
 
     if (token.userId === reqUserId) {
+      // Disable logging this because it's too verbose
+      /*
       this.logger.log(
-        `User with ID '${token.userId}' is allowed to access the resource '${requestedUrl}'`,
+        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user is the owner of it`,
       );
+      */
       return true;
     }
 
-    this.logger.log(
-      `User with ID '${token.userId}' is not allowed to access the resource '${requestedUrl}'`,
+    this.logger.warn(
+      `User with ID ${token.userId} is not allowed to access the resource ${requestedUrl}`,
     );
     return false;
   }

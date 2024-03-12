@@ -76,8 +76,8 @@ model PetStatus {
 }
 
 model Breed {
-  breedId     Int     @id @default(autoincrement())
-  name        String
+  breedId     Int      @id @default(autoincrement())
+  name        String   @unique
   description String?
   speciesId   Int?
   species     Species? @relation(fields: [speciesId], references: [speciesId])
@@ -86,7 +86,7 @@ model Breed {
 
 model Species {
   speciesId   Int     @id @default(autoincrement())
-  name        String
+  name        String  @unique
   description String?
   breeds      Breed[]
 }

@@ -5,6 +5,8 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserHelperService } from 'src/user/userHelper.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
+import { UserDto } from './dto/user.dto';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -18,8 +20,11 @@ export class UserService {
 
   /**
    * Get all users (for admin)
+   * @returns {Promise<{userId: string, username: string, name: string, role: string}[]>} - Promise with array of users (return of Prisma findMany method)
    */
-  async getAllUsers() {
+  async getAllUsers(): Promise<
+    { userId: string; username: string; name: string; role: string }[]
+  > {
     return this.prisma.user.findMany({
       select: {
         userId: true,
@@ -32,9 +37,10 @@ export class UserService {
 
   /**
    * Get user by id (for admin)
-   * @param id - userId
+   * @param id - User's ID
+   * @returns {Promise<UserDto>} - Promise with user (return of Prisma findUnique method)
    */
-  async getUser(id: string) {
+  async getUser(id: string): Promise<UserDto> {
     return this.prisma.user.findUnique({
       where: {
         userId: id,
@@ -53,7 +59,7 @@ export class UserService {
 
   /**
    * Get user's username and name by id (for admin and shelter worker)
-   * @param id - userId
+   * @param id - User's ID
    */
   async getUserName(id: string) {
     return this.prisma.user.findUnique({
@@ -71,8 +77,9 @@ export class UserService {
   /**
    * Get user who is currently logged in
    * @param req - Request object
+   * @returns {Promise<UserDto>} - Promise with user (return of Prisma findUnique method)
    */
-  async getMyUser(req: Request) {
+  async getMyUser(req: Request): Promise<UserDto> {
     const userId = await this.userHelper.getUserIdFromReq(req);
     return this.prisma.user.findUnique({
       where: {
@@ -90,7 +97,13 @@ export class UserService {
     });
   }
 
-  async updateMyUser(req: Request, dto: UpdateUserDto) {
+  /**
+   * Update user who is currently logged in
+   * @param req - Request object
+   * @param dto - UpdateUserDto with new data
+   * @returns {Promise<UserDto>} - Promise with updated user (return of Prisma update method)
+   */
+  async updateMyUser(req: Request, dto: UpdateUserDto): Promise<UserDto> {
     const userId = await this.userHelper.getUserIdFromReq(req);
     return this.updateUser(userId, dto, req);
   }
@@ -98,8 +111,9 @@ export class UserService {
   /**
    * Create user (for admin)
    * @param dto - CreateUserDto with user data
+   * @returns {Promise<UserDto>} - Promise with created user (return of Prisma create method)
    */
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: CreateUserDto): Promise<UserDto> {
     const { username, password } = dto;
 
     const foundUser = await this.prisma.user.findUnique({
@@ -135,8 +149,13 @@ export class UserService {
    * @param id - userId
    * @param dto - UpdateUserDto with new data
    * @param req - Request object
+   * @returns {Promise<UserDto>} - Promise with updated user (return of Prisma update method)
    */
-  async updateUser(id: string, dto: UpdateUserDto, req: Request) {
+  async updateUser(
+    id: string,
+    dto: UpdateUserDto,
+    req: Request,
+  ): Promise<UserDto> {
     if (!dto) {
       throw new BadRequestException('No data to update');
     }
@@ -169,7 +188,7 @@ export class UserService {
       newUser.hashedPassword = await this.hashPassword(dto.password);
     }
 
-    if (await this.userHelper.isReqAdmin(req)) {
+    if (await this.isReqAdmin(req)) {
       newUser.role = dto.role ?? newUser.role;
     } else if (dto.role) {
       throw new BadRequestException('You are not allowed to change the role');
@@ -185,9 +204,10 @@ export class UserService {
 
   /**
    * Delete user
-   * @param id - userId
+   * @param id - User's ID
+   * @returns {Promise<UserDto>} - Promise with no result
    */
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<UserDto> {
     return this.prisma.user.delete({
       where: {
         userId: id,
@@ -198,9 +218,9 @@ export class UserService {
   /**
    * Hashes a password using bcrypt
    * @param password - The password to hash
-   * @returns The hashed password
+   * @returns {Promise<string>} - The hashed password
    */
-  private async hashPassword(password: string) {
+  private async hashPassword(password: string): Promise<string> {
     const saltOrRounds = 10;
     return await bcrypt.hash(password, saltOrRounds);
   }
@@ -208,12 +228,23 @@ export class UserService {
   /**
    * Checks if a user exists in the database
    * @param username - The username to check (string)
-   * @returns True or false, depending on whether the user exists
+   * @returns {Promise<boolean>} - True if the user exists, false otherwise
    */
-  private async isUserExists(username: string) {
+  private async isUserExists(username: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
       where: { username: username },
     });
     return !!user;
+  }
+
+  /**
+   * Checks if the user is an admin
+   * @param req The Request object
+   * @returns True or false, depending on whether the user is an admin
+   */
+  private async isReqAdmin(req: Request) {
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    const role: Role = Role[token.role];
+    return role === Role.ADMIN;
   }
 }

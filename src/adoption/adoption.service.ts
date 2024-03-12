@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
-import { Status } from '@prisma/client';
+import { Status, Role } from '@prisma/client';
 import { UserHelperService } from 'src/user/userHelper.service';
 import { AdoptionDto, AdoptionStatus } from './dto/adoption.dto';
 import { PetHelperService } from 'src/pet/petHelper.service';
@@ -19,15 +19,14 @@ export class AdoptionService {
   ) {}
 
   /**
-   * Get the adoption status for a pet
-   * @param petId - The ID of the pet
-   * @returns The adoption status for the pet: userId, petId, latestStatus
+   * Get the adoption status for a pets
+   * @returns The adoption status for the pets: userId, petId, latestStatus
    */
   async getAllAdoptionProcesses() {
     const adoptions = await this.prisma.adoption.findMany();
     const adoptionsWithStatus: any[] = [];
     for (const adoption of adoptions) {
-      const latestStatus = await this.getAdoptionStatus(adoption.petId);
+      const latestStatus = await this.getAdoptionStatusForPet(adoption.petId);
       adoptionsWithStatus.push(latestStatus);
     }
     return adoptionsWithStatus;
@@ -39,7 +38,8 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async startAdoptionProcess(petId: number, req: Request) {
-    const userId = await this.userHelper.getUserIdFromReq(req);
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    const userId = token.userId;
 
     const pet = await this.prisma.pet.findUnique({
       where: { petId: petId },
@@ -56,7 +56,7 @@ export class AdoptionService {
 
     await this.setAdoptionStatus(dto);
 
-    return await this.getAdoptionStatus(petId);
+    return await this.getAdoptionStatusForPet(petId);
   }
 
   /**
@@ -65,8 +65,11 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async cancelAdoptionProcess(petId: number, req: Request) {
-    const userId = await this.userHelper.getUserIdFromReq(req);
-    const asAdmin: boolean = await this.userHelper.isReqAdmin(req);
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    const userId = token.userId;
+    const role = Role[token.role];
+    const asAdmin: boolean =
+      role === Role.ADMIN || role === Role.SHELTER_WORKER;
 
     const dto: AdoptionDto = {
       petId: petId,
@@ -76,7 +79,7 @@ export class AdoptionService {
 
     await this.setAdoptionStatus(dto, asAdmin);
 
-    return await this.getAdoptionStatus(petId);
+    return await this.getAdoptionStatusForPet(petId);
   }
 
   /**
@@ -85,6 +88,7 @@ export class AdoptionService {
    */
   async setAdoptionProcess(dto: AdoptionDto) {
     await this.setAdoptionStatus(dto, true);
+    return await this.getAdoptionStatusForPet(dto.petId);
   }
 
   /**
@@ -92,7 +96,7 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @returns The adoption status for the pet: userId, petId, latestStatus
    */
-  private async getAdoptionStatus(petId: number) {
+  private async getAdoptionStatusForPet(petId: number) {
     const runningAdoption = await this.prisma.adoption.findFirst({
       where: {
         petId: petId,
@@ -109,7 +113,7 @@ export class AdoptionService {
       throw new NotFoundException(`Status for pet with ID ${petId} not found`);
     }
 
-    return { ...runningAdoption, latestStatus };
+    return { ...runningAdoption, status: latestStatus };
   }
 
   /**
@@ -155,7 +159,7 @@ export class AdoptionService {
       },
     });
 
-    // If there is no running adoption, create a new adoption entry
+    // If there is a running adoption, update it otherwise, create a new one
     if (runningAdoption) {
       // Check if the user is allowed to change the status
       if (runningAdoption.userId !== userId && !asAdmin) {
@@ -164,7 +168,7 @@ export class AdoptionService {
         );
       }
 
-      // If the status is cancelled, delete the adoption entry
+      // If the status is cancelled, delete the adoption entry otherwise, update it
       if (status === AdoptionStatus.CANCELLED) {
         await this.prisma.adoption.delete({
           where: {
@@ -175,21 +179,20 @@ export class AdoptionService {
           },
         });
         return;
-      }
-
-      // Update the adoption entry
-      await this.prisma.adoption.update({
-        where: {
-          userId_petId: {
-            userId: runningAdoption.userId,
-            petId: runningAdoption.petId,
+      } else {
+        await this.prisma.adoption.update({
+          where: {
+            userId_petId: {
+              userId: runningAdoption.userId,
+              petId: runningAdoption.petId,
+            },
           },
-        },
-        data: {
-          petId: petId,
-          userId: userId,
-        },
-      });
+          data: {
+            petId: petId,
+            userId: userId,
+          },
+        });
+      }
     } else {
       // If there is no running adoption, create a new adoption entry
       await this.prisma.adoption.create({

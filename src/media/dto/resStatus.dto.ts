@@ -1,4 +1,4 @@
-interface SuccessStatusDto {
+export interface SuccessStatusDto {
   status: 'success';
   file: string;
   size: string;
@@ -6,7 +6,7 @@ interface SuccessStatusDto {
   newFile: string;
 }
 
-interface FailedStatusDto {
+export interface FailedStatusDto {
   status: 'failed';
   file: string;
   size: string;

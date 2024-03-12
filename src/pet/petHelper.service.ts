@@ -1,12 +1,13 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
-import { SearchPetDto } from 'src/pet/dto/searchPet.dto';
+import { PetSearchDto } from 'src/pet/dto/petSearch.dto';
+import { PetDto } from './dto/pet.dto';
 
 @Injectable()
 export class PetHelperService {
@@ -15,10 +16,14 @@ export class PetHelperService {
     private logger: Logger,
   ) {}
 
-  async getPetsBySearch(search: SearchPetDto) {
+  /**
+   * This function gets all pets. If a search is provided, it filters the pets by the search parameters.
+   * @param search The search parameters to filter the pets.
+   */
+  async getPetsBySearch(search: PetSearchDto) {
     const { status, breed } = search;
     const breedId = Number(breed);
-    let statusEnum;
+    let statusEnum: Status;
     if (status) {
       statusEnum = Status[status.toUpperCase() as keyof typeof Status] ?? null;
     }
@@ -30,7 +35,7 @@ export class PetHelperService {
     });
 
     if (foundPets.length === 0) {
-      throw new BadRequestException(
+      throw new NotFoundException(
         `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breedId})`,
       );
     }
@@ -39,25 +44,24 @@ export class PetHelperService {
 
   /**
    * This function gets all pets and their latest status.
-   * @returns {Promise<Pet>} The pets with the latest status.
+   * @returns {Promise<PetDto[]>} The pets with the latest status.
    */
-  async getPetsWithLatestStatus() {
+  async getPetsWithLatestStatus(): Promise<PetDto[]> {
     const pets = await this.prisma.pet.findMany();
-    const petsWithLatestStatus = await Promise.all(
+    return await Promise.all(
       pets.map(async (pet) => {
         const latestStatus = await this.getLatestStatusForPet(pet.petId);
         return { ...pet, status: latestStatus };
       }),
     );
-    return petsWithLatestStatus;
   }
 
   /**
    * This function gets a pet and it latest status by pet's ID.
-   * @param {number} id The ID of the pet to get.
-   * @returns {Promise<Pet>} The pet with the latest status.
+   * @param {number} id - The ID of the pet to get.
+   * @returns {Promise<PetDto>} The pet with the latest status.
    */
-  async getPetWithLatestStatus(id: number) {
+  async getPetWithLatestStatus(id: number): Promise<PetDto> {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });
@@ -84,31 +88,27 @@ export class PetHelperService {
   /**
    * This function deletes a pet by its ID.
    * @param {number} id - The ID of the pet to delete.
-   * @returns {Promise<void>} A promise that resolves when the pet is deleted.
+   * @returns A promise that resolves when the pet is deleted.
    */
   async deletePet(id: number) {
-    try {
-      const deletedStatuses = await this.prisma.petStatus.deleteMany({
-        where: { petId: id },
-      });
+    const deletedStatuses = await this.prisma.petStatus.deleteMany({
+      where: { petId: id },
+    });
 
-      const deletedAdoptions = await this.prisma.adoption.deleteMany({
-        where: { petId: id },
-      });
+    const deletedAdoptions = await this.prisma.adoption.deleteMany({
+      where: { petId: id },
+    });
 
-      const deletedStatusesCount = deletedStatuses.count;
-      const deletedPet = await this.prisma.pet.delete({
-        where: { petId: id },
-      });
+    const deletedPet = await this.prisma.pet.delete({
+      where: { petId: id },
+    });
 
-      this.logger.log(`Pet deleted with ID '${id}'`);
+    this.logger.log(`Pet with ID ${id} deleted successfully`);
 
-      return { deletedPet, deletedStatusesCount, deletedAdoptions };
-    } catch (err) {
-      this.logger.error(`Failed to delete pet with ID '${id}'`, err.stack);
-      throw new InternalServerErrorException(
-        `Failed to delete pet with ID '${id}'`,
-      );
-    }
+    return {
+      deletedPet,
+      deletedAdoptions,
+      deletedStatuses: deletedStatuses.count,
+    };
   }
 }
