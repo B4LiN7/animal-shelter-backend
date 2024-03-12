@@ -50,12 +50,9 @@ export class UserGuard implements CanActivate {
     }
 
     if (token.userId === reqUserId) {
-      // Disable logging this because it's too verbose
-      /*
       this.logger.log(
         `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user is the owner of it`,
       );
-      */
       return true;
     }
 

@@ -78,6 +78,42 @@ async function addUsers() {
     );
   }
 }
+async function addLocations() {
+  console.log('Adding locations...');
+
+  const locationCount = await prisma.location.count();
+  if (locationCount > 0) {
+    console.log('locations already exist, skip.');
+    return;
+  }
+
+  const users = await prisma.user.findMany();
+  if (users.length === 0) {
+    console.log('no users found, skip.');
+    return;
+  }
+
+  for (const user of users) {
+    const numberOfLocations = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < numberOfLocations; i++) {
+      const newLocation = await prisma.location.create({
+        data: {
+          userId: user.userId,
+          name: `${user.name}'s location`,
+          country: faker.location.country(),
+          city: faker.location.city(),
+          zipCode: Number(faker.location.zipCode('####')),
+          state: faker.location.state(),
+          address: faker.location.streetAddress(),
+          addressExtra: faker.location.secondaryAddress(),
+        },
+      });
+      console.log(
+        `Location '${newLocation.name}' created (for user with ID ${user.userId}) with ID ${newLocation.locationId}.`,
+      );
+    }
+  }
+}
 
 async function addSpecies() {
   console.log('Adding species...');
@@ -299,6 +335,7 @@ async function addPets() {
 export async function main() {
   await checkDatabaseConnection();
   //await clearDatabase();
+  await addLocations();
   await addAdminUser();
   await addUsers();
   await addSpecies();

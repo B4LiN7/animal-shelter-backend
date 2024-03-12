@@ -51,19 +51,16 @@ export class SpeciesService {
    * @returns {Promise<SpeciesDto>} - The updated species (return of Prisma update method)
    */
   async updateSpecies(id: number, dto: UpdateSpeciesDto): Promise<SpeciesDto> {
-    // If you want to create a new species if not found, uncomment the following lines
-    /*
     const existingSpecies = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
-    if (!existingSpecies && dto.name === undefined) {
+    /* if (!existingSpecies && dto.name === undefined) {
       throw new BadRequestException(
         `Species with ID ${id} not exist, try to create, name is required`,
       );
-    } else if (!existingSpecies) {
+    } else */ if (!existingSpecies) {
       return this.addSpecies(dto);
     }
-    */
 
     return this.prisma.species.update({
       where: { speciesId: id },

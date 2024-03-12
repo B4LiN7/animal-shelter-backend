@@ -14,42 +14,53 @@ import { LocationDto } from './dto/location.dto';
 import { Request } from 'express';
 import { LocationGuard } from 'src/auth/guard/location.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from 'src/auth/guard/role.guard';
+import { Role } from 'src/auth/decorator/role.decorator';
+import { Role as R } from '@prisma/client';
 
 @Controller('location')
 @UseGuards(AuthGuard('jwt'), LocationGuard)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
+  /* For logged-in users */
   @Get('my')
   async getMyLocations(@Req() req: Request) {
     return this.locationService.getMyLocations(req);
   }
+  @Post('my')
+  async addLocationToMyLocations(
+    @Body() dto: LocationDto,
+    @Req() req: Request,
+  ) {
+    return this.locationService.addToMyLocations(dto, req);
+  }
 
+  /* For the owners of account and admin */
+  @Get(':id')
+  async getLocation(@Param('id') id: number) {
+    return this.locationService.getLocation(id);
+  }
+  @Put(':id')
+  async updateLocation(@Param('id') id: number, @Body() dto: LocationDto) {
+    return this.locationService.updateLocation(id, dto);
+  }
+  @Delete(':id')
+  async deleteLocation(@Param('id') id: number) {
+    return this.locationService.deleteLocation(id);
+  }
+
+  /* For admins */
   @Get()
+  @UseGuards(RoleGuard)
+  @Role(R.ADMIN)
   async getAllLocations() {
     return this.locationService.getAllLocations();
   }
-
-  @Get(':locationId')
-  async getLocation(@Param('locationId') id: number) {
-    return this.locationService.getLocation(id);
-  }
-
   @Post()
+  @UseGuards(RoleGuard)
+  @Role(R.ADMIN)
   async addLocation(@Body() dto: LocationDto, @Req() req: Request) {
-    return this.locationService.addLocation(dto, req);
-  }
-
-  @Put(':locationId')
-  async updateLocation(
-    @Param('locationId') id: number,
-    @Body() dto: LocationDto,
-  ) {
-    return this.locationService.updateLocation(id, dto);
-  }
-
-  @Delete(':locationId')
-  async deleteLocation(@Param('locationId') id: number) {
-    return this.locationService.deleteLocation(id);
+    return this.locationService.addToMyLocations(dto, req);
   }
 }

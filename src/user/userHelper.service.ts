@@ -20,7 +20,7 @@ export class UserHelperService {
    */
   async getUserFromReq(req: Request) {
     const decodedToken = await this.decodeTokenFromReq(req);
-    return await this.prisma.user.findUnique({
+    return this.prisma.user.findUnique({
       where: { userId: decodedToken.userId },
     });
   }

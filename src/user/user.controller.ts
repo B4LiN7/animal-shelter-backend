@@ -10,14 +10,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
 import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/auth/decorator/role.decorator';
 import { Role as R } from '@prisma/client';
 import { Request } from 'express';
 import { UserGuard } from 'src/auth/guard/user.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from './dto/create.user.dto';
 
 @Controller('user')
 @UseGuards(AuthGuard('jwt'))

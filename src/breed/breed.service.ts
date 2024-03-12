@@ -55,19 +55,16 @@ export class BreedService {
    * @returns {Promise<BreedDto>} - The updated (or added) breed (return of Prisma update method)
    */
   async updateBreed(id: number, dto: UpdateBreedDto): Promise<BreedDto> {
-    // If you want to create a new breed if not found, uncomment the following lines
-    /*
     const existingBreed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
-    if (!existingBreed && dto.name === undefined) {
+    /* if (!existingBreed && dto.name === undefined) {
       throw new BadRequestException(
         `Breed with ID ${id} not exist, try to create, name is required`,
       );
-    } else if (!existingBreed) {
+    } else */ if (!existingBreed) {
       return this.addBreed(dto);
     }
-    */
 
     return this.prisma.breed.update({
       where: { breedId: id },

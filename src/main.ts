@@ -9,6 +9,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log'],
   });
 
+  app.useGlobalFilters(new PrismaExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -17,7 +18,6 @@ async function bootstrap() {
   );
   app.use(CookieParser());
   app.enableCors();
-  app.useGlobalFilters(new PrismaExceptionFilter());
 
   await app.listen(3000);
 }

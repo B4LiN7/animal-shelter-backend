@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { LocationDto } from './dto/location.dto';
-import { UserHelperService } from '../user/userHelper.service';
+import { UserHelperService } from 'src/user/userHelper.service';
 import { Request } from 'express';
-import { Role } from '@prisma/client';
 
 @Injectable()
 export class LocationService {
@@ -13,20 +16,27 @@ export class LocationService {
   ) {}
 
   async getMyLocations(req: Request) {
-    const user = await this.userHelper.getUserFromReq(req);
-    let newUserId = user.userId;
-    if (user.role !== Role.ADMIN) {
-      newUserId = user.userId;
-    }
+    const token = await this.userHelper.decodeTokenFromReq(req);
     const myLocations = await this.prisma.location.findMany({
       where: {
-        userId: newUserId,
+        userId: token.userId,
       },
     });
-    if (!myLocations || myLocations.length === 0) {
-      throw new NotFoundException(`You don't have any locations yet.`);
+    if (myLocations.length === 0) {
+      throw new NotFoundException(`You don't have any locations, yet.`);
     }
     return myLocations;
+  }
+
+  async addToMyLocations(dto: LocationDto, req: Request) {
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    delete dto.userId;
+    return this.prisma.location.create({
+      data: {
+        userId: token.userId,
+        ...dto,
+      },
+    });
   }
 
   async getAllLocations() {
@@ -34,6 +44,7 @@ export class LocationService {
   }
 
   async getLocation(id: number) {
+    if (!id) throw new BadRequestException('Location ID format not valid');
     return this.prisma.location.findUnique({
       where: {
         locationId: id,
@@ -41,18 +52,16 @@ export class LocationService {
     });
   }
 
-  async addLocation(dto: LocationDto, req: Request) {
-    const userId = await this.userHelper.getUserIdFromReq(req);
-    delete dto.userId;
+  async addLocation(dto: LocationDto) {
     return this.prisma.location.create({
       data: {
-        userId: userId,
         ...dto,
       },
     });
   }
 
   async updateLocation(id: number, dto: LocationDto) {
+    if (!id) throw new BadRequestException('Location ID format not valid');
     return this.prisma.location.update({
       where: {
         locationId: id,
@@ -64,6 +73,7 @@ export class LocationService {
   }
 
   async deleteLocation(id: number) {
+    if (!id) throw new BadRequestException('Location ID format not valid');
     return this.prisma.location.delete({
       where: {
         locationId: id,

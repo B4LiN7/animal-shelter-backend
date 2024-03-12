@@ -8,5 +8,7 @@ export interface PetDto {
   birthDate: Date;
   imageUrl: string;
   breedId: number;
+  createdAt: Date;
+  editedAt: Date;
   status: Status;
 }

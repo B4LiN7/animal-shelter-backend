@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Role } from '@prisma/client';
-import { UserHelperService } from '../../user/userHelper.service';
+import { UserHelperService } from 'src/user/userHelper.service';
 
 const ALWAYS_ALLOWED_ROLES: Role[] = [Role.ADMIN];
 
@@ -28,39 +28,39 @@ export class LocationGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const requestedUrl = request.url;
-    const reqLocationId = request.params.locationId;
-
+    const reqUrl = request.url;
+    const reqLocationId = Number.parseInt(request.params.id);
     const token = await this.userHelper.decodeTokenFromReq(request);
+
+    if (isNaN(reqLocationId)) {
+      return true;
+    }
 
     const userRole: Role = Role[token.role];
     if (ALWAYS_ALLOWED_ROLES.includes(userRole)) {
       this.logger.log(
-        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user is a(n) ${userRole}`,
+        `User with ID ${token.userId} is allowed to access the resource ${reqUrl} because the user is a(n) ${userRole}`,
       );
       return true;
     }
 
     const location = await this.prisma.location.findUnique({
       where: {
-        locationId: Number(reqLocationId),
+        locationId: reqLocationId,
       },
       select: {
         userId: true,
       },
     });
-    if (location.userId === token.userId) {
-      // Disable logging this because it's too verbose
-      /*
+    if (location && location.userId === token.userId) {
       this.logger.log(
-        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user the owner of it`,
+        `User with ID ${token.userId} is allowed to access the resource ${reqUrl} because the user the owner of it`,
       );
-      */
       return true;
     }
 
     this.logger.warn(
-      `User with ID ${token.userId} is not allowed to access the resource ${requestedUrl}`,
+      `User with ID ${token.userId} is not allowed to access the resource ${reqUrl}`,
     );
     return false;
   }

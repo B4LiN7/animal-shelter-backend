@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
 import { UserHelperService } from 'src/user/userHelper.service';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from './dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dto/user.dto';
 import { Role } from '@prisma/client';
@@ -199,6 +199,15 @@ export class UserService {
         userId: id,
       },
       data: newUser,
+      select: {
+        userId: true,
+        username: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        editedAt: true,
+      },
     });
   }
 
