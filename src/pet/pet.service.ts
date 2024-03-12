@@ -4,10 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { CreatePetDto } from './dto/createPet.dto';
-import { UpdatePetDto } from './dto/updatePet.dto';
+import { CreatePetDto } from './dto/create.pet.dto';
+import { UpdatePetDto } from './dto/update.pet.dto';
 import { PetHelperService } from './petHelper.service';
-import { SearchPetDto } from './dto/searchPet.dto';
+import { PetSearchDto } from './dto/petSearch.dto';
 import { PetDto } from './dto/pet.dto';
 import { PetStatusDto } from './dto/petStatus.dto';
 import { Status } from '@prisma/client';
@@ -24,7 +24,7 @@ export class PetService {
    * @param search - Search parameters (optional)
    * @returns {Promise<PetDto[]>} - List of pets
    */
-  async getAllPets(search?: SearchPetDto): Promise<PetDto[]> {
+  async getAllPets(search?: PetSearchDto): Promise<PetDto[]> {
     if (search) {
       const foundPets = await this.petHelper.getPetsBySearch(search);
       return Promise.all(

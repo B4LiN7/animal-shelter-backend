@@ -1,11 +1,7 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { UpdateBreedDto } from './dto/updateBreed.dto';
-import { CreateBreedDto } from './dto/createBreed.dto';
+import { UpdateBreedDto } from './dto/update.breed.dto';
+import { CreateBreedDto } from './dto/create.breed.dto';
 import { BreedDto } from './dto/breed.dto';
 
 @Injectable()
@@ -45,7 +41,7 @@ export class BreedService {
    * @returns {Promise<BreedDto>} - The newly created breed (return of Prisma create method)
    */
   async addBreed(dto: CreateBreedDto): Promise<BreedDto> {
-    return await this.prisma.breed.create({
+    return this.prisma.breed.create({
       data: {
         ...dto,
       },
@@ -59,6 +55,8 @@ export class BreedService {
    * @returns {Promise<BreedDto>} - The updated (or added) breed (return of Prisma update method)
    */
   async updateBreed(id: number, dto: UpdateBreedDto): Promise<BreedDto> {
+    // If you want to create a new breed if not found, uncomment the following lines
+    /*
     const existingBreed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -69,6 +67,7 @@ export class BreedService {
     } else if (!existingBreed) {
       return this.addBreed(dto);
     }
+    */
 
     return this.prisma.breed.update({
       where: { breedId: id },
@@ -81,16 +80,20 @@ export class BreedService {
   /**
    * Delete a breed by ID
    * @param id - The ID of the breed
-   * @returns {Promise<BreedDto>} - The deleted breed (return of Prisma delete method)
+   * @returns {Promise<{ removedBreed: BreedDto; updatedPets: number }>} - The deleted breed (return of Prisma delete method) and the number of updated pets
    */
-  async deleteBreed(id: number): Promise<BreedDto> {
-    await this.prisma.pet.updateMany({
+  async deleteBreed(
+    id: number,
+  ): Promise<{ removedBreed: BreedDto; updatedPets: number }> {
+    const updatedPets = await this.prisma.pet.updateMany({
       where: { breedId: id },
       data: { breedId: null },
     });
 
-    return this.prisma.breed.delete({
+    const removedBreed = await this.prisma.breed.delete({
       where: { breedId: id },
     });
+
+    return { removedBreed, updatedPets: updatedPets.count };
   }
 }

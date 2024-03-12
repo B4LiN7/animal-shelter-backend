@@ -1,4 +1,4 @@
-export interface SearchPetDto {
+export interface PetSearchDto {
   status?: string;
   breed?: string;
 }

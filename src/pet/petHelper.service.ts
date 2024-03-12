@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
-import { SearchPetDto } from 'src/pet/dto/searchPet.dto';
+import { PetSearchDto } from 'src/pet/dto/petSearch.dto';
 import { PetDto } from './dto/pet.dto';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class PetHelperService {
    * This function gets all pets. If a search is provided, it filters the pets by the search parameters.
    * @param search The search parameters to filter the pets.
    */
-  async getPetsBySearch(search: SearchPetDto) {
+  async getPetsBySearch(search: PetSearchDto) {
     const { status, breed } = search;
     const breedId = Number(breed);
     let statusEnum: Status;

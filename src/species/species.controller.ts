@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { SpeciesService } from './species.service';
-import { CreateSpeciesDto } from './dto/createSpecies.dto';
+import { CreateSpeciesDto } from './dto/create.species.dto';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { Role } from '../auth/decorator/role.decorator';
 import { Role as R } from '@prisma/client';

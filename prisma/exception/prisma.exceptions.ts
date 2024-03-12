@@ -16,4 +16,8 @@ export const errorMappings: Record<
     status: HttpStatus.CONFLICT,
     message: 'Reference Data already exists',
   },
+  P2006: {
+    status: HttpStatus.BAD_REQUEST,
+    message: 'The provided value for field is not valid',
+  },
 };
