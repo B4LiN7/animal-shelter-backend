@@ -7,6 +7,6 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [PrismaModule, UserModule],
   controllers: [LocationController],
-  providers: [LocationService, Logger],
+  providers: [Logger, LocationService],
 })
 export class LocationModule {}

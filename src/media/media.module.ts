@@ -7,8 +7,8 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [PrismaModule, MulterModule, AuthModule, UserModule],
+  imports: [MulterModule, PrismaModule, AuthModule, UserModule],
   controllers: [MediaController],
-  providers: [MediaService, Logger],
+  providers: [Logger, MediaService],
 })
 export class MediaModule {}

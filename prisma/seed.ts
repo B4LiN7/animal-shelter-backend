@@ -264,19 +264,14 @@ async function addBreeds() {
       switch (selectedSpeciesName) {
         case 'Dog':
           return faker.animal.dog();
-          break;
         case 'Cat':
           return faker.animal.cat();
-          break;
         case 'Rabbit':
           return faker.animal.rabbit();
-          break;
         case 'Bird':
           return faker.animal.bird();
-          break;
         case 'Fish':
           return faker.animal.fish();
-          break;
         default:
           return faker.animal.dog();
       }
@@ -335,9 +330,9 @@ async function addPets() {
 export async function main() {
   await checkDatabaseConnection();
   //await clearDatabase();
-  await addLocations();
   await addAdminUser();
   await addUsers();
+  await addLocations();
   await addSpecies();
   await addBreeds();
   await addPets();

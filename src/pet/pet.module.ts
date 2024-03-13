@@ -9,7 +9,7 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [PrismaModule, AuthModule, UserModule],
   controllers: [PetController],
-  providers: [PetService, PetHelperService, Logger],
+  providers: [Logger, PetService, PetHelperService],
   exports: [PetHelperService],
 })
 export class PetModule {}

@@ -9,7 +9,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 @Module({
   imports: [PrismaModule, PassportModule, UserModule],
   controllers: [AuthController],
-  providers: [AuthService, Logger, JwtStrategy],
+  providers: [Logger, JwtStrategy, AuthService],
   exports: [JwtStrategy],
 })
 export class AuthModule {}

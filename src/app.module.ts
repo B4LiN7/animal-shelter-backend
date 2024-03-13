@@ -6,20 +6,20 @@ import { MediaModule } from './media/media.module';
 import { AdoptionModule } from './adoption/adoption.module';
 import { BreedModule } from './breed/breed.module';
 import { LocationModule } from './location/location.module';
-import { JwtGlobalModule } from './jwtGlobal.module';
 import { SpeciesModule } from './species/species.module';
+import { JwtGlobalModule } from './jwtGlobal.module';
 
 @Module({
   imports: [
+    JwtGlobalModule,
     AuthModule,
     UserModule,
-    PetModule,
-    MediaModule,
-    AdoptionModule,
-    BreedModule,
     LocationModule,
-    JwtGlobalModule,
+    MediaModule,
+    PetModule,
+    BreedModule,
     SpeciesModule,
+    AdoptionModule,
   ],
 })
 export class AppModule {}
