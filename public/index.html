@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animal Shelter API</title>
+
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td, th {
+      padding: 8px;
+      border: 1px solid black;
+    }
+
+    td[rowspan] {
+      text-align: center;
+    }
+
+    .dark {
+        background-color: #333;
+        color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Animal Shelter (Backend) API</h1>
+  <p>Welcome to the Animal Shelter API! You can use this API to view, create, update, and delete data from the shelter db.</p>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Module</th>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Auth endpoint -->
+    <tr>
+      <td rowspan="3">Auth</td>
+      <td>/auth/login</td>
+      <td>POST</td>
+      <td>Login with username and password</td>
+    </tr>
+    <tr>
+      <td>/auth/register</td>
+      <td>POST</td>
+      <td>Register a new user with username, password, email, and name</td>
+    </tr>
+    <tr>
+      <td>/auth/logout</td>
+      <td>GET</td>
+      <td>Logout manually (deleting the token is enough)</td>
+    </tr>
+    <!-- User endpoint -->
+    <tr>
+      <td rowspan="6">User</td>
+      <td>/user</td>
+      <td>GET</td>
+      <td>List all users (id + username), admin access only</td>
+    </tr>
+    <tr>
+      <td>/user/me</td>
+      <td>GET</td>
+      <td>Display logged-in user's data</td>
+    </tr>
+    <tr>
+      <td>/user/:id</td>
+      <td>GET</td>
+      <td>Display specific user's data, self or admin access</td>
+    </tr>
+    <tr>
+      <td>/user</td>
+      <td>POST</td>
+      <td>Create a new user, admin can assign Role</td>
+    </tr>
+    <tr>
+      <td>/user/:id</td>
+      <td>PUT</td>
+      <td>Update specific user's data, self or admin access</td>
+    </tr>
+    <tr>
+      <td>/user/:id</td>
+      <td>DELETE</td>
+      <td>Delete a specific user, self or admin access</td>
+    </tr>
+    <!-- Media endpoint -->
+    <tr>
+      <td rowspan="2">Media</td>
+      <td>/media</td>
+      <td>POST</td>
+      <td>Upload file(s), field name: file</td>
+    </tr>
+    <tr>
+      <td>/media/*</td>
+      <td>GET</td>
+      <td>Access files in the public folder (e.g., /media/uploads/image.jpg)</td>
+    </tr>
+    <!-- Breed endpoint -->
+    <tr>
+      <td rowspan="5">Breed</td>
+      <td>/breed</td>
+      <td>GET</td>
+      <td>Get all breeds</td>
+    </tr>
+    <tr>
+      <td>/breed/:id</td>
+      <td>GET</td>
+      <td>Get a breed by id</td>
+    </tr>
+    <tr>
+      <td>/breed</td>
+      <td>POST</td>
+      <td>Create a new breed</td>
+    </tr>
+    <tr>
+      <td>/breed/:id</td>
+      <td>PUT</td>
+      <td>Update a breed by id</td>
+    </tr>
+    <tr>
+      <td>/breed/:id</td>
+      <td>DELETE</td>
+      <td>Delete a breed by id (Sets breedId to null in all pets)</td>
+    </tr>
+    <!-- Species endpoint -->
+    <tr>
+      <td rowspan="5">Species</td>
+      <td>/species</td>
+      <td>GET</td>
+      <td>Get all species</td>
+    </tr>
+    <tr>
+      <td>/species/:id</td>
+      <td>GET</td>
+      <td>Get a species by id</td>
+    </tr>
+    <tr>
+      <td>/species</td>
+      <td>POST</td>
+      <td>Create a new species</td>
+    </tr>
+    <tr>
+      <td>/species/:id</td>
+      <td>PUT</td>
+      <td>Update a species by id</td>
+    </tr>
+    <tr>
+      <td>/species/:id</td>
+      <td>DELETE</td>
+      <td>Delete a species by id (Sets speciesId to null in all breeds)</td>
+    </tr>
+    <!-- Pet endpoint -->
+    <tr>
+      <td rowspan="6">Pet</td>
+      <td>/pet</td>
+      <td>GET</td>
+      <td>Get all pets</td>
+    </tr>
+    <tr>
+      <td>/pet/:id</td>
+      <td>GET</td>
+      <td>Get a pet by id</td>
+    </tr>
+    <tr>
+      <td>/pet</td>
+      <td>POST</td>
+      <td>Create a new pet</td>
+    </tr>
+    <tr>
+      <td>/pet/:id</td>
+      <td>PUT</td>
+      <td>Update a pet by id</td>
+    </tr>
+    <tr>
+      <td>/pet/:id</td>
+      <td>DELETE</td>
+      <td>Delete a pet by id</td>
+    </tr>
+    <tr>
+      <td>/pet/status/:id</td>
+      <td>GET</td>
+      <td>Get the status history of a pet by id</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <button id="themeSwitch">Switch theme</button>
+
+  <script>
+    document.getElementById('themeSwitch').addEventListener('click', () => {
+      document.body.classList.toggle('dark')
+    })
+  </script>
+</body>
+</html>

@@ -8,6 +8,7 @@ import { BreedModule } from './breed/breed.module';
 import { LocationModule } from './location/location.module';
 import { SpeciesModule } from './species/species.module';
 import { JwtGlobalModule } from './jwtGlobal.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -21,5 +22,6 @@ import { JwtGlobalModule } from './jwtGlobal.module';
     SpeciesModule,
     AdoptionModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

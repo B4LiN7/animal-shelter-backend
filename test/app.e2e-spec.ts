@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
+import { PrismaExceptionFilter } from '../prisma/exception/prisma.exception.filter';
+import * as CookieParser from 'cookie-parser';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -12,6 +14,15 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new PrismaExceptionFilter());
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+      }),
+    );
+    app.use(CookieParser());
+    app.enableCors();
     await app.init();
   });
 
