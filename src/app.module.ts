@@ -7,12 +7,11 @@ import { AdoptionModule } from './adoption/adoption.module';
 import { BreedModule } from './breed/breed.module';
 import { LocationModule } from './location/location.module';
 import { SpeciesModule } from './species/species.module';
-import { JwtGlobalModule } from './jwtGlobal.module';
 import { AppController } from './app.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    JwtGlobalModule,
     AuthModule,
     UserModule,
     LocationModule,
@@ -21,6 +20,11 @@ import { AppController } from './app.controller';
     BreedModule,
     SpeciesModule,
     AdoptionModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '2d' },
+    }),
   ],
   controllers: [AppController],
 })
