@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
+
 async function hashPassword(password: string) {
   const saltOrRounds = 10;
   return await bcrypt.hash(password, saltOrRounds);
@@ -15,18 +16,6 @@ async function checkDatabaseConnection() {
     console.error('Unable to connect to the database');
     throw error;
   }
-}
-async function clearDatabase() {
-  console.log('Clearing database...');
-  await prisma.loginHistory.deleteMany();
-  await prisma.location.deleteMany();
-  await prisma.adoption.deleteMany();
-  await prisma.petStatus.deleteMany();
-  await prisma.pet.deleteMany();
-  await prisma.breed.deleteMany();
-  await prisma.species.deleteMany();
-  await prisma.user.deleteMany();
-  console.log('Database cleared.');
 }
 
 async function addAdminUser() {
@@ -329,13 +318,27 @@ async function addPets() {
 
 export async function main() {
   await checkDatabaseConnection();
-  //await clearDatabase();
-  await addAdminUser();
-  await addUsers();
-  await addLocations();
-  await addSpecies();
-  await addBreeds();
-  await addPets();
+
+  const environment = process.env.ENV;
+  switch (environment) {
+    case 'dev':
+      await addAdminUser();
+      await addUsers();
+      await addLocations();
+      await addSpecies();
+      await addBreeds();
+      await addPets();
+      return;
+    case 'test':
+      await addAdminUser();
+      return;
+    case 'prod':
+      await addAdminUser();
+      return;
+    default:
+      console.log('No environment specified, exit.');
+      return;
+  }
 }
 
 main()
@@ -343,7 +346,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e);
+    console.error('Error in seeding: ' + e);
     await prisma.$disconnect();
     process.exit(1);
   });

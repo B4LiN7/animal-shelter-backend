@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { PrismaExceptionFilter } from '../prisma/exception/prisma.exception.filter';
+import { AppModule } from 'src/app.module';
+import { PrismaExceptionFilter } from 'prisma/exception/prisma.exception.filter';
 import * as CookieParser from 'cookie-parser';
 
 describe('AppController (e2e)', () => {
@@ -27,7 +27,15 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/ (GET) Root reachable', () => {
     return request(app.getHttpServer()).get('/').expect(200);
+  });
+
+  describe('/pet endpoints', () => {
+    describe('/pet (GET)', () => {
+      it('should return nothing', () => {
+        return request(app.getHttpServer()).get('/pet').expect(200).expect([]);
+      });
+    });
   });
 });
