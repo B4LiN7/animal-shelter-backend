@@ -11,7 +11,8 @@ services:
     depends_on:
       - db
     environment:
-      NODE_ENV: production
+      NODE_ENV: prod
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/shelter
     networks:
       - default
     ports:
