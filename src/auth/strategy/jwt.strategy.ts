@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -9,10 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
  * If user's token is valid and user still exists in the database, then we'll return the user.
  */
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private prisma: PrismaService,
-    private logger: Logger,
-  ) {
+  constructor(private prisma: PrismaService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request) => request.cookies.token,
@@ -20,7 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET,
     });
-    this.logger = new Logger(JwtStrategy.name);
   }
 
   async validate(payload: any) {

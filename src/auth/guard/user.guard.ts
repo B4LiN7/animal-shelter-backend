@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
-import { UserHelperService } from '../../user/userHelper.service';
+import { UserHelperService } from 'src/user/userHelper.service';
 
 const ALWAYS_ALLOWED_ROLES: Role[] = [Role.ADMIN];
 
