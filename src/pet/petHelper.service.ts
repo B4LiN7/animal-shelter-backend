@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Status } from '@prisma/client';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { PetSearchDto } from 'src/pet/dto/petSearch.dto';
 import { PetDto } from './dto/pet.dto';
 

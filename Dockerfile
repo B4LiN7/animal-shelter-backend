@@ -29,4 +29,4 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 
-CMD pnpm prisma db push && pnpm prisma db seed && node dist/src/main.js
+CMD pnpm prisma db push && pnpm prisma db seed && node dist/main.js
