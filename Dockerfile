@@ -17,7 +17,6 @@ WORKDIR /app
 
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-COPY .env.docker .env
 
 RUN pnpm prisma generate
 RUN pnpm build
@@ -29,4 +28,4 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 
-CMD pnpm prisma db push && pnpm prisma db seed && node dist/src/main.js
+CMD pnpm prisma db push && pnpm prisma db seed && node dist/main.js

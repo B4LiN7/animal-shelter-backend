@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
+
 async function hashPassword(password: string) {
   const saltOrRounds = 10;
   return await bcrypt.hash(password, saltOrRounds);
@@ -16,19 +17,8 @@ async function checkDatabaseConnection() {
     throw error;
   }
 }
-async function clearDatabase() {
-  console.log('Clearing database...');
-  await prisma.loginHistory.deleteMany();
-  await prisma.location.deleteMany();
-  await prisma.adoption.deleteMany();
-  await prisma.petStatus.deleteMany();
-  await prisma.pet.deleteMany();
-  await prisma.breed.deleteMany();
-  await prisma.species.deleteMany();
-  await prisma.user.deleteMany();
-  console.log('Database cleared.');
-}
 
+// Admin user (always needed)
 async function addAdminUser() {
   console.log('Checking admin user...');
   const admin = await prisma.user.findFirst({
@@ -37,11 +27,11 @@ async function addAdminUser() {
     },
   });
   if (admin && admin.role === Role.ADMIN) {
-    console.log('admin user with ADMIN role already exists, skip.');
+    console.log('Admin user with ADMIN role already exists, skip.');
     return;
   }
   if (admin) {
-    console.log(`delete non ADMIN role user... `);
+    console.log(`Delete non ADMIN role user... `);
     await prisma.user.delete({ where: { userId: admin.userId } });
   }
 
@@ -53,14 +43,16 @@ async function addAdminUser() {
       role: Role.ADMIN,
     },
   });
-  console.log(`admin user created with user ID ${newAdmin.userId}.`);
+  console.log(`Admin user created with user ID ${newAdmin.userId}.`);
 }
+
+// Random users and locations
 async function addUsers() {
   console.log('Adding users...');
 
   const userCount = await prisma.user.findMany();
   if (userCount.length > 1) {
-    console.log('users already exist, skip.');
+    console.log('Users already exist, skip.');
     return;
   }
 
@@ -83,13 +75,13 @@ async function addLocations() {
 
   const locationCount = await prisma.location.count();
   if (locationCount > 0) {
-    console.log('locations already exist, skip.');
+    console.log('Locations already exist, skip.');
     return;
   }
 
   const users = await prisma.user.findMany();
   if (users.length === 0) {
-    console.log('no users found, skip.');
+    console.log('No users found, skip.');
     return;
   }
 
@@ -115,12 +107,13 @@ async function addLocations() {
   }
 }
 
+// Animal breeds and species
 async function addSpecies() {
   console.log('Adding species...');
 
   const speciesCount = await prisma.species.count();
   if (speciesCount > 0) {
-    console.log('species already exist, skip.');
+    console.log('Species already exist, skip.');
     return;
   }
 
@@ -141,12 +134,12 @@ async function addBreeds() {
 
   const breeds = await prisma.breed.findMany();
   if (breeds.length > 0) {
-    console.log('breeds already exist, skip.');
+    console.log('Breeds already exist, skip.');
     return;
   }
   const species = await prisma.species.findMany();
   if (species.length === 0) {
-    console.log('no species found, skip.');
+    console.log('No species found, skip.');
     return;
   }
 
@@ -294,12 +287,12 @@ async function addPets() {
 
   const petCount = await prisma.pet.count();
   if (petCount > 0) {
-    console.log('pets already exist, skip.');
+    console.log('Pets already exist, skip.');
     return;
   }
   const breedCount = await prisma.breed.count();
   if (breedCount <= 0) {
-    console.log('no breeds found, skip.');
+    console.log('No breeds found, skip.');
     return;
   }
 
@@ -329,13 +322,30 @@ async function addPets() {
 
 export async function main() {
   await checkDatabaseConnection();
-  //await clearDatabase();
-  await addAdminUser();
-  await addUsers();
-  await addLocations();
-  await addSpecies();
-  await addBreeds();
-  await addPets();
+
+  const environment = process.env.NODE_ENV;
+  switch (environment) {
+    case 'dev':
+      console.log('Development environment specified, executing...');
+      await addAdminUser();
+      await addUsers();
+      await addLocations();
+      await addSpecies();
+      await addBreeds();
+      await addPets();
+      break;
+    case 'test':
+      console.log('Testing environment specified, executing...');
+      await addAdminUser();
+      break;
+    case 'prod':
+      console.log('Production environment specified, executing...');
+      await addAdminUser();
+      break;
+    default:
+      console.log('No environment specified, exit.');
+      break;
+  }
 }
 
 main()
@@ -343,7 +353,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e);
+    console.error('Error in seeding: ' + e);
     await prisma.$disconnect();
     process.exit(1);
   });
