@@ -36,7 +36,7 @@ export class AuthService {
   async login(dto: LoginDto, req: Request, res: Response) {
     const { username, password } = dto;
 
-    if (await this.userHelper.isTokenValidFromReq(req)) {
+    if (await this.isTokenValidFromReq(req)) {
       throw new BadRequestException('You are already logged in');
     }
 
@@ -129,16 +129,16 @@ export class AuthService {
    * @param res - Response object
    */
   async logout(req: Request, res: Response) {
-    res.clearCookie('token').json({ message: 'You have been logged out' });
     const user = await this.userHelper.getUserFromReq(req);
+    res.clearCookie('token').json({ message: 'You have been logged out' });
 
     this.logger.log(
-      `User with user ID '${user.userId}' has been logged out using /logout`,
+      `User with user ID '${user.userId}' has been logged out using /logout endpoint`,
     );
   }
 
   /**
-   * Signs a JWT token with the user's ID (Secret is stored in .env)
+   * Signs a JWT token with the user's ID and the role (s)he had (Secret is stored in .env)
    * @param userId - The user's ID
    * @param role - The user's role
    * @returns The signed JWT token
@@ -150,5 +150,15 @@ export class AuthService {
       throw new ForbiddenException('Token could not be generated');
     }
     return token;
+  }
+
+  private async isTokenValidFromReq(req: Request): Promise<boolean> {
+    try {
+      const token = req.cookies.token;
+      await this.jwt.verifyAsync(token);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -80,7 +80,8 @@ export class UserService {
    * @returns {Promise<UserDto>} - Promise with user (return of Prisma findUnique method)
    */
   async getMyUser(req: Request): Promise<UserDto> {
-    const userId = await this.userHelper.getUserIdFromReq(req);
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    const userId = token.userId;
     return this.prisma.user.findUnique({
       where: {
         userId: userId,
@@ -104,7 +105,8 @@ export class UserService {
    * @returns {Promise<UserDto>} - Promise with updated user (return of Prisma update method)
    */
   async updateMyUser(req: Request, dto: UpdateUserDto): Promise<UserDto> {
-    const userId = await this.userHelper.getUserIdFromReq(req);
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    const userId = token.userId;
     return this.updateUser(userId, dto, req);
   }
 

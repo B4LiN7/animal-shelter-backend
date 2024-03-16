@@ -26,26 +26,6 @@ export class UserHelperService {
   }
 
   /**
-   * Gets the user's ID from the request
-   * @param req The Request object
-   * @returns The user's ID
-   */
-  async getUserIdFromReq(req: Request): Promise<string> {
-    const decodedToken = await this.decodeTokenFromReq(req);
-    return decodedToken.userId;
-  }
-
-  async isTokenValidFromReq(req: Request): Promise<boolean> {
-    try {
-      const token = req.cookies.token;
-      await this.jwt.verifyAsync(token);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /**
    * Decodes a JWT token from the request object (throw an error if the token is invalid or not provided)
    * @param req - The Request object
    * @returns The decoded JWT token

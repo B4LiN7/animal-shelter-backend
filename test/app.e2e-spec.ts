@@ -32,12 +32,12 @@ describe('AppController (e2e)', () => {
     agent = request.agent(app.getHttpServer());
   });
 
-  it('Root reachable (/ (GET))', () => {
+  it('should reach root ( / ) reachable)', () => {
     return request(app.getHttpServer()).get('/').expect(200);
   });
 
   describe('/auth endpoints', () => {
-    it('should register (/auth/register (POST) )', () => {
+    it('should register ( /auth/register (POST) )', () => {
       return request(app.getHttpServer())
         .post('/auth/register')
         .send({ username: 'test', password: 'password' })
@@ -47,8 +47,9 @@ describe('AppController (e2e)', () => {
           expect(res.body).toHaveProperty('token');
         });
     });
-    it('should login (with create test user) (/auth/login (POST))', () => {
-      return agent
+
+    it('should login (with create test user) ( /auth/login (POST) )', () => {
+      return request(app.getHttpServer())
         .post('/auth/login')
         .send({ username: 'test', password: 'password' })
         .expect(200)
@@ -60,6 +61,11 @@ describe('AppController (e2e)', () => {
           expect(res.body).toHaveProperty('token');
         });
     });
+
+    it('should logout ( /auth/logout (POST) )', async () => {
+      await loginUser(agent, 'test');
+      return agent.get('/auth/logout').expect(200);
+    });
   });
 
   describe('/pet endpoints', () => {
@@ -69,4 +75,15 @@ describe('AppController (e2e)', () => {
       });
     });
   });
+
+  async function loginUser(
+    agent: request.SuperTest<request.Test>,
+    username: string = 'admin',
+    password: string = 'password',
+  ) {
+    await agent
+      .post('/auth/login')
+      .send({ username: username, password: password })
+      .expect(200);
+  }
 });
