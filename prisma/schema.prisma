@@ -47,7 +47,7 @@ model Location {
 
 model Adoption {
   userId String
-  petId  Int
+  petId  Int    @unique
   user   User   @relation(fields: [userId], references: [userId])
   pet    Pet    @relation(fields: [petId], references: [petId])
 
