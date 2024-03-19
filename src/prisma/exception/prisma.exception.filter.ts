@@ -15,7 +15,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const error = exception.code;
     this.logger.error(
-      `Prisma exception (CODE: ${exception.code}): ${exception.message}`,
+      `Prisma exception (${exception.code}) occurred: ${exception.message}`,
     );
 
     const mapping = errorMappings[error];

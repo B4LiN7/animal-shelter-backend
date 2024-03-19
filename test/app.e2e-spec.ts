@@ -69,10 +69,25 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/pet endpoints', () => {
-    describe('/pet (GET)', () => {
-      it('should return nothing', () => {
-        return request(app.getHttpServer()).get('/pet').expect(200).expect([]);
-      });
+    it('should return nothing', () => {
+      return request(app.getHttpServer()).get('/pet').expect(200).expect([]);
+    });
+
+    it('should add a pet', async () => {
+      await addBreeds(agent);
+      return agent
+        .post('/pet')
+        .send({
+          name: 'test',
+          breedId: 1,
+          sex: 'MALE',
+          birthDate: '2020-01-01T00:00:00.000Z',
+          description: 'test',
+        })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('id');
+        });
     });
   });
 
@@ -85,5 +100,43 @@ describe('AppController (e2e)', () => {
       .post('/auth/login')
       .send({ username: username, password: password })
       .expect(200);
+  }
+
+  async function addBreeds(
+    agent: request.SuperTest<request.Test>,
+    breedNumber: number = 1,
+    speciesNumber: number = 1,
+  ) {
+    await loginUser(agent);
+    for (let i = 0; i < speciesNumber; i++) {
+      await agent
+        .post('/species')
+        .send({
+          name: `test_species_${i}`,
+          description: `test_description_${i}`,
+        })
+        .expect(201);
+    }
+    const speciesIds = await agent
+      .get('/species')
+      .expect(200)
+      .then((res) => {
+        return res.body.map((species) => species.id);
+      });
+    for (let i = 0; i < breedNumber; i++) {
+      await agent
+        .post('/breed')
+        .send({
+          name: `test_breed_${i}`,
+          description: `test_description_${i}`,
+          speciesId: getRandomElement(speciesIds),
+        })
+        .expect(201);
+    }
+  }
+
+  function getRandomElement(array) {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
   }
 });

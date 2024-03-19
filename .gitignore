@@ -2,8 +2,8 @@
 /dist
 /node_modules
 
-/public/uploads
 /prisma/migrations
+/public/uploads
 /docs
 
 # Logs
