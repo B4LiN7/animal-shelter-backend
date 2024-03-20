@@ -30,7 +30,10 @@ export class UserService {
         userId: true,
         username: true,
         name: true,
+        email: true,
         role: true,
+        createdAt: true,
+        editedAt: true,
       },
     });
   }
@@ -178,7 +181,11 @@ export class UserService {
       throw new BadRequestException('User with this ID does not exist');
     }
 
-    if (dto.username && (await this.isUserExists(dto.username))) {
+    if (
+      dto.username &&
+      (await this.isUserExists(dto.username)) &&
+      newUser.username !== dto.username
+    ) {
       throw new BadRequestException('User with this username already exists');
     }
 

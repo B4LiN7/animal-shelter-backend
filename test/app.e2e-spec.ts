@@ -5,6 +5,7 @@ import { AppModule } from 'src/app.module';
 import { PrismaExceptionFilter } from 'src/prisma/exception/prisma.exception.filter';
 import * as CookieParser from 'cookie-parser';
 import * as process from 'process';
+import { SpeciesDto } from '../src/species/dto/species.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -47,7 +48,6 @@ describe('AppController (e2e)', () => {
           expect(res.body).toHaveProperty('token');
         });
     });
-
     it('should login (with create test user) ( /auth/login (POST) )', () => {
       return request(app.getHttpServer())
         .post('/auth/login')
@@ -61,10 +61,38 @@ describe('AppController (e2e)', () => {
           expect(res.body).toHaveProperty('token');
         });
     });
-
     it('should logout ( /auth/logout (POST) )', async () => {
       await loginUser(agent, 'test');
       return agent.get('/auth/logout').expect(200);
+    });
+  });
+
+  describe('/user endpoints', () => {
+    it('should return all users (admin and test)', async () => {
+      await loginUser(agent);
+      return agent
+        .get('/user')
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveLength(2);
+        });
+    });
+    it('should return only the test user (logged in user)', async () => {
+      await loginUser(agent, 'test');
+      return agent
+        .get('/user/me')
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('username', 'test');
+        });
+    });
+    it('should throw and unauthorized error', async () => {
+      await loginUser(agent, 'test');
+      return agent.get('/user').expect(403);
+    });
+    it('should modify the test user (logged in user)', async () => {
+      await loginUser(agent, 'test');
+      return agent.put('/user/me').send({ password: 'password2' }).expect(200);
     });
   });
 
@@ -72,24 +100,25 @@ describe('AppController (e2e)', () => {
     it('should return nothing', () => {
       return request(app.getHttpServer()).get('/pet').expect(200).expect([]);
     });
-
     it('should add a pet', async () => {
-      await addBreeds(agent);
+      const breedIds = await addBreeds(agent);
       return agent
         .post('/pet')
         .send({
           name: 'test',
-          breedId: 1,
+          breedId: getRandomElement(breedIds),
           sex: 'MALE',
           birthDate: '2020-01-01T00:00:00.000Z',
           description: 'test',
         })
         .expect(201)
         .expect((res) => {
-          expect(res.body).toHaveProperty('id');
+          expect(res.body).toHaveProperty('petId');
         });
     });
   });
+
+  // Helper functions
 
   async function loginUser(
     agent: request.SuperTest<request.Test>,
@@ -106,7 +135,7 @@ describe('AppController (e2e)', () => {
     agent: request.SuperTest<request.Test>,
     breedNumber: number = 1,
     speciesNumber: number = 1,
-  ) {
+  ): Promise<number[]> {
     await loginUser(agent);
     for (let i = 0; i < speciesNumber; i++) {
       await agent
@@ -121,7 +150,7 @@ describe('AppController (e2e)', () => {
       .get('/species')
       .expect(200)
       .then((res) => {
-        return res.body.map((species) => species.id);
+        return res.body.map((species: SpeciesDto) => species.speciesId);
       });
     for (let i = 0; i < breedNumber; i++) {
       await agent
@@ -133,10 +162,16 @@ describe('AppController (e2e)', () => {
         })
         .expect(201);
     }
+    return await agent
+      .get('/breed')
+      .expect(200)
+      .then((res) => {
+        return res.body.map((breed: any) => breed.breedId);
+      });
   }
 
-  function getRandomElement(array) {
+  function getRandomElement(array: number[]): number {
     const randomIndex = Math.floor(Math.random() * array.length);
-    return array[randomIndex];
+    return Number(array[randomIndex]);
   }
 });

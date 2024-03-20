@@ -54,7 +54,6 @@ export class UserController {
   async getUser(@Param('id') id: string) {
     return this.userService.getUser(id);
   }
-
   @Put(':id')
   @UseGuards(UserGuard)
   async updatePet(
@@ -64,7 +63,6 @@ export class UserController {
   ) {
     return this.userService.updateUser(id, dto, req);
   }
-
   @Delete(':id')
   @UseGuards(UserGuard)
   async deletePet(@Param('id') id: string) {
