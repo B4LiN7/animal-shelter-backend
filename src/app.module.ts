@@ -9,6 +9,7 @@ import { LocationModule } from './location/location.module';
 import { SpeciesModule } from './species/species.module';
 import { AppController } from './app.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { JwtModule } from '@nestjs/jwt';
     BreedModule,
     SpeciesModule,
     AdoptionModule,
+    RoleModule,
   ],
   controllers: [AppController],
 })

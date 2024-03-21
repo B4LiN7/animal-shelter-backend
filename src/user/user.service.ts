@@ -6,13 +6,15 @@ import { UserHelperService } from 'src/user/userHelper.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dto/user.dto';
-import { Role } from '@prisma/client';
+import { Permission as Perm } from '@prisma/client';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
     private userHelper: UserHelperService,
+    private role: RoleService,
     private logger: Logger,
   ) {
     this.logger = new Logger(UserService.name);
@@ -20,20 +22,18 @@ export class UserService {
 
   /**
    * Get all users (for admin)
-   * @returns {Promise<{userId: string, username: string, name: string, role: string}[]>} - Promise with array of users (return of Prisma findMany method)
+   * @returns {Promise<any>} - Promise with array of users (return of Prisma findMany method)
    */
-  async getAllUsers(): Promise<
-    { userId: string; username: string; name: string; role: string }[]
-  > {
+  async getAllUsers(): Promise<any> {
     return this.prisma.user.findMany({
       select: {
         userId: true,
         username: true,
         name: true,
         email: true,
-        role: true,
+        roleName: true,
         createdAt: true,
-        editedAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -53,9 +53,9 @@ export class UserService {
         username: true,
         name: true,
         email: true,
-        role: true,
+        roleName: true,
         createdAt: true,
-        editedAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -94,9 +94,9 @@ export class UserService {
         username: true,
         name: true,
         email: true,
-        role: true,
+        roleName: true,
         createdAt: true,
-        editedAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -173,7 +173,7 @@ export class UserService {
         email: true,
         username: true,
         hashedPassword: true,
-        role: true,
+        roleName: true,
         name: true,
       },
     });
@@ -197,10 +197,14 @@ export class UserService {
       newUser.hashedPassword = await this.hashPassword(dto.password);
     }
 
-    if (await this.isReqAdmin(req)) {
-      newUser.role = dto.role ?? newUser.role;
-    } else if (dto.role) {
-      throw new BadRequestException('You are not allowed to change the role');
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    const reqUser = await this.prisma.user.findUnique({
+      where: { userId: token.userId },
+    });
+    const reqPerm = (await this.role.getPermissionsFromRole(reqUser.roleName))
+      .permissions;
+    if (reqPerm.includes(Perm.UPDATE_USER_PERMISSIONS)) {
+      newUser.roleName = dto.roleName ?? newUser.roleName;
     }
 
     return this.prisma.user.update({
@@ -213,9 +217,9 @@ export class UserService {
         username: true,
         name: true,
         email: true,
-        role: true,
+        roleName: true,
         createdAt: true,
-        editedAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -253,16 +257,5 @@ export class UserService {
       where: { username: username },
     });
     return !!user;
-  }
-
-  /**
-   * Checks if the user is an admin
-   * @param req The Request object
-   * @returns True or false, depending on whether the user is an admin
-   */
-  private async isReqAdmin(req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
-    const role: Role = Role[token.role];
-    return role === Role.ADMIN;
   }
 }

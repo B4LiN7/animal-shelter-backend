@@ -1,13 +1,14 @@
-// The docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["rhel-openssl-1.0.x"]
+}
+
+//  The docs: https:
 
 model User {
   userId         String         @id @default(uuid())
@@ -15,12 +16,13 @@ model User {
   name           String?
   email          String?
   hashedPassword String
-  role           Role           @default(USER)
+  role           Role           @relation(fields: [roleName], references: [roleName])
+  roleName       String
   createdAt      DateTime?      @default(now())
-  editedAt       DateTime?      @updatedAt
-  locations      Location[]
-  adoptions      Adoption[]
-  loginHistory   LoginHistory[]
+  updatedAt      DateTime?      @updatedAt
+  locations      Location[]     @relation(name: "LocationToUser")
+  adoptions      Adoption[]     @relation(name: "AdoptionToUser")
+  loginHistory   LoginHistory[] @relation(name: "LoginHistoryToUser")
 }
 
 model LoginHistory {
@@ -29,7 +31,7 @@ model LoginHistory {
   loginTime DateTime @default(now())
   ipAddress String?
   userAgent String?
-  user      User     @relation(fields: [userId], references: [userId])
+  user      User     @relation(name: "LoginHistoryToUser", fields: [userId], references: [userId])
 }
 
 model Location {
@@ -42,14 +44,14 @@ model Location {
   zipCode      Int
   address      String
   addressExtra String?
-  user         User    @relation(fields: [userId], references: [userId])
+  user         User    @relation(name: "LocationToUser", fields: [userId], references: [userId])
 }
 
 model Adoption {
   userId String
-  petId  Int    @unique
-  user   User   @relation(fields: [userId], references: [userId])
-  pet    Pet    @relation(fields: [petId], references: [petId])
+  petId  Int
+  user   User   @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
+  pet    Pet    @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
 
   @@id([userId, petId])
 }
@@ -62,11 +64,11 @@ model Pet {
   birthDate   DateTime?
   imageUrl    String?
   breedId     Int?
-  breed       Breed?      @relation(fields: [breedId], references: [breedId])
+  breed       Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
   createdAt   DateTime?   @default(now())
-  editedAt    DateTime?   @updatedAt
-  adoptions   Adoption[]
-  petStatus   PetStatus[]
+  updatedAt   DateTime?   @updatedAt
+  adoptions   Adoption[]  @relation(name: "AdoptionToPet")
+  petStatus   PetStatus[] @relation(name: "PetToPetStatus")
 }
 
 model PetStatus {
@@ -74,7 +76,7 @@ model PetStatus {
   status      Status   @default(UNKNOWN)
   from        DateTime @default(now())
   petId       Int
-  pet         Pet      @relation(fields: [petId], references: [petId])
+  pet         Pet      @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
 }
 
 model Breed {
@@ -82,21 +84,23 @@ model Breed {
   name        String   @unique
   description String?
   speciesId   Int?
-  species     Species? @relation(fields: [speciesId], references: [speciesId])
-  pets        Pet[]
+  species     Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
+  pets        Pet[]    @relation(name: "BreedToPet")
 }
 
 model Species {
   speciesId   Int     @id @default(autoincrement())
   name        String  @unique
   description String?
-  breeds      Breed[]
+  breeds      Breed[] @relation(name: "BreedToSpecies")
 }
 
-enum Role {
-  ADMIN
-  USER
-  SHELTER_WORKER
+model Role {
+  roleName     String       @id @unique @db.VarChar(255)
+  friendlyName String?
+  description  String?
+  permissions  Permission[]
+  users        User[]
 }
 
 enum Sex {
@@ -113,4 +117,29 @@ enum Status {
   ADOPTED
   ILL
   DECEASED
+}
+
+enum Permission {
+  CREATE_USER
+  GET_USER
+  UPDATE_USER_PERMISSIONS
+
+  START_ADOPTION
+  FINISH_ADOPTION
+  SET_ADOPTION
+
+  GET_PET
+  CREATE_PET
+  UPDATE_PET
+  DELETE_PET
+
+  GET_BREED
+  CREATE_BREED
+  UPDATE_BREED
+  DELETE_BREED
+
+  GET_SPECIES
+  CREATE_SPECIES
+  UPDATE_SPECIES
+  DELETE_SPECIES
 }

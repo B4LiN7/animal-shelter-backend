@@ -13,9 +13,6 @@ import {
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from 'src/auth/guard/role.guard';
-import { Role } from 'src/auth/decorator/role.decorator';
-import { Role as R } from '@prisma/client';
 import { AdoptionDto } from './dto/adoption.dto';
 
 @Controller('adoption')

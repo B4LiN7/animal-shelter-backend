@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { Permission } from '@prisma/client';
 
 @Injectable()
 /**
@@ -32,7 +33,12 @@ export class UserHelperService {
    */
   async decodeTokenFromReq(
     req: Request,
-  ): Promise<{ userId: string; role: string; iat: number; exp: number }> {
+  ): Promise<{
+    userId: string;
+    permissions: Permission[];
+    iat: number;
+    exp: number;
+  }> {
     const token = req.cookies.token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');

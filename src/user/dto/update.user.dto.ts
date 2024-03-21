@@ -1,5 +1,4 @@
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { Role } from '@prisma/client';
+import { IsEmail, IsOptional, IsString, Matches } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -19,6 +18,9 @@ export class UpdateUserDto {
   email: string;
 
   @IsOptional()
-  @IsEnum(Role)
-  role: Role;
+  @IsString()
+  @Matches(/^[A-Z_]+$/, {
+    message: 'roleName should only contain uppercase letters and underscores',
+  })
+  roleName: string;
 }

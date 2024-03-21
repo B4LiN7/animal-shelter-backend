@@ -1,12 +1,11 @@
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   Length,
+  Matches,
 } from 'class-validator';
-import { Role } from '@prisma/client';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -30,6 +29,9 @@ export class CreateUserDto {
   email: string;
 
   @IsOptional()
-  @IsEnum(Role)
-  role: Role;
+  @IsString()
+  @Matches(/^[A-Z_]+$/, {
+    message: 'roleName should only contain uppercase letters and underscores',
+  })
+  roleName: string;
 }
