@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Permission as Perm } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 
@@ -18,6 +18,43 @@ async function checkDatabaseConnection() {
   }
 }
 
+async function addRoles() {
+  const rolePermMap = [
+    { name: 'ADMIN', permissions: Object.values(Perm) },
+    {
+      name: 'USER',
+      permissions: [Perm.START_ADOPTION, Perm.UPLOAD_IMAGE],
+    },
+    {
+      name: 'VET',
+      permissions: [
+        Perm.SET_ADOPTION,
+        Perm.UPLOAD_IMAGE,
+        Perm.CREATE_BREED,
+        Perm.CREATE_PET,
+        Perm.CREATE_SPECIES,
+      ],
+    },
+  ];
+  for (const role of rolePermMap) {
+    try {
+      const addedRole = await prisma.role.create({
+        data: {
+          roleName: role.name,
+          permissions: {
+            set: role.permissions,
+          },
+        },
+      });
+      console.log(
+        `Role '${addedRole.roleName}' created with permissions: ${addedRole.permissions}.`,
+      );
+    } catch (error) {
+      console.error('Error adding role: ' + error);
+    }
+  }
+}
+
 // Admin user (always needed)
 async function addAdminUser() {
   console.log('Checking admin user...');
@@ -26,7 +63,7 @@ async function addAdminUser() {
       username: 'admin',
     },
   });
-  if (admin && admin.role === Role.ADMIN) {
+  if (admin && admin.roleName === 'ADMIN') {
     console.log('Admin user with ADMIN role already exists, skip.');
     return;
   }
@@ -40,7 +77,7 @@ async function addAdminUser() {
       username: 'admin',
       name: 'Admin User',
       hashedPassword: await hashPassword('password'),
-      role: Role.ADMIN,
+      roleName: 'ADMIN',
     },
   });
   console.log(`Admin user created with user ID ${newAdmin.userId}.`);
@@ -62,7 +99,7 @@ async function addUsers() {
         username: faker.internet.userName(),
         hashedPassword: await hashPassword('password'),
         name: faker.person.fullName(),
-        role: Role.USER,
+        roleName: 'USER',
       },
     });
     console.log(
@@ -332,6 +369,7 @@ export async function main() {
   switch (environment) {
     case 'dev':
       console.log('Development environment specified, executing...');
+      await addRoles();
       await addAdminUser();
       await addUsers();
       await addLocations();

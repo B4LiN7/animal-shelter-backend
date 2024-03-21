@@ -14,20 +14,23 @@ import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AdoptionDto } from './dto/adoption.dto';
+import { PermissionGuard } from '../auth/guard/permission.guard';
+import { Permission as Perm } from '@prisma/client';
+import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('adoption')
-@UseGuards(AuthGuard('jwt'), RoleGuard)
+@UseGuards(AuthGuard('jwt'), PermissionGuard)
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
   @Get()
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @Permissions(Perm.GET_ADOPTIONS)
   getAllAdoptionProcesses() {
     return this.adoptionService.getAllAdoptionProcesses();
   }
 
   @Get('pet/:petId')
-  @Role(R.USER)
+  @Permissions(Perm.START_ADOPTION)
   startAdoptionProcess(
     @Param('petId', ParseIntPipe) petId: number,
     @Req() req: Request,
@@ -36,6 +39,7 @@ export class AdoptionController {
   }
 
   @Delete('pet/:petId')
+  @Permissions(Perm.START_ADOPTION, Perm.SET_ADOPTION)
   cancelAdoptionProcess(
     @Param('petId', ParseIntPipe) petId: number,
     @Req() req: Request,
@@ -45,7 +49,7 @@ export class AdoptionController {
 
   @Post()
   @HttpCode(200)
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @Permissions(Perm.SET_ADOPTION)
   setAdoptionProcess(@Body() dto: AdoptionDto) {
     return this.adoptionService.setAdoptionProcess(dto);
   }

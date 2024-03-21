@@ -31,9 +31,7 @@ export class UserHelperService {
    * @param req - The Request object
    * @returns The decoded JWT token
    */
-  async decodeTokenFromReq(
-    req: Request,
-  ): Promise<{
+  async decodeTokenFromReq(req: Request): Promise<{
     userId: string;
     permissions: Permission[];
     iat: number;

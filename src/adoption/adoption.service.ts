@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
-import { Status, Role } from '@prisma/client';
+import { Status, Permission as Perm } from '@prisma/client';
 import { UserHelperService } from 'src/user/userHelper.service';
 import { AdoptionDto, AdoptionStatus } from './dto/adoption.dto';
 import { PetHelperService } from 'src/pet/petHelper.service';
@@ -67,9 +67,7 @@ export class AdoptionService {
   async cancelAdoptionProcess(petId: number, req: Request) {
     const token = await this.userHelper.decodeTokenFromReq(req);
     const userId = token.userId;
-    const role = Role[token.role];
-    const asAdmin: boolean =
-      role === Role.ADMIN || role === Role.SHELTER_WORKER;
+    const asAdmin: boolean = token.permissions.includes(Perm.SET_ADOPTION);
 
     const dto: AdoptionDto = {
       petId: petId,

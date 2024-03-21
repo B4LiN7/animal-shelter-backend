@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { SpeciesService } from './species.service';
 import { CreateSpeciesDto } from './dto/create.species.dto';
-import { RoleGuard } from '../auth/guard/role.guard';
-import { Role } from '../auth/decorator/role.decorator';
-import { Role as R } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
+import { PermissionGuard } from '../auth/guard/permission.guard';
+import { Permission as Perm } from '@prisma/client';
+import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('species')
 export class SpeciesController {
@@ -31,15 +31,15 @@ export class SpeciesController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), RoleGuard)
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @Permissions(Perm.CREATE_SPECIES)
   async addSpecies(@Body() dto: CreateSpeciesDto) {
     return this.speciesService.addSpecies(dto);
   }
 
   @Put('/:id')
-  @UseGuards(AuthGuard('jwt'), RoleGuard)
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @Permissions(Perm.UPDATE_SPECIES)
   async updateSpecies(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: CreateSpeciesDto,
@@ -48,8 +48,8 @@ export class SpeciesController {
   }
 
   @Delete('/:id')
-  @UseGuards(AuthGuard('jwt'), RoleGuard)
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @Permissions(Perm.DELETE_SPECIES)
   async deleteSpecies(@Param('id', ParseIntPipe) id: number) {
     return this.speciesService.deleteSpecies(id);
   }

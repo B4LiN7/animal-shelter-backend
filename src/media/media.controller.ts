@@ -12,6 +12,9 @@ import { MediaService } from './media.service';
 import { Response } from 'express';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { PermissionGuard } from '../auth/guard/permission.guard';
+import { Permission as Perm } from '@prisma/client';
+import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('media')
 export class MediaController {
@@ -23,7 +26,8 @@ export class MediaController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @Permissions(Perm.UPLOAD_IMAGE)
   @UseInterceptors(AnyFilesInterceptor())
   uploadFiles(
     @UploadedFiles() files: Express.Multer.File[],

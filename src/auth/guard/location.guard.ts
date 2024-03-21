@@ -3,12 +3,11 @@ import {
   CanActivate,
   ExecutionContext,
   Logger,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Role } from '@prisma/client';
+import { Permission as Perm } from '@prisma/client';
 import { UserHelperService } from 'src/user/userHelper.service';
-
-const ALWAYS_ALLOWED_ROLES: Role[] = [Role.ADMIN];
 
 @Injectable()
 /**
@@ -20,8 +19,8 @@ const ALWAYS_ALLOWED_ROLES: Role[] = [Role.ADMIN];
 export class LocationGuard implements CanActivate {
   constructor(
     private prisma: PrismaService,
-    private userHelper: UserHelperService,
     private logger: Logger,
+    private userHelper: UserHelperService,
   ) {
     this.logger = new Logger(LocationGuard.name);
   }
@@ -29,17 +28,16 @@ export class LocationGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const reqUrl = request.url;
-    const reqLocationId = Number.parseInt(request.params.id);
+    const reqLocationId = parseInt(request.params.id);
     const token = await this.userHelper.decodeTokenFromReq(request);
 
     if (isNaN(reqLocationId)) {
-      return true;
+      throw new BadRequestException('Invalid location ID');
     }
 
-    const userRole: Role = Role[token.role];
-    if (ALWAYS_ALLOWED_ROLES.includes(userRole)) {
+    if (token.permissions.includes(Perm.ACCESS_ANY_LOCATION)) {
       this.logger.log(
-        `User with ID ${token.userId} is allowed to access the resource ${reqUrl} because the user is a(n) ${userRole}`,
+        `User with ID ${token.userId} is allowed to access the resource ${reqUrl} because the user have ACCESS_ANY_LOCATION permission`,
       );
       return true;
     }

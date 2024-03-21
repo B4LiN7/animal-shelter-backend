@@ -9,7 +9,7 @@ import { PERMISSION_KEY } from '../decorator/permisson.decorator';
  * Guard to check if the user is a member of the role required to access the resource.
  * If undefined (not given), the user can access the resource.
  */
-export class RoleGuard implements CanActivate {
+export class PermissionGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private userHelper: UserHelperService,

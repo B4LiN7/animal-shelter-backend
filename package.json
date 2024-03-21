@@ -17,7 +17,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "pnpm run test:resetdb && jest --config ./test/jest-e2e.json",
-    "test:resetdb": "dotenv -e .env.prisma-test -- prisma db push --force-reset --skip-generate && dotenv -e .env.prisma-test -- prisma db seed"
+    "test:resetdb": "dotenv -e .env.prisma-test -- prisma db push --force-reset --skip-generate && dotenv -e .env.prisma-test -- prisma db seed",
+    "test:resetproddb": "prisma db push --force-reset --skip-generate && prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.3",

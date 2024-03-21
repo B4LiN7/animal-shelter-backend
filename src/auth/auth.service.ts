@@ -13,7 +13,8 @@ import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from '@prisma/client';
+import { Permission } from '@prisma/client';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
     private logger: Logger,
     private user: UserService,
     private userHelper: UserHelperService,
+    private role: RoleService,
   ) {
     this.logger = new Logger(AuthService.name);
   }
@@ -36,7 +38,17 @@ export class AuthService {
   async login(dto: LoginDto, req: Request, res: Response) {
     const { username, password } = dto;
 
-    if (await this.isTokenValidFromReq(req)) {
+    if (
+      await (async () => {
+        try {
+          const token = req.cookies.token;
+          await this.jwt.verifyAsync(token);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      })()
+    ) {
       throw new BadRequestException('You are already logged in');
     }
 
@@ -58,7 +70,11 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const token = await this.signToken(foundUser.userId, foundUser.role);
+    const permissions = await this.role.getPermissionsFromRole(
+      foundUser.roleName,
+    );
+
+    const token = await this.signToken(foundUser.userId, permissions);
 
     const loginHistory = await this.prisma.loginHistory.create({
       data: {
@@ -101,8 +117,10 @@ export class AuthService {
       email,
       name,
     } as CreateUserDto);
-
-    const token = await this.signToken(newUser.userId, newUser.role);
+    const permissions = await this.role.getPermissionsFromRole(
+      newUser.roleName,
+    );
+    const token = await this.signToken(newUser.userId, permissions);
 
     const loginHistory = await this.prisma.loginHistory.create({
       data: {
@@ -140,25 +158,15 @@ export class AuthService {
   /**
    * Signs a JWT token with the user's ID and the role (s)he had (Secret is stored in .env)
    * @param userId - The user's ID
-   * @param role - The user's role
+   * @param permissions
    * @returns The signed JWT token
    */
-  private async signToken(userId: string, role: Role) {
-    const payload = { userId, role };
+  private async signToken(userId: string, permissions: Permission[]) {
+    const payload = { userId, permissions };
     const token = await this.jwt.signAsync(payload);
     if (!token) {
       throw new ForbiddenException('Token could not be generated');
     }
     return token;
-  }
-
-  private async isTokenValidFromReq(req: Request): Promise<boolean> {
-    try {
-      const token = req.cookies.token;
-      await this.jwt.verifyAsync(token);
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }

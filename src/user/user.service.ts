@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dto/user.dto';
 import { Permission as Perm } from '@prisma/client';
-import { RoleService } from '../role/role.service';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class UserService {
@@ -201,8 +201,7 @@ export class UserService {
     const reqUser = await this.prisma.user.findUnique({
       where: { userId: token.userId },
     });
-    const reqPerm = (await this.role.getPermissionsFromRole(reqUser.roleName))
-      .permissions;
+    const reqPerm = await this.role.getPermissionsFromRole(reqUser.roleName);
     if (reqPerm.includes(Perm.UPDATE_USER_PERMISSIONS)) {
       newUser.roleName = dto.roleName ?? newUser.roleName;
     }

@@ -47,14 +47,16 @@ export class RoleService {
   }
 
   async getPermissionsFromRole(name: string) {
-    return this.prisma.role.findUnique({
-      where: {
-        roleName: name,
-      },
-      select: {
-        permissions: true,
-      },
-    });
+    return (
+      await this.prisma.role.findUnique({
+        where: {
+          roleName: name,
+        },
+        select: {
+          permissions: true,
+        },
+      })
+    ).permissions;
   }
 
   async addAllPermissionsToRole(name: string) {
