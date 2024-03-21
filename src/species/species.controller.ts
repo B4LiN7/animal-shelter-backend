@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -25,7 +26,7 @@ export class SpeciesController {
     return this.speciesService.getAllSpecies();
   }
   @Get('/:id')
-  async getSpecies(@Param('id') id: number) {
+  async getSpecies(@Param('id', ParseIntPipe) id: number) {
     return this.speciesService.getSpecies(id);
   }
 
@@ -39,14 +40,17 @@ export class SpeciesController {
   @Put('/:id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.ADMIN, R.SHELTER_WORKER)
-  async updateSpecies(@Param('id') id: number, @Body() dto: CreateSpeciesDto) {
+  async updateSpecies(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateSpeciesDto,
+  ) {
     return this.speciesService.updateSpecies(id, dto);
   }
 
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.ADMIN, R.SHELTER_WORKER)
-  async deleteSpecies(@Param('id') id: number) {
+  async deleteSpecies(@Param('id', ParseIntPipe) id: number) {
     return this.speciesService.deleteSpecies(id);
   }
 }

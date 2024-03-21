@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -34,7 +35,7 @@ export class PetController {
     return this.petService.getAllPets();
   }
   @Get(':id')
-  async readPet(@Param('id') id: number) {
+  async readPet(@Param('id', ParseIntPipe) id: number) {
     return this.petService.getPet(id);
   }
 
@@ -48,14 +49,17 @@ export class PetController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.ADMIN, R.SHELTER_WORKER)
-  async updatePet(@Param('id') id: number, @Body() dto: UpdatePetDto) {
+  async updatePet(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdatePetDto,
+  ) {
     return this.petService.updatePet(id, dto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.ADMIN, R.SHELTER_WORKER)
-  async deletePet(@Param('id') id: number) {
+  async deletePet(@Param('id', ParseIntPipe) id: number) {
     return this.petService.deletePet(id);
   }
 
@@ -63,7 +67,7 @@ export class PetController {
   @Get('status/:id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.ADMIN, R.SHELTER_WORKER)
-  async readPetStatus(@Param('id') id: number) {
+  async readPetStatus(@Param('id', ParseIntPipe) id: number) {
     return this.petService.getPetStatus(id);
   }
 }

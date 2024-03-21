@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Req,
@@ -38,15 +39,18 @@ export class LocationController {
 
   /* For the owners of account and admin */
   @Get(':id')
-  async getLocation(@Param('id') id: number) {
+  async getLocation(@Param('id', ParseIntPipe) id: number) {
     return this.locationService.getLocation(id);
   }
   @Put(':id')
-  async updateLocation(@Param('id') id: number, @Body() dto: LocationDto) {
+  async updateLocation(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: LocationDto,
+  ) {
     return this.locationService.updateLocation(id, dto);
   }
   @Delete(':id')
-  async deleteLocation(@Param('id') id: number) {
+  async deleteLocation(@Param('id', ParseIntPipe) id: number) {
     return this.locationService.deleteLocation(id);
   }
 

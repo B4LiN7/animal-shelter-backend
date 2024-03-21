@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -26,7 +27,7 @@ export class BreedController {
     return this.breedService.getAllBreeds();
   }
   @Get(':id')
-  async getBreed(@Param('id') id: number) {
+  async getBreed(@Param('id', ParseIntPipe) id: number) {
     return this.breedService.getBreed(id);
   }
 
@@ -40,14 +41,17 @@ export class BreedController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.SHELTER_WORKER, R.ADMIN)
-  async updateBreed(@Param('id') id: number, @Body() dto: UpdateBreedDto) {
+  async updateBreed(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateBreedDto,
+  ) {
     return this.breedService.updateBreed(id, dto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Role(R.SHELTER_WORKER, R.ADMIN)
-  async deleteBreed(@Param('id') id: number) {
+  async deleteBreed(@Param('id', ParseIntPipe) id: number) {
     return this.breedService.deleteBreed(id);
   }
 }

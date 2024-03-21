@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LocationDto } from './dto/location.dto';
 import { UserHelperService } from 'src/user/userHelper.service';
@@ -44,7 +40,6 @@ export class LocationService {
   }
 
   async getLocation(id: number) {
-    if (!id) throw new BadRequestException('Location ID format not valid');
     return this.prisma.location.findUnique({
       where: {
         locationId: id,
@@ -61,7 +56,6 @@ export class LocationService {
   }
 
   async updateLocation(id: number, dto: LocationDto) {
-    if (!id) throw new BadRequestException('Location ID format not valid');
     return this.prisma.location.update({
       where: {
         locationId: id,
@@ -73,7 +67,6 @@ export class LocationService {
   }
 
   async deleteLocation(id: number) {
-    if (!id) throw new BadRequestException('Location ID format not valid');
     return this.prisma.location.delete({
       where: {
         locationId: id,

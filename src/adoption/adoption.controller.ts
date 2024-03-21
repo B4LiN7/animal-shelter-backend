@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Post,
   Req,
   UseGuards,
@@ -30,12 +31,18 @@ export class AdoptionController {
 
   @Get('pet/:petId')
   @Role(R.USER)
-  startAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
+  startAdoptionProcess(
+    @Param('petId', ParseIntPipe) petId: number,
+    @Req() req: Request,
+  ) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
 
   @Delete('pet/:petId')
-  cancelAdoptionProcess(@Param('petId') petId: number, @Req() req: Request) {
+  cancelAdoptionProcess(
+    @Param('petId', ParseIntPipe) petId: number,
+    @Req() req: Request,
+  ) {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
   }
 
