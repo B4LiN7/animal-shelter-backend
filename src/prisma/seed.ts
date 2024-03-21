@@ -270,16 +270,21 @@ async function addBreeds() {
       }
     };
 
-    const addedBreed = await prisma.breed.create({
-      data: {
-        name: breedName(selectedSpecies.name),
-        description: breed.description,
-        speciesId: selectedSpecies.speciesId,
-      },
-    });
-    console.log(
-      `Breed '${addedBreed.name}' for species ${addedBreed.speciesId} created with ID ${addedBreed.breedId}.`,
-    );
+    try {
+      const addedBreed = await prisma.breed.create({
+        data: {
+          name: breedName(selectedSpecies.name),
+          description: breed.description,
+          speciesId: selectedSpecies.speciesId,
+        },
+      });
+
+      console.log(
+        `Breed '${addedBreed.name}' for species ${addedBreed.speciesId} created with ID ${addedBreed.breedId}.`,
+      );
+    } catch (error) {
+      console.error('Error adding breed: ' + error);
+    }
   }
 }
 async function addPets() {
