@@ -25,7 +25,7 @@ export class BreedService {
    * @param id - The ID of the breed
    * @returns {Promise<BreedDto>} - A promise of a breed
    */
-  async getBreed(id: number): Promise<BreedDto> {
+  async getBreed(id: string): Promise<BreedDto> {
     const breed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -54,7 +54,7 @@ export class BreedService {
    * @param dto - The data to update the breed
    * @returns {Promise<BreedDto>} - The updated (or added) breed (return of Prisma update method)
    */
-  async updateBreed(id: number, dto: UpdateBreedDto): Promise<BreedDto> {
+  async updateBreed(id: string, dto: UpdateBreedDto): Promise<BreedDto> {
     const existingBreed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -80,7 +80,7 @@ export class BreedService {
    * @returns {Promise<{ removedBreed: BreedDto; updatedPets: number }>} - The deleted breed (return of Prisma delete method) and the number of updated pets
    */
   async deleteBreed(
-    id: number,
+    id: string,
   ): Promise<{ removedBreed: BreedDto; updatedPets: number }> {
     const updatedPets = await this.prisma.pet.updateMany({
       where: { breedId: id },

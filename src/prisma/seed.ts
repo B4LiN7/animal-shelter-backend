@@ -1,7 +1,7 @@
-import { PrismaClient, Permission as Perm } from '@prisma/client';
+import { PrismaClient, PermissionEnum as Perm } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
-
+/*
 const prisma = new PrismaClient();
 
 async function hashPassword(password: string) {
@@ -400,3 +400,4 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+*/

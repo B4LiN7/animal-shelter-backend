@@ -6,10 +6,10 @@ export enum AdoptionStatus {
   CANCELLED = 'CANCELLED',
 }
 
-export class AdoptionDto {
+export class UpdateAdoptionDto {
   @IsNotEmpty()
   @IsNumber()
-  petId: number;
+  petId: string;
 
   @IsNotEmpty()
   @IsString()

@@ -1,4 +1,6 @@
 import {
+  ArrayMinSize,
+  ArrayNotEmpty,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -28,10 +30,14 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsOptional()
-  @IsString()
+  @IsNotEmpty()
+  @IsString({ each: true })
   @Matches(/^[A-Z_]+$/, {
-    message: 'roleName should only contain uppercase letters and underscores',
+    each: true,
+    message:
+      'Each role name should only contain uppercase letters and underscores',
   })
-  roleName: string;
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  roles: string[];
 }

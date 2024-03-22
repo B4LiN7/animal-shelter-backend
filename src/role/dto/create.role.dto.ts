@@ -1,4 +1,4 @@
-import { Permission } from '@prisma/client';
+import { PermissionEnum as Permission } from '@prisma/client';
 import {
   IsEnum,
   IsNotEmpty,
@@ -14,10 +14,6 @@ export class CreateRoleDto {
     message: 'roleName should only contain uppercase letters and underscores',
   })
   roleName: string;
-
-  @IsOptional()
-  @IsString()
-  friendlyName: string;
 
   @IsOptional()
   @IsString()

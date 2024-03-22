@@ -8,7 +8,77 @@ generator client {
   binaryTargets = ["rhel-openssl-1.0.x"]
 }
 
-//  The docs: https:
+model Pet {
+  petId       String      @id @default(uuid())
+  name        String?
+  sex         PetSexEnum  @default(OTHER)
+  description String?
+  birthDate   DateTime?
+  imageUrls   String[]
+  breedId     String?
+  breed       Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
+  createdAt   DateTime?   @default(now())
+  updatedAt   DateTime?   @updatedAt
+  adoptions   Adoption[]  @relation(name: "AdoptionToPet")
+  petStatus   PetStatus[] @relation(name: "PetToPetStatus")
+}
+
+enum PetSexEnum {
+  FEMALE
+  MALE
+  OTHER
+}
+
+model PetStatus {
+  petStatusId String        @id @default(uuid())
+  status      PetStatusEnum @default(UNKNOWN)
+  from        DateTime      @default(now())
+  petId       String
+  pet         Pet           @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
+}
+
+enum PetStatusEnum {
+  UNKNOWN
+  INCOMING
+  INSHELTER
+  ADOPTING
+  ADOPTED
+  ILL
+  DECEASED
+}
+
+model Breed {
+  breedId     String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  speciesId   String?
+  species     Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
+  pets        Pet[]    @relation(name: "BreedToPet")
+}
+
+model Species {
+  speciesId   String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  breeds      Breed[] @relation(name: "BreedToSpecies")
+}
+
+model Adoption {
+  userId String
+  petId  String
+  user   User               @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
+  pet    Pet                @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
+  status AdoptionStatusEnum
+  reason String?
+
+  @@id([userId, petId])
+}
+
+enum AdoptionStatusEnum {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
 model User {
   userId         String         @id @default(uuid())
@@ -16,17 +86,16 @@ model User {
   name           String?
   email          String?
   hashedPassword String
-  role           Role           @relation(fields: [roleName], references: [roleName])
-  roleName       String
   createdAt      DateTime?      @default(now())
   updatedAt      DateTime?      @updatedAt
   locations      Location[]     @relation(name: "LocationToUser")
   adoptions      Adoption[]     @relation(name: "AdoptionToUser")
   loginHistory   LoginHistory[] @relation(name: "LoginHistoryToUser")
+  userRoles      UserRole[]     @relation(name: "UserRoleToUser")
 }
 
 model LoginHistory {
-  loginId   Int      @id @default(autoincrement())
+  loginId   String   @id @default(uuid())
   userId    String
   loginTime DateTime @default(now())
   ipAddress String?
@@ -35,7 +104,7 @@ model LoginHistory {
 }
 
 model Location {
-  locationId   Int     @id @default(autoincrement())
+  locationId   String  @id @default(uuid())
   userId       String
   name         String?
   country      String
@@ -47,83 +116,28 @@ model Location {
   user         User    @relation(name: "LocationToUser", fields: [userId], references: [userId])
 }
 
-model Adoption {
+model UserRole {
   userId String
-  petId  Int
-  user   User   @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
-  pet    Pet    @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
+  roleId String
+  user   User   @relation(name: "UserRoleToUser", fields: [userId], references: [userId])
+  role   Role   @relation(name: "UserRoleToRole", fields: [roleId], references: [roleId])
 
-  @@id([userId, petId])
-}
-
-model Pet {
-  petId       Int         @id @default(autoincrement())
-  name        String?
-  sex         Sex         @default(OTHER)
-  description String?
-  birthDate   DateTime?
-  imageUrl    String?
-  breedId     Int?
-  breed       Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
-  createdAt   DateTime?   @default(now())
-  updatedAt   DateTime?   @updatedAt
-  adoptions   Adoption[]  @relation(name: "AdoptionToPet")
-  petStatus   PetStatus[] @relation(name: "PetToPetStatus")
-}
-
-model PetStatus {
-  petStatusId Int      @id @default(autoincrement())
-  status      Status   @default(UNKNOWN)
-  from        DateTime @default(now())
-  petId       Int
-  pet         Pet      @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
-}
-
-model Breed {
-  breedId     Int      @id @default(autoincrement())
-  name        String   @unique
-  description String?
-  speciesId   Int?
-  species     Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
-  pets        Pet[]    @relation(name: "BreedToPet")
-}
-
-model Species {
-  speciesId   Int     @id @default(autoincrement())
-  name        String  @unique
-  description String?
-  breeds      Breed[] @relation(name: "BreedToSpecies")
+  @@id([userId, roleId])
 }
 
 model Role {
-  roleName     String       @id @unique @db.VarChar(255)
-  friendlyName String?
-  description  String?
-  permissions  Permission[]
-  users        User[]
+  roleId      String           @id @default(uuid())
+  roleName    String           @unique
+  description String?
+  permissions PermissionEnum[]
+  userRoles   UserRole[]       @relation(name: "UserRoleToRole")
 }
 
-enum Sex {
-  FEMALE
-  MALE
-  OTHER
-}
-
-enum Status {
-  UNKNOWN
-  INCOMING
-  INSHELTER
-  ADOPTING
-  ADOPTED
-  ILL
-  DECEASED
-}
-
-enum Permission {
+enum PermissionEnum {
   ACCESS_ANY_LOCATION
   ACCESS_ANY_USER
 
-  UPDATE_USER_PERMISSIONS
+  UPDATE_USER_ROLES
   CREATE_USER
   GET_USERS
   GET_USERNAMES

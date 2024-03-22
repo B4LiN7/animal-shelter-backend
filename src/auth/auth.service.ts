@@ -8,23 +8,21 @@ import { Request, Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserHelperService } from '../user/userHelper.service';
+import { UserHelperService } from '../user/user.helper.service';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { Permission } from '@prisma/client';
-import { RoleService } from '../role/role.service';
+import { PermissionEnum as Permission } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
-    private jwt: JwtService,
     private logger: Logger,
+    private jwt: JwtService,
+    private prisma: PrismaService,
     private user: UserService,
     private userHelper: UserHelperService,
-    private role: RoleService,
   ) {
     this.logger = new Logger(AuthService.name);
   }
@@ -70,8 +68,8 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
 
-    const permissions = await this.role.getPermissionsFromRole(
-      foundUser.roleName,
+    const permissions = await this.userHelper.getUserAllPermissions(
+      foundUser.userId,
     );
 
     const token = await this.signToken(foundUser.userId, permissions);
@@ -117,8 +115,8 @@ export class AuthService {
       email,
       name,
     } as CreateUserDto);
-    const permissions = await this.role.getPermissionsFromRole(
-      newUser.roleName,
+    const permissions = await this.userHelper.getUserAllPermissions(
+      newUser.userId,
     );
     const token = await this.signToken(newUser.userId, permissions);
 
@@ -147,7 +145,7 @@ export class AuthService {
    * @param res - Response object
    */
   async logout(req: Request, res: Response) {
-    const user = await this.userHelper.getUserFromReq(req);
+    const user = await this.getUserFromReq(req);
     res.clearCookie('token').json({ message: 'You have been logged out' });
 
     this.logger.log(
@@ -168,5 +166,16 @@ export class AuthService {
       throw new ForbiddenException('Token could not be generated');
     }
     return token;
+  }
+
+  /**
+   * Gets the user from the request
+   * @param req The Request object
+   */
+  private async getUserFromReq(req: Request) {
+    const decodedToken = await this.userHelper.decodeTokenFromReq(req);
+    return this.prisma.user.findUnique({
+      where: { userId: decodedToken.userId },
+    });
   }
 }

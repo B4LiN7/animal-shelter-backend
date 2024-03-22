@@ -5,9 +5,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
-import { Status, Permission as Perm } from '@prisma/client';
-import { UserHelperService } from 'src/user/userHelper.service';
-import { AdoptionDto, AdoptionStatus } from './dto/adoption.dto';
+import {
+  PetStatusEnum as Status,
+  AdoptionStatusEnum as PAdoptionStatus,
+  PermissionEnum as Perm,
+} from '@prisma/client';
+import { UserHelperService } from 'src/user/user.helper.service';
+import { UpdateAdoptionDto, AdoptionStatus } from './dto/update.adoption.dto';
 import { PetHelperService } from 'src/pet/petHelper.service';
 
 @Injectable()
@@ -37,7 +41,7 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @param req - The Request object for userId
    */
-  async startAdoptionProcess(petId: number, req: Request) {
+  async startAdoptionProcess(petId: string, req: Request) {
     const token = await this.userHelper.decodeTokenFromReq(req);
     const userId = token.userId;
 
@@ -48,7 +52,7 @@ export class AdoptionService {
       throw new NotFoundException(`Pet with ID ${petId} not found.`);
     }
 
-    const dto: AdoptionDto = {
+    const dto: UpdateAdoptionDto = {
       petId: petId,
       userId: userId,
       status: AdoptionStatus.ADOPTING,
@@ -64,12 +68,12 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @param req - The Request object for userId
    */
-  async cancelAdoptionProcess(petId: number, req: Request) {
+  async cancelAdoptionProcess(petId: string, req: Request) {
     const token = await this.userHelper.decodeTokenFromReq(req);
     const userId = token.userId;
     const asAdmin: boolean = token.permissions.includes(Perm.SET_ADOPTION);
 
-    const dto: AdoptionDto = {
+    const dto: UpdateAdoptionDto = {
       petId: petId,
       userId: userId,
       status: AdoptionStatus.CANCELLED,
@@ -84,7 +88,7 @@ export class AdoptionService {
    * Set the adoption process for a pet (for admin or shelter worker only)
    * @param dto - The adoption DTO
    */
-  async setAdoptionProcess(dto: AdoptionDto) {
+  async setAdoptionProcess(dto: UpdateAdoptionDto) {
     await this.setAdoptionStatus(dto, true);
     return await this.getAdoptionStatusForPet(dto.petId);
   }
@@ -94,7 +98,7 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @returns The adoption status for the pet: userId, petId, latestStatus
    */
-  private async getAdoptionStatusForPet(petId: number) {
+  private async getAdoptionStatusForPet(petId: string) {
     const runningAdoption = await this.prisma.adoption.findFirst({
       where: {
         petId: petId,
@@ -119,7 +123,7 @@ export class AdoptionService {
    * @param dto - The adoption DTO which contains the pet ID, user ID and the new status
    * @param asAdmin - If the function is called by an admin
    */
-  private async setAdoptionStatus(dto: AdoptionDto, asAdmin = false) {
+  private async setAdoptionStatus(dto: UpdateAdoptionDto, asAdmin = false) {
     const { petId, userId, status } = dto;
 
     // Check if the pet and user exist
@@ -197,6 +201,7 @@ export class AdoptionService {
         data: {
           petId: petId,
           userId: userId,
+          status: PAdoptionStatus.PENDING,
         },
       });
     }

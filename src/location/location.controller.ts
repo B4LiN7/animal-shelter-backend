@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Req,
@@ -16,7 +15,7 @@ import { Request } from 'express';
 import { LocationGuard } from 'src/auth/guard/location.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { PermissionGuard } from '../auth/guard/permission.guard';
-import { Permission as Perm } from '@prisma/client';
+import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('location')
@@ -40,20 +39,17 @@ export class LocationController {
   /* For the owners of account and admin */
   @Get(':id')
   @UseGuards(LocationGuard)
-  async getLocation(@Param('id', ParseIntPipe) id: number) {
+  async getLocation(@Param('id') id: string) {
     return this.locationService.getLocation(id);
   }
   @Put(':id')
   @UseGuards(LocationGuard)
-  async updateLocation(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: LocationDto,
-  ) {
+  async updateLocation(@Param('id') id: string, @Body() dto: LocationDto) {
     return this.locationService.updateLocation(id, dto);
   }
   @Delete(':id')
   @UseGuards(LocationGuard)
-  async deleteLocation(@Param('id', ParseIntPipe) id: number) {
+  async deleteLocation(@Param('id') id: string) {
     return this.locationService.deleteLocation(id);
   }
 

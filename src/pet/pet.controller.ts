@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -16,7 +15,7 @@ import { UpdatePetDto } from './dto/update.pet.dto';
 import { PetSearchDto } from './dto/petSearch.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PermissionGuard } from '../auth/guard/permission.guard';
-import { Permission as Perm } from '@prisma/client';
+import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('pet')
@@ -35,7 +34,7 @@ export class PetController {
     return this.petService.getAllPets();
   }
   @Get(':id')
-  async readPet(@Param('id', ParseIntPipe) id: number) {
+  async readPet(@Param('id') id: string) {
     return this.petService.getPet(id);
   }
 
@@ -49,24 +48,21 @@ export class PetController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions(Perm.UPDATE_PET)
-  async updatePet(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdatePetDto,
-  ) {
+  async updatePet(@Param('id') id: string, @Body() dto: UpdatePetDto) {
     return this.petService.updatePet(id, dto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions(Perm.DELETE_PET)
-  async deletePet(@Param('id', ParseIntPipe) id: number) {
+  async deletePet(@Param('id') id: string) {
     return this.petService.deletePet(id);
   }
 
   /* Past statuses for pet */
   @Get('status/:id')
   @UseGuards(AuthGuard('jwt'))
-  async readPetStatus(@Param('id', ParseIntPipe) id: number) {
+  async readPetStatus(@Param('id') id: string) {
     return this.petService.getPetStatus(id);
   }
 }

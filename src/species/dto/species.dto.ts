@@ -1,5 +1,5 @@
 export interface SpeciesDto {
-  speciesId: number;
+  speciesId: string;
   name: string;
   description: string;
 }

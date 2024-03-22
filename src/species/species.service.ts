@@ -25,7 +25,7 @@ export class SpeciesService {
    * @param id - Species' ID
    * @returns {Promise<SpeciesDto>} - SpeciesDto
    */
-  async getSpecies(id: number): Promise<SpeciesDto> {
+  async getSpecies(id: string): Promise<SpeciesDto> {
     const species = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
@@ -50,7 +50,7 @@ export class SpeciesService {
    * @param dto - Species data
    * @returns {Promise<SpeciesDto>} - The updated species (return of Prisma update method)
    */
-  async updateSpecies(id: number, dto: UpdateSpeciesDto): Promise<SpeciesDto> {
+  async updateSpecies(id: string, dto: UpdateSpeciesDto): Promise<SpeciesDto> {
     const existingSpecies = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
@@ -74,7 +74,7 @@ export class SpeciesService {
    * @returns {Promise<{ removedSpecies: SpeciesDto; updatedBreeds: number }>} - The deleted species (return of Prisma delete method) and the number of updated breeds
    */
   async deleteSpecies(
-    id: number,
+    id: string,
   ): Promise<{ removedSpecies: SpeciesDto; updatedBreeds: number }> {
     const updatedBreeds = await this.prisma.breed.updateMany({
       where: { breedId: id },

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -14,7 +13,7 @@ import { UpdateBreedDto } from './dto/update.breed.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateBreedDto } from './dto/create.breed.dto';
 import { PermissionGuard } from '../auth/guard/permission.guard';
-import { Permission as Perm } from '@prisma/client';
+import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('breed')
@@ -27,7 +26,7 @@ export class BreedController {
     return this.breedService.getAllBreeds();
   }
   @Get(':id')
-  async getBreed(@Param('id', ParseIntPipe) id: number) {
+  async getBreed(@Param('id') id: string) {
     return this.breedService.getBreed(id);
   }
 
@@ -41,17 +40,14 @@ export class BreedController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions(Perm.UPDATE_BREED)
-  async updateBreed(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateBreedDto,
-  ) {
+  async updateBreed(@Param('id') id: string, @Body() dto: UpdateBreedDto) {
     return this.breedService.updateBreed(id, dto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions(Perm.DELETE_BREED)
-  async deleteBreed(@Param('id', ParseIntPipe) id: number) {
+  async deleteBreed(@Param('id') id: string) {
     return this.breedService.deleteBreed(id);
   }
 }

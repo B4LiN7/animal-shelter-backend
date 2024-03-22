@@ -1,6 +1,6 @@
 export interface BreedDto {
-  breedId: number;
+  breedId: string;
   name: string;
   description: string;
-  speciesId: number;
+  speciesId: string;
 }

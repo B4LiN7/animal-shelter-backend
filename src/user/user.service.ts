@@ -1,50 +1,63 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { UserHelperService } from 'src/user/userHelper.service';
+import { UserHelperService } from 'src/user/user.helper.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dto/user.dto';
-import { Permission as Perm } from '@prisma/client';
+import { PermissionEnum as Perm } from '@prisma/client';
 import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaService,
-    private userHelper: UserHelperService,
-    private role: RoleService,
     private logger: Logger,
+    private prisma: PrismaService,
+    private role: RoleService,
+    private userHelper: UserHelperService,
   ) {
     this.logger = new Logger(UserService.name);
   }
 
   /**
-   * Get all users (for admin)
-   * @returns {Promise<any>} - Promise with array of users (return of Prisma findMany method)
+   * Get all users
+   * @returns {Promise<UserDto>} - Promise with array of users (return of Prisma findMany method)
    */
-  async getAllUsers(): Promise<any> {
-    return this.prisma.user.findMany({
+  async getAllUsers(): Promise<UserDto[]> {
+    let usersWithRP: UserDto[];
+    const users = await this.prisma.user.findMany({
       select: {
         userId: true,
         username: true,
         name: true,
         email: true,
-        roleName: true,
         createdAt: true,
         updatedAt: true,
       },
     });
+    for (const user of users) {
+      const roles = await this.userHelper.getUserRoleNames(user.userId);
+      const permissions = await this.userHelper.getUserAllPermissions(
+        user.userId,
+      );
+      usersWithRP.push({ ...user, roles, permissions });
+    }
+    return usersWithRP;
   }
 
   /**
-   * Get user by id (for admin)
+   * Get user by ID
    * @param id - User's ID
-   * @returns {Promise<UserDto>} - Promise with user (return of Prisma findUnique method)
+   * @returns {Promise<UserDto>} - Promise with user
    */
   async getUser(id: string): Promise<UserDto> {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         userId: id,
       },
@@ -53,25 +66,29 @@ export class UserService {
         username: true,
         name: true,
         email: true,
-        roleName: true,
         createdAt: true,
         updatedAt: true,
       },
     });
+    const roles = await this.userHelper.getUserRoleNames(user.userId);
+    const permissions = await this.userHelper.getUserAllPermissions(
+      user.userId,
+    );
+    return { ...user, roles, permissions };
   }
 
   /**
-   * Get user's username and name by id (for admin and shelter worker)
+   * Get user's username and name by ID
    * @param id - User's ID
+   * @returns {Promise<{ userId: string; name: string }>} - Promise with user's ID and name
    */
-  async getUserName(id: string) {
+  async getUserName(id: string): Promise<{ userId: string; name: string }> {
     return this.prisma.user.findUnique({
       where: {
         userId: id,
       },
       select: {
         userId: true,
-        username: true,
         name: true,
       },
     });
@@ -80,25 +97,12 @@ export class UserService {
   /**
    * Get user who is currently logged in
    * @param req - Request object
-   * @returns {Promise<UserDto>} - Promise with user (return of Prisma findUnique method)
+   * @returns {Promise<UserDto>} - Promise with user
    */
   async getMyUser(req: Request): Promise<UserDto> {
     const token = await this.userHelper.decodeTokenFromReq(req);
     const userId = token.userId;
-    return this.prisma.user.findUnique({
-      where: {
-        userId: userId,
-      },
-      select: {
-        userId: true,
-        username: true,
-        name: true,
-        email: true,
-        roleName: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    return this.getUser(userId);
   }
 
   /**
@@ -114,7 +118,7 @@ export class UserService {
   }
 
   /**
-   * Create user (for admin)
+   * Create user
    * @param dto - CreateUserDto with user data
    * @returns {Promise<UserDto>} - Promise with created user (return of Prisma create method)
    */
@@ -133,8 +137,14 @@ export class UserService {
       );
     }
 
+    const roles = await Promise.all(
+      dto.roles.map((role) => this.role.getRoleByName(role)),
+    );
+
     const hashedPassword = await this.hashPassword(password);
+
     delete dto.password;
+    delete dto.roles;
     const newUser = await this.prisma.user.create({
       data: {
         hashedPassword: hashedPassword,
@@ -142,11 +152,17 @@ export class UserService {
       },
     });
 
+    await Promise.all(
+      roles.map((role) =>
+        this.userHelper.addRoleToUser(role.roleId, newUser.userId),
+      ),
+    );
+
     this.logger.log(
       `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
     );
 
-    return newUser;
+    return this.getUser(newUser.userId);
   }
 
   /**
@@ -161,11 +177,117 @@ export class UserService {
     dto: UpdateUserDto,
     req: Request,
   ): Promise<UserDto> {
-    if (!dto) {
-      throw new BadRequestException('No data to update');
+    const newUser = await this.getRawUser(id);
+
+    // Check if the new username is given or already used by another user
+    if (
+      dto.username &&
+      newUser.username !== dto.username &&
+      (await this.isUserExists(dto.username))
+    ) {
+      throw new BadRequestException('User with this username already exists');
     }
 
-    const newUser = await this.prisma.user.findUnique({
+    // Update only the fields that are given in the dto
+    newUser.email = dto.email ?? newUser.email;
+    newUser.username = dto.username ?? newUser.username;
+    newUser.name = dto.name ?? newUser.name;
+    if (dto.password) {
+      newUser.hashedPassword = await this.hashPassword(dto.password);
+    }
+
+    const token = await this.userHelper.decodeTokenFromReq(req);
+    if (token.permissions.includes(Perm.UPDATE_USER_ROLES)) {
+      await this.setUserRoles(id, dto.roles);
+    }
+
+    await this.prisma.user.update({
+      where: {
+        userId: id,
+      },
+      data: newUser,
+    });
+
+    return this.getUser(id);
+  }
+
+  /**
+   * Delete user
+   * @param id - User's ID
+   */
+  async deleteUser(id: string) {
+    const deletedUser = await this.prisma.user.delete({
+      where: {
+        userId: id,
+      },
+    });
+
+    const deletedRoles = await this.deleteUserRoleConnections(id);
+
+    return { ...deletedUser, deletedRoles: deletedRoles.count };
+  }
+
+  /**
+   * Delete all user's role connections
+   * @param userId - User's ID
+   */
+  private async deleteUserRoleConnections(userId: string) {
+    return this.prisma.userRole.deleteMany({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  /**
+   * Set the roles for a user
+   * @param userId - The user's ID
+   * @param roleNames - The roles' names
+   */
+  private async setUserRoles(
+    userId: string,
+    roleNames: string[],
+  ): Promise<void> {
+    try {
+      await Promise.all(
+        roleNames.map(async (roleName) => {
+          await this.prisma.role.findUnique({
+            where: {
+              roleName: roleName,
+            },
+          });
+        }),
+      );
+    } catch (error) {
+      throw new ForbiddenException('Role not found');
+    }
+
+    await this.prisma.userRole.deleteMany({
+      where: {
+        userId,
+      },
+    });
+
+    for (const role of roleNames) {
+      await this.prisma.userRole.create({
+        data: {
+          user: {
+            connect: {
+              userId,
+            },
+          },
+          role: {
+            connect: {
+              roleName: role,
+            },
+          },
+        },
+      });
+    }
+  }
+
+  private async getRawUser(id: string) {
+    const foundUser = await this.prisma.user.findUnique({
       where: {
         userId: id,
       },
@@ -173,67 +295,13 @@ export class UserService {
         email: true,
         username: true,
         hashedPassword: true,
-        roleName: true,
         name: true,
       },
     });
-    if (!newUser) {
+    if (!foundUser) {
       throw new BadRequestException('User with this ID does not exist');
     }
-
-    if (
-      dto.username &&
-      (await this.isUserExists(dto.username)) &&
-      newUser.username !== dto.username
-    ) {
-      throw new BadRequestException('User with this username already exists');
-    }
-
-    newUser.email = dto.email ?? newUser.email;
-    newUser.username = dto.username ?? newUser.username;
-    newUser.name = dto.name ?? newUser.name;
-
-    if (dto.password) {
-      newUser.hashedPassword = await this.hashPassword(dto.password);
-    }
-
-    const token = await this.userHelper.decodeTokenFromReq(req);
-    const reqUser = await this.prisma.user.findUnique({
-      where: { userId: token.userId },
-    });
-    const reqPerm = await this.role.getPermissionsFromRole(reqUser.roleName);
-    if (reqPerm.includes(Perm.UPDATE_USER_PERMISSIONS)) {
-      newUser.roleName = dto.roleName ?? newUser.roleName;
-    }
-
-    return this.prisma.user.update({
-      where: {
-        userId: id,
-      },
-      data: newUser,
-      select: {
-        userId: true,
-        username: true,
-        name: true,
-        email: true,
-        roleName: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-  }
-
-  /**
-   * Delete user
-   * @param id - User's ID
-   * @returns {Promise<UserDto>} - Promise with no result
-   */
-  async deleteUser(id: string): Promise<UserDto> {
-    return this.prisma.user.delete({
-      where: {
-        userId: id,
-      },
-    });
+    return foundUser;
   }
 
   /**

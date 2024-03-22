@@ -11,5 +11,5 @@ export class CreateBreedDto {
 
   @IsNotEmpty()
   @IsNumber()
-  speciesId: number;
+  speciesId: string;
 }

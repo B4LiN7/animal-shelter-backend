@@ -4,8 +4,8 @@ import {
   ExecutionContext,
   Logger,
 } from '@nestjs/common';
-import { UserHelperService } from 'src/user/userHelper.service';
-import { Permission as Perm } from '@prisma/client';
+import { UserHelperService } from 'src/user/user.helper.service';
+import { PermissionEnum as Perm } from '@prisma/client';
 
 @Injectable()
 /**

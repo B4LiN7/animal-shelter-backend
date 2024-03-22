@@ -10,7 +10,7 @@ import { PetHelperService } from './petHelper.service';
 import { PetSearchDto } from './dto/petSearch.dto';
 import { PetDto } from './dto/pet.dto';
 import { PetStatusDto } from './dto/petStatus.dto';
-import { Status } from '@prisma/client';
+import { PetStatusEnum as Status } from '@prisma/client';
 
 @Injectable()
 export class PetService {
@@ -41,7 +41,7 @@ export class PetService {
    * @param id - Pet's ID
    * @returns {Promise<PetDto>} - The pet with the given ID
    */
-  async getPet(id: number): Promise<PetDto> {
+  async getPet(id: string): Promise<PetDto> {
     return await this.petHelper.getPetWithLatestStatus(id);
   }
 
@@ -83,7 +83,7 @@ export class PetService {
    * @param dto - New pet data
    * @returns {Promise<PetDto>} - The updated pet
    */
-  async updatePet(id: number, dto: UpdatePetDto): Promise<PetDto> {
+  async updatePet(id: string, dto: UpdatePetDto): Promise<PetDto> {
     const { status, ...newPet } = dto;
 
     const existingPet = await this.prisma.pet.findUnique({
@@ -142,7 +142,7 @@ export class PetService {
    * @param id - Pet's ID
    * @returns The deleted pet, adoptions and statuses
    */
-  async deletePet(id: number) {
+  async deletePet(id: string) {
     return await this.petHelper.deletePet(id);
   }
 
@@ -151,7 +151,7 @@ export class PetService {
    * @param id - Pet's ID
    * @returns {Promise<PetStatusDto[]>} - The status history of the pet
    */
-  async getPetStatus(id: number): Promise<PetStatusDto[]> {
+  async getPetStatus(id: string): Promise<PetStatusDto[]> {
     return this.prisma.petStatus.findMany({
       where: { petId: id },
       orderBy: { from: 'desc' },

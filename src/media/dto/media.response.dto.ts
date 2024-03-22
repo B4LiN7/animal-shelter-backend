@@ -13,4 +13,4 @@ export interface FailedStatusDto {
   message: string;
 }
 
-export type ResponseStatusDto = SuccessStatusDto | FailedStatusDto;
+export type MediaUploadStatusResponseDto = SuccessStatusDto | FailedStatusDto;

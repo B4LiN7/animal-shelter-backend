@@ -1,4 +1,4 @@
-import { Sex, Status } from '@prisma/client';
+import { PetSexEnum as Sex, PetStatusEnum as Status } from '@prisma/client';
 import {
   IsDate,
   IsEnum,
@@ -19,11 +19,11 @@ export class UpdatePetDto {
 
   @IsOptional()
   @IsString()
-  imageUrl: string;
+  imageUrls: string[];
 
   @IsOptional()
   @IsNumber()
-  breedId: number;
+  breedId: string;
 
   @IsOptional()
   @IsString()

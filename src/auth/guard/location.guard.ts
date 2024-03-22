@@ -6,8 +6,8 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Permission as Perm } from '@prisma/client';
-import { UserHelperService } from 'src/user/userHelper.service';
+import { PermissionEnum as Perm } from '@prisma/client';
+import { UserHelperService } from 'src/user/user.helper.service';
 
 @Injectable()
 /**
@@ -28,7 +28,7 @@ export class LocationGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const reqUrl = request.url;
-    const reqLocationId = parseInt(request.params.id);
+    const reqLocationId = request.params.id;
     const token = await this.userHelper.decodeTokenFromReq(request);
 
     if (isNaN(reqLocationId)) {

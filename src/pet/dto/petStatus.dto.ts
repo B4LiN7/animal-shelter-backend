@@ -1,5 +1,5 @@
 export interface PetStatusDto {
-  petId: number;
+  petId: string;
   status: string;
   from: Date;
 }

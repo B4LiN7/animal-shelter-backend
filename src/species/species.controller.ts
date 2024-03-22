@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -13,7 +12,7 @@ import { SpeciesService } from './species.service';
 import { CreateSpeciesDto } from './dto/create.species.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PermissionGuard } from '../auth/guard/permission.guard';
-import { Permission as Perm } from '@prisma/client';
+import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('species')
@@ -26,7 +25,7 @@ export class SpeciesController {
     return this.speciesService.getAllSpecies();
   }
   @Get('/:id')
-  async getSpecies(@Param('id', ParseIntPipe) id: number) {
+  async getSpecies(@Param('id') id: string) {
     return this.speciesService.getSpecies(id);
   }
 
@@ -40,17 +39,14 @@ export class SpeciesController {
   @Put('/:id')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions(Perm.UPDATE_SPECIES)
-  async updateSpecies(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateSpeciesDto,
-  ) {
+  async updateSpecies(@Param('id') id: string, @Body() dto: CreateSpeciesDto) {
     return this.speciesService.updateSpecies(id, dto);
   }
 
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions(Perm.DELETE_SPECIES)
-  async deleteSpecies(@Param('id', ParseIntPipe) id: number) {
+  async deleteSpecies(@Param('id') id: string) {
     return this.speciesService.deleteSpecies(id);
   }
 }

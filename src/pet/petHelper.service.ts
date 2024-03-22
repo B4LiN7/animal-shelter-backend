@@ -4,7 +4,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Status } from '@prisma/client';
+import { PetStatusEnum as Status } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PetSearchDto } from 'src/pet/dto/petSearch.dto';
 import { PetDto } from './dto/pet.dto';
@@ -22,7 +22,6 @@ export class PetHelperService {
    */
   async getPetsBySearch(search: PetSearchDto) {
     const { status, breed } = search;
-    const breedId = Number(breed);
     let statusEnum: Status;
     if (status) {
       statusEnum = Status[status.toUpperCase() as keyof typeof Status] ?? null;
@@ -30,13 +29,13 @@ export class PetHelperService {
     const pets = await this.getPetsWithLatestStatus();
     const foundPets = pets.filter((pet) => {
       const statusMatch = statusEnum ? pet.status === statusEnum : true;
-      const breedMatch = breedId ? pet.breedId === breedId : true;
+      const breedMatch = breed ? pet.breedId === breed : true;
       return statusMatch && breedMatch;
     });
 
     if (foundPets.length === 0) {
       throw new NotFoundException(
-        `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breedId})`,
+        `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breed})`,
       );
     }
     return foundPets;
@@ -61,7 +60,7 @@ export class PetHelperService {
    * @param {number} id - The ID of the pet to get.
    * @returns {Promise<PetDto>} The pet with the latest status.
    */
-  async getPetWithLatestStatus(id: number): Promise<PetDto> {
+  async getPetWithLatestStatus(id: string): Promise<PetDto> {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });
@@ -77,7 +76,7 @@ export class PetHelperService {
    * @param {number} id - The ID of the pet.
    * @returns {Promise<Status>} The latest status of the pet.
    */
-  async getLatestStatusForPet(id: number): Promise<Status> {
+  async getLatestStatusForPet(id: string): Promise<Status> {
     const latestStatus = await this.prisma.petStatus.findFirst({
       where: { petId: id },
       orderBy: { from: 'desc' },
@@ -90,7 +89,7 @@ export class PetHelperService {
    * @param {number} id - The ID of the pet to delete.
    * @returns A promise that resolves when the pet is deleted.
    */
-  async deletePet(id: number) {
+  async deletePet(id: string) {
     const deletedStatuses = await this.prisma.petStatus.deleteMany({
       where: { petId: id },
     });

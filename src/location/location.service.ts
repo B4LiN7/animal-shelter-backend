@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LocationDto } from './dto/location.dto';
-import { UserHelperService } from 'src/user/userHelper.service';
+import { UserHelperService } from 'src/user/user.helper.service';
 import { Request } from 'express';
 
 @Injectable()
@@ -39,7 +39,7 @@ export class LocationService {
     return this.prisma.location.findMany();
   }
 
-  async getLocation(id: number) {
+  async getLocation(id: string) {
     return this.prisma.location.findUnique({
       where: {
         locationId: id,
@@ -55,7 +55,7 @@ export class LocationService {
     });
   }
 
-  async updateLocation(id: number, dto: LocationDto) {
+  async updateLocation(id: string, dto: LocationDto) {
     return this.prisma.location.update({
       where: {
         locationId: id,
@@ -66,7 +66,7 @@ export class LocationService {
     });
   }
 
-  async deleteLocation(id: number) {
+  async deleteLocation(id: string) {
     return this.prisma.location.delete({
       where: {
         locationId: id,

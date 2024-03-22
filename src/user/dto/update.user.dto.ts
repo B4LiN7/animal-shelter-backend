@@ -1,4 +1,11 @@
-import { IsEmail, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  ArrayMinSize,
+  ArrayNotEmpty,
+  IsEmail,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -18,9 +25,13 @@ export class UpdateUserDto {
   email: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ each: true })
   @Matches(/^[A-Z_]+$/, {
-    message: 'roleName should only contain uppercase letters and underscores',
+    each: true,
+    message:
+      'Each roleName should only contain uppercase letters and underscores',
   })
-  roleName: string;
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  roles: string[];
 }
