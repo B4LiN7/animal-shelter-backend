@@ -1,11 +1,5 @@
 import { PetSexEnum as Sex, PetStatusEnum as Status } from '@prisma/client';
-import {
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class UpdatePetDto {
@@ -18,11 +12,12 @@ export class UpdatePetDto {
   description: string;
 
   @IsOptional()
-  @IsString()
+  @IsArray()
+  @IsString({ each: true })
   imageUrls: string[];
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   breedId: string;
 
   @IsOptional()

@@ -1,7 +1,7 @@
 import { PrismaClient, PermissionEnum as Perm } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
-/*
+
 const prisma = new PrismaClient();
 
 async function hashPassword(password: string) {
@@ -63,13 +63,9 @@ async function addAdminUser() {
       username: 'admin',
     },
   });
-  if (admin && admin.roleName === 'ADMIN') {
+  if (admin) {
     console.log('Admin user with ADMIN role already exists, skip.');
     return;
-  }
-  if (admin) {
-    console.log(`Delete non ADMIN role user... `);
-    await prisma.user.delete({ where: { userId: admin.userId } });
   }
 
   const newAdmin = await prisma.user.create({
@@ -77,9 +73,21 @@ async function addAdminUser() {
       username: 'admin',
       name: 'Admin User',
       hashedPassword: await hashPassword('password'),
+    },
+  });
+
+  const adminRole = await prisma.role.findFirst({
+    where: {
       roleName: 'ADMIN',
     },
   });
+  await prisma.userRole.create({
+    data: {
+      userId: newAdmin.userId,
+      roleId: adminRole.roleId,
+    },
+  });
+
   console.log(`Admin user created with user ID ${newAdmin.userId}.`);
 }
 
@@ -99,9 +107,21 @@ async function addUsers() {
         username: faker.internet.userName(),
         hashedPassword: await hashPassword('password'),
         name: faker.person.fullName(),
+      },
+    });
+
+    const userRole = await prisma.role.findFirst({
+      where: {
         roleName: 'USER',
       },
     });
+    await prisma.userRole.create({
+      data: {
+        userId: newUser.userId,
+        roleId: userRole.roleId,
+      },
+    });
+
     console.log(
       `User with username '${newUser.username}' created with user ID ${newUser.userId}.`,
     );
@@ -400,4 +420,3 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
-*/

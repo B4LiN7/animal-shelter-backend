@@ -30,7 +30,7 @@ export class UserService {
    * @returns {Promise<UserDto>} - Promise with array of users (return of Prisma findMany method)
    */
   async getAllUsers(): Promise<UserDto[]> {
-    let usersWithRP: UserDto[];
+    const usersWithRP: UserDto[] = [];
     const users = await this.prisma.user.findMany({
       select: {
         userId: true,

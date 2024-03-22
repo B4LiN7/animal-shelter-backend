@@ -3,7 +3,6 @@ import {
   IsDate,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   registerDecorator,
@@ -24,7 +23,7 @@ export class CreatePetDto {
   imageUrls: string[];
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   breedId: string;
 
   @IsNotEmpty()

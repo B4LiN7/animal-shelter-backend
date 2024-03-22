@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePetDto } from './dto/create.pet.dto';
 import { UpdatePetDto } from './dto/update.pet.dto';
-import { PetHelperService } from './petHelper.service';
+import { PetHelperService } from './pet.helper.service';
 import { PetSearchDto } from './dto/petSearch.dto';
 import { PetDto } from './dto/pet.dto';
 import { PetStatusDto } from './dto/petStatus.dto';
@@ -126,12 +126,18 @@ export class PetService {
     });
 
     if (status) {
-      await this.prisma.petStatus.create({
-        data: {
-          petId: id,
-          status: status,
-        },
+      const latestStatus = await this.prisma.petStatus.findFirst({
+        where: { petId: id },
+        orderBy: { from: 'desc' },
       });
+      if (latestStatus.status !== status) {
+        await this.prisma.petStatus.create({
+          data: {
+            petId: id,
+            status: status,
+          },
+        });
+      }
     }
 
     return await this.petHelper.getPetWithLatestStatus(id);

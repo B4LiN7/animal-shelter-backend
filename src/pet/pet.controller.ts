@@ -60,7 +60,7 @@ export class PetController {
   }
 
   /* Past statuses for pet */
-  @Get('status/:id')
+  @Get(':id/status')
   @UseGuards(AuthGuard('jwt'))
   async readPetStatus(@Param('id') id: string) {
     return this.petService.getPetStatus(id);

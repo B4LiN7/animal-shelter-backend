@@ -12,7 +12,7 @@ import {
 } from '@prisma/client';
 import { UserHelperService } from 'src/user/user.helper.service';
 import { UpdateAdoptionDto, AdoptionStatus } from './dto/update.adoption.dto';
-import { PetHelperService } from 'src/pet/petHelper.service';
+import { PetHelperService } from 'src/pet/pet.helper.service';
 
 @Injectable()
 export class AdoptionService {
