@@ -1,4 +1,4 @@
-export interface BreedDto {
+export interface BreedType {
   breedId: string;
   name: string;
   description: string;

@@ -15,11 +15,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { PermissionGuard } from '../auth/guard/permission.guard';
 import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
+  @SkipThrottle()
   @Get('*')
   serveMedia(@Param('0') path: string, @Res() res: Response) {
     return this.mediaService.serveMedia(path, res);

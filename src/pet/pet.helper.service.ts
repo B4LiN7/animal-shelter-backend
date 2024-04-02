@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { PetStatusEnum as Status } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { PetSearchDto } from 'src/pet/dto/petSearch.dto';
-import { PetDto } from './dto/pet.dto';
+import { SearchPetDto } from 'src/pet/dto/search.pet.dto';
+import { PetType } from './type/pet.type';
 
 @Injectable()
 export class PetHelperService {
@@ -20,7 +20,7 @@ export class PetHelperService {
    * This function gets all pets. If a search is provided, it filters the pets by the search parameters.
    * @param search The search parameters to filter the pets.
    */
-  async getPetsBySearch(search: PetSearchDto) {
+  async getPetsBySearch(search: SearchPetDto) {
     const { status, breed } = search;
     let statusEnum: Status;
     if (status) {
@@ -43,9 +43,9 @@ export class PetHelperService {
 
   /**
    * This function gets all pets and their latest status.
-   * @returns {Promise<PetDto[]>} The pets with the latest status.
+   * @returns {Promise<PetType[]>} The pets with the latest status.
    */
-  async getPetsWithLatestStatus(): Promise<PetDto[]> {
+  async getPetsWithLatestStatus(): Promise<PetType[]> {
     const pets = await this.prisma.pet.findMany();
     return await Promise.all(
       pets.map(async (pet) => {
@@ -58,9 +58,9 @@ export class PetHelperService {
   /**
    * This function gets a pet and it latest status by pet's ID.
    * @param {number} id - The ID of the pet to get.
-   * @returns {Promise<PetDto>} The pet with the latest status.
+   * @returns {Promise<PetType>} The pet with the latest status.
    */
-  async getPetWithLatestStatus(id: string): Promise<PetDto> {
+  async getPetWithLatestStatus(id: string): Promise<PetType> {
     const pet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });

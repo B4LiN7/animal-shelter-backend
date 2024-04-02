@@ -1,10 +1,5 @@
 import { IsString, IsNotEmpty, IsNumber, IsEnum } from 'class-validator';
-
-export enum AdoptionStatus {
-  ADOPTING = 'ADOPTING',
-  ADOPTED = 'ADOPTED',
-  CANCELLED = 'CANCELLED',
-}
+import { AdoptionStatusEnum as AdoptionStatus } from '@prisma/client';
 
 export class UpdateAdoptionDto {
   @IsNotEmpty()
@@ -18,4 +13,7 @@ export class UpdateAdoptionDto {
   @IsNotEmpty()
   @IsEnum(AdoptionStatus)
   status: AdoptionStatus;
+
+  @IsString()
+  reason: string;
 }

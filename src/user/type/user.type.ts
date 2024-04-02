@@ -1,12 +1,10 @@
-import { PermissionEnum as Permission } from '@prisma/client';
-
-export interface UserDto {
+export interface UserType {
   userId: string;
   username: string;
   name: string;
   email: string;
+  profileImageUrl: string;
   roles: string[];
-  permissions: Permission[];
   createdAt: Date;
   updatedAt: Date;
 }

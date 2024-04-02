@@ -62,7 +62,7 @@ export class LocationController {
   }
   @Post()
   @UseGuards(PermissionGuard)
-  @Permissions(Perm.CREATE_LOCATION)
+  @Permissions(Perm.ACCESS_ANY_LOCATION)
   async addLocation(@Body() dto: LocationDto, @Req() req: Request) {
     return this.locationService.addToMyLocations(dto, req);
   }

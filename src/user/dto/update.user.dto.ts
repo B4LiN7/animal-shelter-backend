@@ -25,6 +25,10 @@ export class UpdateUserDto {
   email: string;
 
   @IsOptional()
+  @IsEmail()
+  profileImageUrl: string;
+
+  @IsOptional()
   @IsString({ each: true })
   @Matches(/^[A-Z_]+$/, {
     each: true,

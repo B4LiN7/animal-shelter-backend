@@ -8,16 +8,8 @@ async function hashPassword(password: string) {
   const saltOrRounds = 10;
   return await bcrypt.hash(password, saltOrRounds);
 }
-async function checkDatabaseConnection() {
-  try {
-    await prisma.$connect();
-    console.log('Database connection successful');
-  } catch (error) {
-    console.error('Unable to connect to the database');
-    throw error;
-  }
-}
 
+// Adding roles and their permissions
 async function addRoles() {
   const rolePermMap = [
     { name: 'ADMIN', permissions: Object.values(Perm) },
@@ -29,10 +21,15 @@ async function addRoles() {
       name: 'VET',
       permissions: [
         Perm.SET_ADOPTION,
-        Perm.UPLOAD_IMAGE,
         Perm.CREATE_BREED,
         Perm.CREATE_PET,
         Perm.CREATE_SPECIES,
+        Perm.UPDATE_BREED,
+        Perm.UPDATE_PET,
+        Perm.UPDATE_SPECIES,
+        Perm.DELETE_BREED,
+        Perm.DELETE_PET,
+        Perm.DELETE_SPECIES,
       ],
     },
   ];
@@ -63,7 +60,12 @@ async function addAdminUser() {
       username: 'admin',
     },
   });
-  if (admin) {
+  const userAdminConnection = await prisma.userRole.findFirst({
+    where: {
+      userId: admin?.userId,
+    },
+  });
+  if (admin && userAdminConnection) {
     console.log('Admin user with ADMIN role already exists, skip.');
     return;
   }
@@ -76,11 +78,29 @@ async function addAdminUser() {
     },
   });
 
+  const userRole = await prisma.role.findFirst({
+    where: {
+      roleName: 'USER',
+    },
+  });
+  if (!userRole) {
+    throw new Error('User role not found, try to recreate roles...');
+  }
+  await prisma.userRole.create({
+    data: {
+      userId: newAdmin.userId,
+      roleId: userRole.roleId,
+    },
+  });
+
   const adminRole = await prisma.role.findFirst({
     where: {
       roleName: 'ADMIN',
     },
   });
+  if (!adminRole) {
+    throw new Error('Admin role not found, try to recreate roles...');
+  }
   await prisma.userRole.create({
     data: {
       userId: newAdmin.userId,
@@ -92,27 +112,33 @@ async function addAdminUser() {
 }
 
 // Random users and locations
-async function addUsers() {
+async function addUsers(addUserCount: number, addIfFound: boolean = false) {
   console.log('Adding users...');
 
-  const userCount = await prisma.user.findMany();
-  if (userCount.length > 1) {
-    console.log('Users already exist, skip.');
-    return;
+  if (!addIfFound) {
+    const userCount = await prisma.user.findMany();
+    if (userCount.length > 1) {
+      console.log('Users already exist, skip.');
+      return;
+    }
   }
 
-  for (let i = 0; i < 10; i++) {
+  const userRole = await prisma.role.findFirst({
+    where: {
+      roleName: 'USER',
+    },
+  });
+  if (!userRole) {
+    console.error('User role not found, try to recreate roles...');
+    await addRoles();
+  }
+
+  for (let i = 0; i < addUserCount; i++) {
     const newUser = await prisma.user.create({
       data: {
         username: faker.internet.userName(),
         hashedPassword: await hashPassword('password'),
         name: faker.person.fullName(),
-      },
-    });
-
-    const userRole = await prisma.role.findFirst({
-      where: {
-        roleName: 'USER',
       },
     });
     await prisma.userRole.create({
@@ -121,19 +147,23 @@ async function addUsers() {
         roleId: userRole.roleId,
       },
     });
-
     console.log(
       `User with username '${newUser.username}' created with user ID ${newUser.userId}.`,
     );
   }
 }
-async function addLocations() {
+async function addLocations(
+  maxLocationForUser: number = 5,
+  addIfFound: boolean = false,
+) {
   console.log('Adding locations...');
 
-  const locationCount = await prisma.location.count();
-  if (locationCount > 0) {
-    console.log('Locations already exist, skip.');
-    return;
+  if (!addIfFound) {
+    const locationCount = await prisma.location.count();
+    if (locationCount > 0) {
+      console.log('Locations already exist, skip.');
+      return;
+    }
   }
 
   const users = await prisma.user.findMany();
@@ -143,12 +173,14 @@ async function addLocations() {
   }
 
   for (const user of users) {
-    const numberOfLocations = Math.floor(Math.random() * 3) + 1;
+    const numberOfLocations =
+      Math.floor(Math.random() * Math.abs(maxLocationForUser)) + 1;
+
     for (let i = 0; i < numberOfLocations; i++) {
       const newLocation = await prisma.location.create({
         data: {
           userId: user.userId,
-          name: `${user.name}'s location`,
+          name: `${user.username}'s location`,
           country: faker.location.country(),
           city: faker.location.city(),
           zipCode: Number(faker.location.zipCode('####')),
@@ -157,6 +189,7 @@ async function addLocations() {
           addressExtra: faker.location.secondaryAddress(),
         },
       });
+
       console.log(
         `Location '${newLocation.name}' created (for user with ID ${user.userId}) with ID ${newLocation.locationId}.`,
       );
@@ -165,13 +198,15 @@ async function addLocations() {
 }
 
 // Animal breeds and species
-async function addSpecies() {
+async function addSpecies(addIfFound: boolean = false) {
   console.log('Adding species...');
 
-  const speciesCount = await prisma.species.count();
-  if (speciesCount > 0) {
-    console.log('Species already exist, skip.');
-    return;
+  if (!addIfFound) {
+    const speciesCount = await prisma.species.count();
+    if (speciesCount > 0) {
+      console.log('Species already exist, skip.');
+      return;
+    }
   }
 
   const species = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Fish'];
@@ -186,13 +221,15 @@ async function addSpecies() {
     );
   }
 }
-async function addBreeds() {
+async function addBreeds(addIfFound: boolean = false) {
   console.log('Adding breeds... ');
 
-  const breeds = await prisma.breed.findMany();
-  if (breeds.length > 0) {
-    console.log('Breeds already exist, skip.');
-    return;
+  if (!addIfFound) {
+    const breeds = await prisma.breed.findMany();
+    if (breeds.length > 0) {
+      console.log('Breeds already exist, skip.');
+      return;
+    }
   }
   const species = await prisma.species.findMany();
   if (species.length === 0) {
@@ -307,6 +344,7 @@ async function addBreeds() {
         'Playful, cheerful, and hypoallergenic, known for their white, fluffy coat and gentle personality. They require regular grooming and are well-suited for apartment living.',
     },
   ];
+
   for (const breed of dogBreeds) {
     const randomSpeciesIndex = Math.floor(Math.random() * species.length);
     const selectedSpecies = species[randomSpeciesIndex];
@@ -344,13 +382,15 @@ async function addBreeds() {
     }
   }
 }
-async function addPets() {
+async function addPets(addPetCount: number, addIfFound: boolean = false) {
   console.log('Adding pets...');
 
-  const petCount = await prisma.pet.count();
-  if (petCount > 0) {
-    console.log('Pets already exist, skip.');
-    return;
+  if (!addIfFound) {
+    const petCount = await prisma.pet.count();
+    if (petCount > 0) {
+      console.log('Pets already exist, skip.');
+      return;
+    }
   }
   const breedCount = await prisma.breed.count();
   if (breedCount <= 0) {
@@ -359,15 +399,15 @@ async function addPets() {
   }
 
   const breeds = await prisma.breed.findMany();
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < addPetCount; i++) {
     const randomBreedIndex = Math.floor(Math.random() * breedCount);
     const randomBreed = breeds[randomBreedIndex];
     const addedPet = await prisma.pet.create({
       data: {
         name: faker.person.firstName(),
         breedId: randomBreed.breedId,
-        birthDate: new Date(),
-        description: 'A friendly dog looking for a loving home',
+        birthDate: faker.date.past({ years: 10 }),
+        description: 'A friendly pet looking for a loving home.',
       },
     });
     await prisma.petStatus.create({
@@ -381,9 +421,47 @@ async function addPets() {
     );
   }
 }
+async function addAdoptions(addIfFound: boolean = false) {
+  console.log('Adding adoptions...');
+
+  if (!addIfFound) {
+    const adoptionCount = await prisma.adoption.count();
+    if (adoptionCount > 0) {
+      console.log('Adoptions already exist, skip.');
+      return;
+    }
+  }
+  const pets = await prisma.pet.findMany();
+  const users = await prisma.user.findMany();
+  if (pets.length === 0 || users.length === 0) {
+    console.log('No pets or users found, skip.');
+    return;
+  }
+
+  for (const pet of pets) {
+    const randomUserIndex = Math.floor(Math.random() * users.length);
+    const randomUser = users[randomUserIndex];
+    await prisma.adoption.create({
+      data: {
+        petId: pet.petId,
+        userId: randomUser.userId,
+        status: 'PENDING',
+      },
+    });
+    console.log(
+      `Adoption created for pet ID ${pet.petId} and user ID ${randomUser.userId}.`,
+    );
+  }
+}
 
 export async function main() {
-  await checkDatabaseConnection();
+  try {
+    await prisma.$connect();
+    console.log('Database connection successful');
+  } catch (error) {
+    console.error('Unable to connect to the database');
+    throw error;
+  }
 
   const environment = process.env.NODE_ENV;
   switch (environment) {
@@ -391,18 +469,21 @@ export async function main() {
       console.log('Development environment specified, executing...');
       await addRoles();
       await addAdminUser();
-      await addUsers();
+      await addUsers(50);
       await addLocations();
       await addSpecies();
       await addBreeds();
-      await addPets();
+      await addPets(1000);
+      await addAdoptions();
       break;
     case 'test':
       console.log('Testing environment specified, executing...');
+      await addRoles();
       await addAdminUser();
       break;
     case 'prod':
       console.log('Production environment specified, executing...');
+      await addRoles();
       await addAdminUser();
       break;
     default:

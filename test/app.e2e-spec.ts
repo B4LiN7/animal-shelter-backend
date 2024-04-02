@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
-import { PrismaExceptionFilter } from 'src/prisma/exception/prisma.exception.filter';
+import { PrismaExceptionFilter } from 'src/prisma/exception/prisma.exception';
 import * as CookieParser from 'cookie-parser';
 import * as process from 'process';
-import { SpeciesDto } from '../src/species/dto/species.dto';
+import { SpeciesType } from '../src/species/type/species.type';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -135,7 +135,7 @@ describe('AppController (e2e)', () => {
     agent: request.SuperTest<request.Test>,
     breedNumber: number = 1,
     speciesNumber: number = 1,
-  ): Promise<number[]> {
+  ): Promise<string[]> {
     await loginUser(agent);
     for (let i = 0; i < speciesNumber; i++) {
       await agent
@@ -150,7 +150,7 @@ describe('AppController (e2e)', () => {
       .get('/species')
       .expect(200)
       .then((res) => {
-        return res.body.map((species: SpeciesDto) => species.speciesId);
+        return res.body.map((species: SpeciesType) => species.speciesId);
       });
     for (let i = 0; i < breedNumber; i++) {
       await agent
@@ -170,8 +170,8 @@ describe('AppController (e2e)', () => {
       });
   }
 
-  function getRandomElement(array: number[]): number {
+  function getRandomElement(array: string[]): string {
     const randomIndex = Math.floor(Math.random() * array.length);
-    return Number(array[randomIndex]);
+    return array[randomIndex];
   }
 });

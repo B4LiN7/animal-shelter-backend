@@ -7,12 +7,15 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { UserHelperService } from 'src/user/user.helper.service';
+import { UserHelperService } from 'src/user/user-helper.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
-import { UserDto } from './dto/user.dto';
+import { UserType } from './type/user.type';
 import { PermissionEnum as Perm } from '@prisma/client';
 import { RoleService } from 'src/role/role.service';
+import { RoleType } from './type/role.type';
+
+const DEFAULT_ROLE_FOR_NEW_USER = 'USER';
 
 @Injectable()
 export class UserService {
@@ -27,26 +30,27 @@ export class UserService {
 
   /**
    * Get all users
-   * @returns {Promise<UserDto>} - Promise with array of users (return of Prisma findMany method)
+   * @returns {Promise<UserType>} - Promise with array of users (return of Prisma findMany method)
    */
-  async getAllUsers(): Promise<UserDto[]> {
-    const usersWithRP: UserDto[] = [];
+  async getAllUsers(): Promise<UserType[]> {
+    const usersWithRP: UserType[] = [];
     const users = await this.prisma.user.findMany({
       select: {
         userId: true,
         username: true,
         name: true,
         email: true,
+        profileImageUrl: true,
         createdAt: true,
         updatedAt: true,
       },
     });
     for (const user of users) {
       const roles = await this.userHelper.getUserRoleNames(user.userId);
-      const permissions = await this.userHelper.getUserAllPermissions(
+      /*const permissions = await this.userHelper.getUserAllPermissions(
         user.userId,
-      );
-      usersWithRP.push({ ...user, roles, permissions });
+      );*/
+      usersWithRP.push({ ...user, roles });
     }
     return usersWithRP;
   }
@@ -54,9 +58,9 @@ export class UserService {
   /**
    * Get user by ID
    * @param id - User's ID
-   * @returns {Promise<UserDto>} - Promise with user
+   * @returns {Promise<UserType>} - Promise with user
    */
-  async getUser(id: string): Promise<UserDto> {
+  async getUser(id: string): Promise<UserType> {
     const user = await this.prisma.user.findUnique({
       where: {
         userId: id,
@@ -66,15 +70,16 @@ export class UserService {
         username: true,
         name: true,
         email: true,
+        profileImageUrl: true,
         createdAt: true,
         updatedAt: true,
       },
     });
     const roles = await this.userHelper.getUserRoleNames(user.userId);
-    const permissions = await this.userHelper.getUserAllPermissions(
+    /*const permissions = await this.userHelper.getUserAllPermissions(
       user.userId,
-    );
-    return { ...user, roles, permissions };
+    );*/
+    return { ...user, roles };
   }
 
   /**
@@ -97,9 +102,9 @@ export class UserService {
   /**
    * Get user who is currently logged in
    * @param req - Request object
-   * @returns {Promise<UserDto>} - Promise with user
+   * @returns {Promise<UserType>} - Promise with user
    */
-  async getMyUser(req: Request): Promise<UserDto> {
+  async getMyUser(req: Request): Promise<UserType> {
     const token = await this.userHelper.decodeTokenFromReq(req);
     const userId = token.userId;
     return this.getUser(userId);
@@ -109,9 +114,9 @@ export class UserService {
    * Update user who is currently logged in
    * @param req - Request object
    * @param dto - UpdateUserDto with new data
-   * @returns {Promise<UserDto>} - Promise with updated user (return of Prisma update method)
+   * @returns {Promise<UserType>} - Promise with updated user (return of Prisma update method)
    */
-  async updateMyUser(req: Request, dto: UpdateUserDto): Promise<UserDto> {
+  async updateMyUser(req: Request, dto: UpdateUserDto): Promise<UserType> {
     const token = await this.userHelper.decodeTokenFromReq(req);
     const userId = token.userId;
     return this.updateUser(userId, dto, req);
@@ -120,9 +125,9 @@ export class UserService {
   /**
    * Create user
    * @param dto - CreateUserDto with user data
-   * @returns {Promise<UserDto>} - Promise with created user (return of Prisma create method)
+   * @returns {Promise<UserType>} - Promise with created user (return of Prisma create method)
    */
-  async createUser(dto: CreateUserDto): Promise<UserDto> {
+  async createUser(dto: CreateUserDto): Promise<UserType> {
     const { username, password } = dto;
 
     const foundUser = await this.prisma.user.findUnique({
@@ -137,11 +142,20 @@ export class UserService {
       );
     }
 
-    const roles = await Promise.all(
-      dto.roles.map((role) => this.role.getRoleByName(role)),
-    );
-
     const hashedPassword = await this.hashPassword(password);
+
+    let roles: RoleType[] = [];
+    if (dto.roles) {
+      roles = await Promise.all(
+        dto.roles.map((role) => this.role.getRoleByName(role)),
+      );
+    }
+    const defaultRole = await this.role.getRoleByName(
+      DEFAULT_ROLE_FOR_NEW_USER,
+    );
+    if (!roles.includes(defaultRole)) {
+      roles.push(defaultRole);
+    }
 
     delete dto.password;
     delete dto.roles;
@@ -170,13 +184,13 @@ export class UserService {
    * @param id - userId
    * @param dto - UpdateUserDto with new data
    * @param req - Request object
-   * @returns {Promise<UserDto>} - Promise with updated user (return of Prisma update method)
+   * @returns {Promise<UserType>} - Promise with updated user (return of Prisma update method)
    */
   async updateUser(
     id: string,
     dto: UpdateUserDto,
     req: Request,
-  ): Promise<UserDto> {
+  ): Promise<UserType> {
     const newUser = await this.getRawUser(id);
 
     // Check if the new username is given or already used by another user

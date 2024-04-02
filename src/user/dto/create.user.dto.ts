@@ -30,6 +30,10 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
+  @IsOptional()
+  @IsEmail()
+  profileImageUrl: string;
+
   @IsNotEmpty()
   @IsString({ each: true })
   @Matches(/^[A-Z_]+$/, {

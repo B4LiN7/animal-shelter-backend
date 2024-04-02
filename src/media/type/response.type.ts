@@ -1,4 +1,4 @@
-export interface SuccessStatusDto {
+export interface SuccessStatusType {
   status: 'success';
   file: string;
   size: string;
@@ -6,11 +6,11 @@ export interface SuccessStatusDto {
   newFile: string;
 }
 
-export interface FailedStatusDto {
+export interface FailedStatusType {
   status: 'failed';
   file: string;
   size: string;
   message: string;
 }
 
-export type MediaUploadStatusResponseDto = SuccessStatusDto | FailedStatusDto;
+export type MediaUploadResType = SuccessStatusType | FailedStatusType;

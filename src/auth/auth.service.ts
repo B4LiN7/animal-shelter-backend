@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserHelperService } from '../user/user.helper.service';
+import { UserHelperService } from '../user/user-helper.service';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create.user.dto';
 import * as bcrypt from 'bcrypt';
@@ -100,7 +100,7 @@ export class AuthService {
    * @param res - Response object
    */
   async register(dto: RegisterDto, req: Request, res: Response) {
-    const { username, password, email, name } = dto;
+    const { username, email } = dto;
     let newUsername = username;
 
     if (!username && !email) {
@@ -109,11 +109,10 @@ export class AuthService {
       newUsername = email;
     }
 
+    delete dto.username;
     const newUser = await this.user.createUser({
       username: newUsername,
-      password,
-      email,
-      name,
+      ...dto,
     } as CreateUserDto);
     const permissions = await this.userHelper.getUserAllPermissions(
       newUser.userId,

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PermissionEnum as Perm } from '@prisma/client';
-import { UserHelperService } from 'src/user/user.helper.service';
+import { UserHelperService } from 'src/user/user-helper.service';
 
 @Injectable()
 /**

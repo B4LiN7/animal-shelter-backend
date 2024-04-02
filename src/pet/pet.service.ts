@@ -7,10 +7,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePetDto } from './dto/create.pet.dto';
 import { UpdatePetDto } from './dto/update.pet.dto';
 import { PetHelperService } from './pet.helper.service';
-import { PetSearchDto } from './dto/petSearch.dto';
-import { PetDto } from './dto/pet.dto';
-import { PetStatusDto } from './dto/petStatus.dto';
-import { PetStatusEnum as Status } from '@prisma/client';
+import { SearchPetDto } from './dto/search.pet.dto';
+import { PetType } from './type/pet.type';
+import { PetStatusDto } from './type/pet-status.dto';
+import {
+  PetStatusEnum as Status,
+  AdoptionStatusEnum as AdoptionStatus,
+} from '@prisma/client';
 
 @Injectable()
 export class PetService {
@@ -22,9 +25,9 @@ export class PetService {
   /**
    * Get all pets
    * @param search - Search parameters (optional)
-   * @returns {Promise<PetDto[]>} - List of pets
+   * @returns {Promise<PetType[]>} - List of pets
    */
-  async getAllPets(search?: PetSearchDto): Promise<PetDto[]> {
+  async getAllPets(search?: SearchPetDto): Promise<PetType[]> {
     if (search) {
       const foundPets = await this.petHelper.getPetsBySearch(search);
       return Promise.all(
@@ -39,18 +42,18 @@ export class PetService {
   /**
    * Get a pet by ID
    * @param id - Pet's ID
-   * @returns {Promise<PetDto>} - The pet with the given ID
+   * @returns {Promise<PetType>} - The pet with the given ID
    */
-  async getPet(id: string): Promise<PetDto> {
+  async getPet(id: string): Promise<PetType> {
     return await this.petHelper.getPetWithLatestStatus(id);
   }
 
   /**
    * Create a new pet
    * @param dto - New pet data
-   * @returns {Promise<PetDto>} - The newly created pet
+   * @returns {Promise<PetType>} - The newly created pet
    */
-  async createPet(dto: CreatePetDto): Promise<PetDto> {
+  async createPet(dto: CreatePetDto): Promise<PetType> {
     const { status, ...newPet } = dto;
 
     const breedId = newPet.breedId;
@@ -81,9 +84,9 @@ export class PetService {
    * Update a pet
    * @param id - Pet's ID
    * @param dto - New pet data
-   * @returns {Promise<PetDto>} - The updated pet
+   * @returns {Promise<PetType>} - The updated pet
    */
-  async updatePet(id: string, dto: UpdatePetDto): Promise<PetDto> {
+  async updatePet(id: string, dto: UpdatePetDto): Promise<PetType> {
     const { status, ...newPet } = dto;
 
     const existingPet = await this.prisma.pet.findUnique({
@@ -102,20 +105,20 @@ export class PetService {
       return await this.createPet(dto);
     }
 
-    const adoptingPet = await this.prisma.adoption.findFirst({
-      where: { petId: id },
+    const pendingAdoption = await this.prisma.adoption.findFirst({
+      where: { petId: id, status: AdoptionStatus.PENDING },
     });
-    if (adoptingPet) {
-      if (status === Status.ILL || status === Status.DECEASED) {
-        await this.prisma.adoption.delete({
-          where: {
-            userId_petId: {
-              userId: adoptingPet.userId,
-              petId: adoptingPet.petId,
-            },
-          },
-        });
-      }
+    if (
+      pendingAdoption &&
+      (status === Status.ILL || status === Status.DECEASED)
+    ) {
+      await this.prisma.adoption.update({
+        where: { adoptionId: pendingAdoption.adoptionId },
+        data: {
+          status: AdoptionStatus.CANCELLED,
+          reason: `The adoption automatically cancelled because '${existingPet?.name}' is ${status}.`,
+        },
+      });
     }
 
     await this.prisma.pet.update({

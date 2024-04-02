@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import * as path from 'path';
 import { writeFile } from 'fs/promises';
-import { MediaUploadStatusResponseDto } from './dto/media.response.dto';
+import { MediaUploadResType } from './type/response.type';
 
 @Injectable()
 export class MediaService {
@@ -71,7 +71,7 @@ export class MediaService {
    */
   async uploadFile(
     file: Express.Multer.File,
-  ): Promise<MediaUploadStatusResponseDto> {
+  ): Promise<MediaUploadResType> {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       return {
         status: 'failed',

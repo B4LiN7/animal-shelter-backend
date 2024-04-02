@@ -43,7 +43,7 @@ export class UserController {
   }
   @Get()
   @UseGuards(PermissionGuard)
-  @Permissions(Perm.GET_USERS)
+  @Permissions(Perm.GET_USER)
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
@@ -72,7 +72,7 @@ export class UserController {
   /* For adoption: To get know what is the user's name */
   @Get('name/:id')
   @UseGuards(PermissionGuard)
-  @Permissions(Perm.GET_USERNAMES)
+  @Permissions(Perm.GET_USERNAME)
   async getUserName(@Param('id') id: string) {
     return this.userService.getUserName(id);
   }

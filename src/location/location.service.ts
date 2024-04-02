@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LocationDto } from './dto/location.dto';
-import { UserHelperService } from 'src/user/user.helper.service';
+import { UserHelperService } from 'src/user/user-helper.service';
 import { Request } from 'express';
 
 @Injectable()

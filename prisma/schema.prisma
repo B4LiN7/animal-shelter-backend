@@ -9,18 +9,20 @@ generator client {
 }
 
 model Pet {
-  petId       String      @id @default(uuid())
+  petId     String    @id @default(uuid())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
   name        String?
-  sex         PetSexEnum  @default(OTHER)
-  description String?
+  sex         PetSexEnum @default(OTHER)
   birthDate   DateTime?
+  description String?
   imageUrls   String[]
-  breedId     String?
-  breed       Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
-  createdAt   DateTime?   @default(now())
-  updatedAt   DateTime?   @updatedAt
-  adoptions   Adoption[]  @relation(name: "AdoptionToPet")
-  petStatus   PetStatus[] @relation(name: "PetToPetStatus")
+
+  breedId   String?
+  breed     Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
+  adoptions Adoption[]  @relation(name: "AdoptionToPet")
+  petStatus PetStatus[] @relation(name: "PetToPetStatus")
 }
 
 enum PetSexEnum {
@@ -30,82 +32,94 @@ enum PetSexEnum {
 }
 
 model PetStatus {
-  petStatusId String        @id @default(uuid())
-  status      PetStatusEnum @default(UNKNOWN)
-  from        DateTime      @default(now())
-  petId       String
-  pet         Pet           @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
+  petStatusId String @id @default(uuid())
+
+  status PetStatusEnum @default(UNKNOWN)
+  from   DateTime      @default(now())
+
+  petId String
+  pet   Pet    @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
 }
 
 enum PetStatusEnum {
   UNKNOWN
   INCOMING
   INSHELTER
-  ADOPTING
   ADOPTED
   ILL
   DECEASED
 }
 
 model Breed {
-  breedId     String   @id @default(uuid())
-  name        String   @unique
+  breedId String @id @default(uuid())
+
+  name        String  @unique
   description String?
-  speciesId   String?
-  species     Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
-  pets        Pet[]    @relation(name: "BreedToPet")
+
+  speciesId String?
+  species   Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
+  pets      Pet[]    @relation(name: "BreedToPet")
 }
 
 model Species {
-  speciesId   String  @id @default(uuid())
+  speciesId String @id @default(uuid())
+
   name        String  @unique
   description String?
-  breeds      Breed[] @relation(name: "BreedToSpecies")
+
+  breeds Breed[] @relation(name: "BreedToSpecies")
 }
 
 model Adoption {
-  userId String
-  petId  String
-  user   User               @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
-  pet    Pet                @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
+  adoptionId String @id @default(uuid())
+
   status AdoptionStatusEnum
   reason String?
 
-  @@id([userId, petId])
+  userId String
+  petId  String
+  user   User   @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
+  pet    Pet    @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
 }
 
 enum AdoptionStatusEnum {
   PENDING
+  CANCELLED
   APPROVED
   REJECTED
 }
 
 model User {
-  userId         String         @id @default(uuid())
-  username       String         @unique
+  userId    String    @id @default(uuid())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  username       String  @unique
+  hashedPassword String
   name           String?
   email          String?
-  hashedPassword String
-  createdAt      DateTime?      @default(now())
-  updatedAt      DateTime?      @updatedAt
-  locations      Location[]     @relation(name: "LocationToUser")
-  adoptions      Adoption[]     @relation(name: "AdoptionToUser")
-  loginHistory   LoginHistory[] @relation(name: "LoginHistoryToUser")
-  userRoles      UserRole[]     @relation(name: "UserRoleToUser")
+  profileImageUrl   String?
+
+  locations    Location[]     @relation(name: "LocationToUser")
+  adoptions    Adoption[]     @relation(name: "AdoptionToUser")
+  loginHistory LoginHistory[] @relation(name: "LoginHistoryToUser")
+  userRoles    UserRole[]     @relation(name: "UserRoleToUser")
 }
 
 model LoginHistory {
-  loginId   String   @id @default(uuid())
-  userId    String
+  loginId String @id @default(uuid())
+
   loginTime DateTime @default(now())
   ipAddress String?
   userAgent String?
-  user      User     @relation(name: "LoginHistoryToUser", fields: [userId], references: [userId])
+
+  userId String
+  user   User   @relation(name: "LoginHistoryToUser", fields: [userId], references: [userId])
 }
 
 model Location {
-  locationId   String  @id @default(uuid())
-  userId       String
+  locationId String @id @default(uuid())
+
   name         String?
   country      String
   state        String?
@@ -113,7 +127,9 @@ model Location {
   zipCode      Int
   address      String
   addressExtra String?
-  user         User    @relation(name: "LocationToUser", fields: [userId], references: [userId])
+
+  userId String
+  user   User   @relation(name: "LocationToUser", fields: [userId], references: [userId])
 }
 
 model UserRole {
@@ -126,11 +142,13 @@ model UserRole {
 }
 
 model Role {
-  roleId      String           @id @default(uuid())
+  roleId String @id @default(uuid())
+
   roleName    String           @unique
   description String?
   permissions PermissionEnum[]
-  userRoles   UserRole[]       @relation(name: "UserRoleToRole")
+
+  userRoles UserRole[] @relation(name: "UserRoleToRole")
 }
 
 enum PermissionEnum {
@@ -138,28 +156,35 @@ enum PermissionEnum {
   ACCESS_ANY_USER
 
   UPDATE_USER_ROLES
+
+  GET_USER
+  GET_USERNAME
   CREATE_USER
-  GET_USERS
-  GET_USERNAMES
+  UPDATE_USER
+  DELETE_USER
 
   UPLOAD_IMAGE
 
+  GET_LOCATION
   CREATE_LOCATION
   UPDATE_LOCATION
   DELETE_LOCATION
 
   START_ADOPTION
+  GET_ADOPTION
   SET_ADOPTION
-  GET_ADOPTIONS
 
+  GET_PET
   CREATE_PET
   UPDATE_PET
   DELETE_PET
 
+  GET_BREED
   CREATE_BREED
   UPDATE_BREED
   DELETE_BREED
 
+  GET_SPECIES
   CREATE_SPECIES
   UPDATE_SPECIES
   DELETE_SPECIES

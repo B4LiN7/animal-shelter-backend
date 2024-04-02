@@ -1,14 +1,14 @@
 import { PetSexEnum as Sex, PetStatusEnum as Status } from '@prisma/client';
 
-export interface PetDto {
+export interface PetType {
   petId: string;
-  name: string;
-  sex: Sex;
-  description: string;
-  birthDate: Date;
-  imageUrls: string[];
-  breedId: string;
   createdAt: Date;
   updatedAt: Date;
+  name: string;
+  description: string;
+  imageUrls: string[];
+  sex: Sex;
+  birthDate: Date;
   status: Status;
+  breedId: string;
 }

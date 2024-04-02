@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSpeciesDto } from './dto/create.species.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { SpeciesDto } from './dto/species.dto';
+import { SpeciesType } from './type/species.type';
 import { UpdateSpeciesDto } from './dto/update.species.dto';
 
 @Injectable()
@@ -10,9 +10,9 @@ export class SpeciesService {
 
   /**
    * Get all species
-   * @returns {Promise<SpeciesDto[]>} - Array of species
+   * @returns {Promise<SpeciesType[]>} - Array of species
    */
-  async getAllSpecies(): Promise<SpeciesDto[]> {
+  async getAllSpecies(): Promise<SpeciesType[]> {
     const species = await this.prisma.species.findMany();
     if (species.length === 0) {
       throw new NotFoundException('No species in the database');
@@ -23,9 +23,9 @@ export class SpeciesService {
   /**
    * Get a species by ID
    * @param id - Species' ID
-   * @returns {Promise<SpeciesDto>} - SpeciesDto
+   * @returns {Promise<SpeciesType>} - SpeciesType
    */
-  async getSpecies(id: string): Promise<SpeciesDto> {
+  async getSpecies(id: string): Promise<SpeciesType> {
     const species = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
@@ -37,10 +37,10 @@ export class SpeciesService {
 
   /**
    * Create a new species
-   * @param dto - SpeciesDto DTO
-   * @returns {Promise<SpeciesDto>} - The created species (return of Prisma create method)
+   * @param dto - SpeciesType DTO
+   * @returns {Promise<SpeciesType>} - The created species (return of Prisma create method)
    */
-  async addSpecies(dto: CreateSpeciesDto): Promise<SpeciesDto> {
+  async addSpecies(dto: CreateSpeciesDto): Promise<SpeciesType> {
     return this.prisma.species.create({ data: { ...dto } });
   }
 
@@ -48,9 +48,9 @@ export class SpeciesService {
    * Update a species, If the species does not exist, create a new one
    * @param id - Species' ID
    * @param dto - Species data
-   * @returns {Promise<SpeciesDto>} - The updated species (return of Prisma update method)
+   * @returns {Promise<SpeciesType>} - The updated species (return of Prisma update method)
    */
-  async updateSpecies(id: string, dto: UpdateSpeciesDto): Promise<SpeciesDto> {
+  async updateSpecies(id: string, dto: UpdateSpeciesDto): Promise<SpeciesType> {
     const existingSpecies = await this.prisma.species.findUnique({
       where: { speciesId: id },
     });
@@ -71,11 +71,11 @@ export class SpeciesService {
   /**
    * Delete a species
    * @param id - Species' ID
-   * @returns {Promise<{ removedSpecies: SpeciesDto; updatedBreeds: number }>} - The deleted species (return of Prisma delete method) and the number of updated breeds
+   * @returns {Promise<{ removedSpecies: SpeciesType; updatedBreeds: number }>} - The deleted species (return of Prisma delete method) and the number of updated breeds
    */
   async deleteSpecies(
     id: string,
-  ): Promise<{ removedSpecies: SpeciesDto; updatedBreeds: number }> {
+  ): Promise<{ removedSpecies: SpeciesType; updatedBreeds: number }> {
     const updatedBreeds = await this.prisma.breed.updateMany({
       where: { breedId: id },
       data: { speciesId: null },

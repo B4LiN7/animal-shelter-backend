@@ -12,7 +12,7 @@ import {
 import { PetService } from './pet.service';
 import { CreatePetDto } from './dto/create.pet.dto';
 import { UpdatePetDto } from './dto/update.pet.dto';
-import { PetSearchDto } from './dto/petSearch.dto';
+import { SearchPetDto } from './dto/search.pet.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PermissionGuard } from '../auth/guard/permission.guard';
 import { PermissionEnum as Perm } from '@prisma/client';
@@ -24,12 +24,9 @@ export class PetController {
 
   /* Anyone can get pets */
   @Get()
-  async readAllPets(
-    @Query('status') status: string,
-    @Query('breedId') breed: string,
-  ) {
-    if (status || breed) {
-      return this.petService.getAllPets({ status, breed } as PetSearchDto);
+  async readAllPets(@Query() dto: SearchPetDto) {
+    if (dto.status || dto.breed) {
+      return this.petService.getAllPets(dto);
     }
     return this.petService.getAllPets();
   }
