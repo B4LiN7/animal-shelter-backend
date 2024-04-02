@@ -34,21 +34,26 @@ async function addRoles() {
     },
   ];
   for (const role of rolePermMap) {
-    try {
-      const addedRole = await prisma.role.create({
-        data: {
-          roleName: role.name,
-          permissions: {
-            set: role.permissions,
-          },
-        },
-      });
-      console.log(
-        `Role '${addedRole.roleName}' created with permissions: ${addedRole.permissions}.`,
-      );
-    } catch (error) {
-      console.error('Error adding role: ' + error);
+    const existingRole = await prisma.role.findFirst({
+      where: {
+        roleName: role.name,
+      },
+    });
+    if (existingRole) {
+      console.log(`Role '${role.name}' already exists, skip.`);
+      continue;
     }
+    const addedRole = await prisma.role.create({
+      data: {
+        roleName: role.name,
+        permissions: {
+          set: role.permissions,
+        },
+      },
+    });
+    console.log(
+      `Role '${addedRole.roleName}' created with permissions: ${addedRole.permissions}.`,
+    );
   }
 }
 

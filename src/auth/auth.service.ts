@@ -36,20 +36,6 @@ export class AuthService {
   async login(dto: LoginDto, req: Request, res: Response) {
     const { username, password } = dto;
 
-    if (
-      await (async () => {
-        try {
-          const token = req.cookies.token;
-          await this.jwt.verifyAsync(token);
-          return true;
-        } catch (e) {
-          return false;
-        }
-      })()
-    ) {
-      throw new BadRequestException('You are already logged in');
-    }
-
     const foundUser = await this.prisma.user.findUnique({
       where: { username: username },
     });
@@ -72,12 +58,12 @@ export class AuthService {
       foundUser.userId,
     );
 
-    const token = await this.signToken(foundUser.userId, permissions);
+    const tokens = await this.makeTokens(foundUser.userId, permissions);
 
-    const loginHistory = await this.prisma.loginHistory.create({
+    const loginHistory = await this.prisma.userLogin.create({
       data: {
         userId: foundUser.userId,
-        loginTime: new Date(),
+        refreshToken: tokens.refresh_token,
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
       },
@@ -87,9 +73,10 @@ export class AuthService {
       `User with username '${username}' has been logged in from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
-    res.cookie('token', token, { httpOnly: true }).json({
+    res.cookie('access_token', tokens.access_token, { httpOnly: true }).json({
       message: `You have been logged in as ${foundUser.username}`,
-      token: token,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
     });
   }
 
@@ -117,12 +104,11 @@ export class AuthService {
     const permissions = await this.userHelper.getUserAllPermissions(
       newUser.userId,
     );
-    const token = await this.signToken(newUser.userId, permissions);
+    const tokens = await this.makeTokens(newUser.userId, permissions);
 
-    const loginHistory = await this.prisma.loginHistory.create({
+    const loginHistory = await this.prisma.userLogin.create({
       data: {
         userId: newUser.userId,
-        loginTime: new Date(),
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
       },
@@ -132,9 +118,10 @@ export class AuthService {
       `Now created user with username '${username}' has been logged in from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
-    res.cookie('token', token, { httpOnly: true }).json({
+    res.cookie('access_token', tokens.access_token, { httpOnly: true }).json({
       message: `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
-      token: token,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
     });
   }
 
@@ -145,7 +132,9 @@ export class AuthService {
    */
   async logout(req: Request, res: Response) {
     const user = await this.getUserFromReq(req);
-    res.clearCookie('token').json({ message: 'You have been logged out' });
+    res
+      .clearCookie('access_token')
+      .json({ message: 'You have been logged out' });
 
     this.logger.log(
       `User with user ID '${user.userId}' has been logged out using /logout endpoint`,
@@ -153,18 +142,18 @@ export class AuthService {
   }
 
   /**
-   * Signs a JWT token with the user's ID and the role (s)he had (Secret is stored in .env)
+   * Signs access and refresh JWT token with the user's ID and the role (s)he had (Secret is stored in .env)
    * @param userId - The user's ID
    * @param permissions
    * @returns The signed JWT token
    */
-  private async signToken(userId: string, permissions: Permission[]) {
+  private async makeTokens(userId: string, permissions: Permission[]) {
     const payload = { userId, permissions };
-    const token = await this.jwt.signAsync(payload);
-    if (!token) {
-      throw new ForbiddenException('Token could not be generated');
-    }
-    return token;
+    const access_token = await this.jwt.signAsync(payload, { expiresIn: '1h' });
+    const refresh_token = await this.jwt.signAsync(payload, {
+      expiresIn: '7d',
+    });
+    return { access_token, refresh_token };
   }
 
   /**
