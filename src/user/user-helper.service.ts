@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { PermissionEnum as Permission } from '@prisma/client';
+import { AccessTokenType } from '../auth/type/access-token.type';
 
 @Injectable()
 /**
@@ -33,9 +34,10 @@ export class UserHelperService {
       },
     });
 
-    return userRoles.reduce((acc, userRole) => {
+    const allRoles = userRoles.reduce((acc, userRole) => {
       return [...acc, ...userRole.role.permissions];
     }, []);
+    return [...new Set(allRoles)];
   }
 
   /**
@@ -91,42 +93,12 @@ export class UserHelperService {
     });
   }
 
-  async decodeAccessTokenFromReq(req: Request): Promise<{
-    userId: string;
-    permissions: Permission[];
-    iat: number;
-    exp: number;
-  }> {
-    const token = req.user['accessToken']
-    if (!token) {
-      throw new ForbiddenException('No token provided. Please log in.');
-    }
-
-    const tokenParts = token.split('.');
-    if (tokenParts.length !== 3) {
-      throw new ForbiddenException('Invalid token format. Please log in.');
-    }
-
-    const decodedToken = await this.jwt.verifyAsync(token);
-    if (!decodedToken) {
-      throw new ForbiddenException('Invalid token. Please log in.');
-    }
-
-    return decodedToken;
-  }
-
   /**
-   * Decodes a JWT token from the request object (throw an error if the token is invalid or not provided)
-   * @param req - The Request object
-   * @returns - The decoded JWT token
+   * Decode the access token from the request
+   * @param req - The (Express) Request object
    */
-  async decodeTokenFromReq(req: Request): Promise<{
-    userId: string;
-    permissions: Permission[];
-    iat: number;
-    exp: number;
-  }> {
-    const token = req.cookies.access_token;
+  async decodeAccessTokenFromReq(req: Request): Promise<AccessTokenType> {
+    const token = req.user['accessToken']
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }

@@ -474,12 +474,12 @@ export async function main() {
       console.log('Development environment specified, executing...');
       await addRoles();
       await addAdminUser();
-      await addUsers(50);
+      await addUsers(20);
       await addLocations();
       await addSpecies();
       await addBreeds();
-      await addPets(1000);
-      await addAdoptions();
+      await addPets(100);
+      //await addAdoptions();
       break;
     case 'test':
       console.log('Testing environment specified, executing...');

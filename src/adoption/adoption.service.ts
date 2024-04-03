@@ -8,13 +8,11 @@ import { Request } from 'express';
 import {
   PetStatusEnum as Status,
   AdoptionStatusEnum as AdoptionStatus,
-  PermissionEnum as Perm,
 } from '@prisma/client';
 import { UserHelperService } from 'src/user/user-helper.service';
 import { UpdateAdoptionDto } from './dto/update.adoption.dto';
 import { PetHelperService } from 'src/pet/pet.helper.service';
 import { AdoptionType } from './type/adoption.type';
-import { nicePath } from 'typedoc/dist/lib/utils/paths';
 
 @Injectable()
 export class AdoptionService {
@@ -83,7 +81,7 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async startAdoptionProcess(petId: string, req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = await this.userHelper.decodeAccessTokenFromReq(req);
     const userId = token.userId;
 
     const pet = await this.prisma.pet.findUnique({
@@ -111,7 +109,7 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async cancelAdoptionProcess(petId: string, req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = await this.userHelper.decodeAccessTokenFromReq(req);
     const userId = token.userId;
 
     const dto: UpdateAdoptionDto = {

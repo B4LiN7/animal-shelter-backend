@@ -12,7 +12,7 @@ export class LocationService {
   ) {}
 
   async getMyLocations(req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = await this.userHelper.decodeAccessTokenFromReq(req);
     const myLocations = await this.prisma.location.findMany({
       where: {
         userId: token.userId,
@@ -25,7 +25,7 @@ export class LocationService {
   }
 
   async addToMyLocations(dto: LocationDto, req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = await this.userHelper.decodeAccessTokenFromReq(req);
     delete dto.userId;
     return this.prisma.location.create({
       data: {

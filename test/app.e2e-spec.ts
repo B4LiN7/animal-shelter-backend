@@ -45,7 +45,8 @@ describe('AppController (e2e)', () => {
         .expect(201)
         .expect((res) => {
           expect(res.body).toHaveProperty('message');
-          expect(res.body).toHaveProperty('token');
+          expect(res.body).toHaveProperty('access_token');
+          expect(res.body).toHaveProperty('refresh_token');
         });
     });
     it('should login (with create test user) ( /auth/login (POST) )', () => {
@@ -54,45 +55,56 @@ describe('AppController (e2e)', () => {
         .send({ username: 'test', password: 'password' })
         .expect(200)
         .expect((res) => {
-          expect(res.body).toHaveProperty(
-            'message',
-            'You have been logged in as test',
-          );
-          expect(res.body).toHaveProperty('token');
+          expect(res.body).toHaveProperty('message');
+          expect(res.body).toHaveProperty('access_token');
+          expect(res.body).toHaveProperty('refresh_token');
         });
     });
     it('should logout ( /auth/logout (POST) )', async () => {
+      const token = await loginUser(agent, 'test');
       await loginUser(agent, 'test');
-      return agent.get('/auth/logout').expect(200);
+      return agent
+        .get('/auth/logout')
+        .set('Authorization', `Bearer ${token.refreshToken}`)
+        .expect(200);
     });
   });
 
   describe('/user endpoints', () => {
     it('should return all users (admin and test)', async () => {
-      await loginUser(agent);
+      const token = await loginUser(agent);
       return agent
         .get('/user')
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200)
         .expect((res) => {
           expect(res.body).toHaveLength(2);
         });
     });
     it('should return only the test user (logged in user)', async () => {
-      await loginUser(agent, 'test');
+      const token = await loginUser(agent, 'test');
       return agent
         .get('/user/me')
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200)
         .expect((res) => {
           expect(res.body).toHaveProperty('username', 'test');
         });
     });
     it('should throw and unauthorized error', async () => {
-      await loginUser(agent, 'test');
-      return agent.get('/user').expect(403);
+      const token = await loginUser(agent, 'test');
+      return agent
+        .get('/user')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(403);
     });
     it('should modify the test user (logged in user)', async () => {
-      await loginUser(agent, 'test');
-      return agent.put('/user/me').send({ password: 'password2' }).expect(200);
+      const token = await loginUser(agent, 'test');
+      return agent
+        .put('/user/me')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send({ password: 'password2' })
+        .expect(200);
     });
   });
 
@@ -102,8 +114,10 @@ describe('AppController (e2e)', () => {
     });
     it('should add a pet', async () => {
       const breedIds = await addBreeds(agent);
+      const token = await loginUser(agent);
       return agent
         .post('/pet')
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           name: 'test',
           breedId: getRandomElement(breedIds),
@@ -125,10 +139,14 @@ describe('AppController (e2e)', () => {
     username: string = 'admin',
     password: string = 'password',
   ) {
-    await agent
+    const response = await agent
       .post('/auth/login')
       .send({ username: username, password: password })
       .expect(200);
+    return {
+      accessToken: response.body.access_token,
+      refreshToken: response.body.refresh_token,
+    };
   }
 
   async function addBreeds(
@@ -136,10 +154,11 @@ describe('AppController (e2e)', () => {
     breedNumber: number = 1,
     speciesNumber: number = 1,
   ): Promise<string[]> {
-    await loginUser(agent);
+    const token = await loginUser(agent);
     for (let i = 0; i < speciesNumber; i++) {
       await agent
         .post('/species')
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           name: `test_species_${i}`,
           description: `test_description_${i}`,
@@ -148,6 +167,7 @@ describe('AppController (e2e)', () => {
     }
     const speciesIds = await agent
       .get('/species')
+      .set('Authorization', `Bearer ${token.accessToken}`)
       .expect(200)
       .then((res) => {
         return res.body.map((species: SpeciesType) => species.speciesId);
@@ -155,6 +175,7 @@ describe('AppController (e2e)', () => {
     for (let i = 0; i < breedNumber; i++) {
       await agent
         .post('/breed')
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           name: `test_breed_${i}`,
           description: `test_description_${i}`,
@@ -164,6 +185,7 @@ describe('AppController (e2e)', () => {
     }
     return await agent
       .get('/breed')
+      .set('Authorization', `Bearer ${token.accessToken}`)
       .expect(200)
       .then((res) => {
         return res.body.map((breed: any) => breed.breedId);

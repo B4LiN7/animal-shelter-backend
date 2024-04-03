@@ -166,7 +166,7 @@ export class AuthService {
     });
 
     this.logger.log(
-      `User '${foundUser.userId}' refreshed their tokens from IP ${req.ip} and user agent '${req.headers['user-agent']}'`,
+      `User ${foundUser.userId} refreshed their tokens from IP ${req.ip} and user agent '${req.headers['user-agent']}'`,
     );
 
     res.json({

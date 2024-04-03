@@ -99,7 +99,7 @@ export class UserService {
    * @returns {Promise<UserType>} - Promise with user
    */
   async getMyUser(req: Request): Promise<UserType> {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = req.user['decodedToken'];
     const userId = token.userId;
     return this.getUser(userId);
   }
@@ -111,7 +111,7 @@ export class UserService {
    * @returns {Promise<UserType>} - Promise with updated user (return of Prisma update method)
    */
   async updateMyUser(req: Request, dto: UpdateUserDto): Promise<UserType> {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = await this.userHelper.decodeAccessTokenFromReq(req);
     const userId = token.userId;
     return this.updateUser(userId, dto, req);
   }
