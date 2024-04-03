@@ -5,14 +5,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 /**
- * JwtStrategy is a Passport strategy that we'll use to validate the user's token.
+ * AccessCookieStrategy is a Passport strategy that we'll use to validate the user's token.
  * If user's token is valid and user still exists in the database, then we'll return the user.
  */
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtAccessCookieStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-access-cookie',
+) {
   constructor(private prisma: PrismaService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request) => request.cookies.access_token,
+        (request) => request.cookies.refresh_token
       ]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET,
@@ -20,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return this.prisma.user.findUnique({ where: { userId: payload.userId } });
+    return payload;
   }
 }

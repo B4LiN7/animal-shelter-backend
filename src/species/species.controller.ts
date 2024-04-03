@@ -30,21 +30,21 @@ export class SpeciesController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.CREATE_SPECIES)
   async addSpecies(@Body() dto: CreateSpeciesDto) {
     return this.speciesService.addSpecies(dto);
   }
 
   @Put('/:id')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.UPDATE_SPECIES)
   async updateSpecies(@Param('id') id: string, @Body() dto: CreateSpeciesDto) {
     return this.speciesService.updateSpecies(id, dto);
   }
 
   @Delete('/:id')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.DELETE_SPECIES)
   async deleteSpecies(@Param('id') id: string) {
     return this.speciesService.deleteSpecies(id);

@@ -19,7 +19,7 @@ import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('location')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt-access-token'))
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 

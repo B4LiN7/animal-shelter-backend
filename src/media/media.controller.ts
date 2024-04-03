@@ -28,7 +28,7 @@ export class MediaController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.UPLOAD_IMAGE)
   @UseInterceptors(AnyFilesInterceptor())
   uploadFiles(

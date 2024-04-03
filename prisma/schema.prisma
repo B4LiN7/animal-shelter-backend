@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["rhel-openssl-1.0.x", "linux-musl-openssl-3.0.x"]
+  binaryTargets = ["rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
 }
 
 model Pet {
@@ -94,27 +94,27 @@ model User {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  username       String  @unique
-  hashedPassword String
-  name           String?
-  email          String?
-  profileImageUrl   String?
+  username        String  @unique
+  hashedPassword  String
+  name            String?
+  email           String?
+  profileImageUrl String?
 
-  locations    Location[]     @relation(name: "LocationToUser")
-  adoptions    Adoption[]     @relation(name: "AdoptionToUser")
+  locations Location[]  @relation(name: "LocationToUser")
+  adoptions Adoption[]  @relation(name: "AdoptionToUser")
   userLogin UserLogin[] @relation(name: "UserLoginToUser")
-  userRoles    UserRole[]     @relation(name: "UserRoleToUser")
+  userRoles UserRole[]  @relation(name: "UserRoleToUser")
 }
 
 model UserLogin {
-  loginId String @id @default(uuid())
+  userLoginId String @id @default(uuid())
 
-  firstLogin DateTime @default(now())
-  lastLogin  DateTime @default(now())
-  refreshToken   String?
-  isRevoked      Boolean @default(false)
-  ipAddress String?
-  userAgent String?
+  createdAt    DateTime  @default(now())
+  refreshedAt  DateTime  @default(now())
+  refreshToken String?
+  expireAt     DateTime?
+  ipAddress    String?
+  userAgent    String?
 
   userId String
   user   User   @relation(name: "UserLoginToUser", fields: [userId], references: [userId])

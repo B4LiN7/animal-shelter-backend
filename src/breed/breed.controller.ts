@@ -31,21 +31,21 @@ export class BreedController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.CREATE_BREED)
   async addBreed(@Body() dto: CreateBreedDto) {
     return this.breedService.addBreed(dto);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.UPDATE_BREED)
   async updateBreed(@Param('id') id: string, @Body() dto: UpdateBreedDto) {
     return this.breedService.updateBreed(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.DELETE_BREED)
   async deleteBreed(@Param('id') id: string) {
     return this.breedService.deleteBreed(id);

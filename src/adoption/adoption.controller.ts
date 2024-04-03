@@ -18,7 +18,7 @@ import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('adoption')
-@UseGuards(AuthGuard('jwt'), PermissionGuard)
+@UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 

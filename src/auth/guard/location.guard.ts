@@ -29,7 +29,7 @@ export class LocationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const reqUrl = request.url;
     const reqLocationId = request.params.id;
-    const token = await this.userHelper.decodeTokenFromReq(request);
+    const token = await this.userHelper.decodeAccessTokenFromReq(request);
 
     if (isNaN(reqLocationId)) {
       throw new BadRequestException('Invalid location ID');

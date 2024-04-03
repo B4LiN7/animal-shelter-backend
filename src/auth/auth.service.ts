@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
@@ -49,7 +44,7 @@ export class AuthService {
     );
     if (!isPasswordMatch) {
       this.logger.log(
-        `Somebody with username '${username}' has entered a wrong password from IP address ${req.ip} and user agent '${req.headers['user-agent']}'`,
+        `Wrong password given for user '${foundUser.userId}' from IP address ${req.ip} and user agent '${req.headers['user-agent']}'`,
       );
       throw new BadRequestException('Wrong credentials');
     }
@@ -57,26 +52,28 @@ export class AuthService {
     const permissions = await this.userHelper.getUserAllPermissions(
       foundUser.userId,
     );
+    const accessToken = await this.makeAccessToken(foundUser.userId, permissions);
+    const refreshToken = await this.makeRefreshToken(foundUser.userId);
 
-    const tokens = await this.makeTokens(foundUser.userId, permissions);
-
+    const decodedRefreshToken = await this.jwt.decode(refreshToken);
     const loginHistory = await this.prisma.userLogin.create({
       data: {
         userId: foundUser.userId,
-        refreshToken: tokens.refresh_token,
+        refreshToken: refreshToken,
+        expireAt: new Date(decodedRefreshToken.exp * 1000),
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
       },
     });
 
     this.logger.log(
-      `User with username '${username}' has been logged in from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
+      `User '${foundUser.userId}' logged in from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
-    res.cookie('access_token', tokens.access_token, { httpOnly: true }).json({
-      message: `You have been logged in as ${foundUser.username}`,
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
+    res.json({
+      message: `You have been logged in as '${foundUser.username}' (ID: ${foundUser.userId})`,
+      access_token: accessToken,
+      refresh_token: refreshToken,
     });
   }
 
@@ -104,66 +101,134 @@ export class AuthService {
     const permissions = await this.userHelper.getUserAllPermissions(
       newUser.userId,
     );
-    const tokens = await this.makeTokens(newUser.userId, permissions);
 
+    const accessToken = await this.makeAccessToken(newUser.userId, permissions);
+    const refreshToken = await this.makeRefreshToken(newUser.userId);
+
+    const decodedRefreshToken = await this.jwt.decode(refreshToken);
     const loginHistory = await this.prisma.userLogin.create({
       data: {
         userId: newUser.userId,
+        refreshToken: refreshToken,
+        expireAt: new Date(decodedRefreshToken.exp),
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
       },
     });
 
     this.logger.log(
-      `Now created user with username '${username}' has been logged in from IP address ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
+      `User '${newUser.userId}' created (and logged in) from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
-    res.cookie('access_token', tokens.access_token, { httpOnly: true }).json({
-      message: `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
+    res.json({
+      message: `User '${newUser.username}' (ID: ${newUser.userId}) created`,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  }
+
+  async refresh(req: Request, res: Response) {
+    const refreshToken = req.user['refreshToken'];
+    if (!refreshToken) {
+      throw new BadRequestException('No refresh token provided');
+    }
+
+    const foundLogin = await this.prisma.userLogin.findFirst(
+      {
+        where: { refreshToken: refreshToken, expireAt: { gte: new Date() } },
+      },
+    );
+    if (!foundLogin) {
+      throw new BadRequestException('Refresh token not found');
+    }
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { userId: foundLogin.userId },
+    });
+    if (!foundUser) {
+      throw new BadRequestException('User not found');
+    }
+
+    const permissions = await this.userHelper.getUserAllPermissions(
+      foundUser.userId,
+    );
+    const newAccessToken = await this.makeAccessToken(foundUser.userId, permissions);
+    const newRefreshToken = await this.makeRefreshToken(foundUser.userId);
+
+    const decodedNewRefreshToken = await this.jwt.decode(newRefreshToken);
+    await this.prisma.userLogin.update({
+      where: { userLoginId: foundLogin.userLoginId },
+      data: {
+        refreshToken: newRefreshToken,
+        expireAt: new Date(decodedNewRefreshToken.exp * 1000),
+        refreshedAt: new Date(),
+      },
+    });
+
+    this.logger.log(
+      `User '${foundUser.userId}' refreshed their tokens from IP ${req.ip} and user agent '${req.headers['user-agent']}'`,
+    );
+
+    res.json({
+      message: `Tokens refreshed for user '${foundUser.username}' (ID: ${foundUser.userId})`,
+      access_token: newAccessToken,
+      refresh_token: newRefreshToken,
     });
   }
 
   /**
    * Logs out the user by clearing the token cookie
    * @param req - Request object
-   * @param res - Response object
    */
-  async logout(req: Request, res: Response) {
-    const user = await this.getUserFromReq(req);
-    res
-      .clearCookie('access_token')
-      .json({ message: 'You have been logged out' });
+  async logout(req: Request) {
+    const refreshToken = req.user['refreshToken'];
+    if (!refreshToken) {
+      throw new BadRequestException('No refresh token provided');
+    }
 
-    this.logger.log(
-      `User with user ID '${user.userId}' has been logged out using /logout endpoint`,
+    const foundLogin = await this.prisma.userLogin.deleteMany(
+      {
+        where: { refreshToken: refreshToken },
+      },
     );
+    if (foundLogin.count === 0) {
+      throw new BadRequestException('Refresh token not found');
+    }
+
+    return { message: 'You have been logged out (refresh token revoked)' };
   }
 
   /**
-   * Signs access and refresh JWT token with the user's ID and the role (s)he had (Secret is stored in .env)
+   * Makes the access and refresh tokens
    * @param userId - The user's ID
-   * @param permissions
-   * @returns The signed JWT token
+   * @param permissions - The permissions of the user
+   * @param expire - The expiration time of the access token (default: 15 minutes)
+   * @returns The access token
    */
-  private async makeTokens(userId: string, permissions: Permission[]) {
+  private async makeAccessToken(
+    userId: string,
+    permissions: Permission[],
+    expire: string = '15m',
+  ): Promise<string> {
     const payload = { userId, permissions };
-    const access_token = await this.jwt.signAsync(payload, { expiresIn: '1h' });
-    const refresh_token = await this.jwt.signAsync(payload, {
-      expiresIn: '7d',
+    return await this.jwt.signAsync(payload, {
+      expiresIn: expire,
     });
-    return { access_token, refresh_token };
   }
 
   /**
-   * Gets the user from the request
-   * @param req The Request object
+   * Makes the refresh token
+   * @param userId - The user's ID
+   * @param expire - The expiration time of the refresh token (default: 7 days)
+   * @returns The refresh token
    */
-  private async getUserFromReq(req: Request) {
-    const decodedToken = await this.userHelper.decodeTokenFromReq(req);
-    return this.prisma.user.findUnique({
-      where: { userId: decodedToken.userId },
+  private async makeRefreshToken(
+    userId: string,
+    expire: string = '7d',
+  ): Promise<string> {
+    const payload = { userId };
+    return await this.jwt.signAsync(payload, {
+      expiresIn: expire,
     });
   }
 }

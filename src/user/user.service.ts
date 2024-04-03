@@ -33,7 +33,7 @@ export class UserService {
    * @returns {Promise<UserType>} - Promise with array of users (return of Prisma findMany method)
    */
   async getAllUsers(): Promise<UserType[]> {
-    const usersWithRP: UserType[] = [];
+    const usersWithRoles: UserType[] = [];
     const users = await this.prisma.user.findMany({
       select: {
         userId: true,
@@ -47,12 +47,9 @@ export class UserService {
     });
     for (const user of users) {
       const roles = await this.userHelper.getUserRoleNames(user.userId);
-      /*const permissions = await this.userHelper.getUserAllPermissions(
-        user.userId,
-      );*/
-      usersWithRP.push({ ...user, roles });
+      usersWithRoles.push({ ...user, roles });
     }
-    return usersWithRP;
+    return usersWithRoles;
   }
 
   /**
@@ -76,9 +73,6 @@ export class UserService {
       },
     });
     const roles = await this.userHelper.getUserRoleNames(user.userId);
-    /*const permissions = await this.userHelper.getUserAllPermissions(
-      user.userId,
-    );*/
     return { ...user, roles };
   }
 
@@ -135,7 +129,7 @@ export class UserService {
     });
     if (foundUser) {
       this.logger.warn(
-        `Somebody tried to create user with already used username '${username}'`,
+        `Attempt to create user with used username '${username}'`,
       );
       throw new BadRequestException(
         `User with username '${username}' already exists`,
@@ -210,9 +204,11 @@ export class UserService {
       newUser.hashedPassword = await this.hashPassword(dto.password);
     }
 
-    const token = await this.userHelper.decodeTokenFromReq(req);
-    if (token.permissions.includes(Perm.UPDATE_USER_ROLES)) {
-      await this.setUserRoles(id, dto.roles);
+    if (dto.roles) {
+      const token = await this.userHelper.decodeAccessTokenFromReq(req);
+      if (token.permissions.includes(Perm.UPDATE_USER_ROLES)) {
+        await this.setUserRoles(id, dto.roles);
+      }
     }
 
     await this.prisma.user.update({

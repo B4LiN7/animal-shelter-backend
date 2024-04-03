@@ -27,7 +27,7 @@ export class UserGuard implements CanActivate {
     const requestedUrl = request.url;
     const reqUserId = request.params.id;
 
-    const token = await this.userHelper.decodeTokenFromReq(request);
+    const token = await this.userHelper.decodeAccessTokenFromReq(request);
 
     if (!reqUserId) {
       // Disable logging this because it's too verbose

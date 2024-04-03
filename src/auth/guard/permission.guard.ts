@@ -26,7 +26,7 @@ export class PermissionGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = await this.userHelper.decodeTokenFromReq(request);
+    const token = await this.userHelper.decodeAccessTokenFromReq(request);
     const userPermissions = token.permissions;
 
     return requiredPermissions.some((perm) => userPermissions.includes(perm));

@@ -36,21 +36,21 @@ export class PetController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.CREATE_PET)
   async createPet(@Body() dto: CreatePetDto) {
     return this.petService.createPet(dto);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.UPDATE_PET)
   async updatePet(@Param('id') id: string, @Body() dto: UpdatePetDto) {
     return this.petService.updatePet(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.DELETE_PET)
   async deletePet(@Param('id') id: string) {
     return this.petService.deletePet(id);
@@ -58,7 +58,7 @@ export class PetController {
 
   /* Past statuses for pet */
   @Get(':id/status')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt-access-token'))
   async readPetStatus(@Param('id') id: string) {
     return this.petService.getPetStatus(id);
   }

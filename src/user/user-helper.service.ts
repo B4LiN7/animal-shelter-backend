@@ -91,6 +91,30 @@ export class UserHelperService {
     });
   }
 
+  async decodeAccessTokenFromReq(req: Request): Promise<{
+    userId: string;
+    permissions: Permission[];
+    iat: number;
+    exp: number;
+  }> {
+    const token = req.user['accessToken']
+    if (!token) {
+      throw new ForbiddenException('No token provided. Please log in.');
+    }
+
+    const tokenParts = token.split('.');
+    if (tokenParts.length !== 3) {
+      throw new ForbiddenException('Invalid token format. Please log in.');
+    }
+
+    const decodedToken = await this.jwt.verifyAsync(token);
+    if (!decodedToken) {
+      throw new ForbiddenException('Invalid token. Please log in.');
+    }
+
+    return decodedToken;
+  }
+
   /**
    * Decodes a JWT token from the request object (throw an error if the token is invalid or not provided)
    * @param req - The Request object
@@ -102,7 +126,7 @@ export class UserHelperService {
     iat: number;
     exp: number;
   }> {
-    const token = req.cookies.token;
+    const token = req.cookies.access_token;
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }
