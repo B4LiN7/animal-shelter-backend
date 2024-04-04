@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -58,10 +59,13 @@ export class AdoptionController {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
   }
 
-  @Post()
+  @Put(':adoptionId')
   @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
-  setAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
-    return this.adoptionService.setAdoptionProcess(dto);
+  setAdoptionProcess(
+    @Param('adoptionId') adoptionId: string,
+    @Body() dto: UpdateAdoptionDto,
+  ) {
+    return this.adoptionService.setAdoptionProcess(adoptionId, dto);
   }
 }

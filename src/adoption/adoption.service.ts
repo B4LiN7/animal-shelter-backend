@@ -126,17 +126,18 @@ export class AdoptionService {
 
   /**
    * Set the adoption process for a pet (for admin or shelter worker only)
+   * @param adoptionId - The ID of the adoption
    * @param dto - The adoption DTO
    */
-  async setAdoptionProcess(dto: UpdateAdoptionDto) {
-    const { userId } = dto;
-    const user = await this.prisma.user.findUnique({
-      where: { userId: userId },
+  async setAdoptionProcess(adoptionId: string, dto: UpdateAdoptionDto) {
+    const adoption = await this.prisma.adoption.update({
+      where: {
+        adoptionId: adoptionId,
+      },
+      data: {
+        ...dto,
+      },
     });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found.`);
-    }
-    const adoption = await this.setAdoption(dto);
     return await this.getAdoptionProcess(adoption.adoptionId);
   }
 
@@ -177,7 +178,6 @@ export class AdoptionService {
             ...dto,
           },
         });
-        break;
 
       case AdoptionStatus.CANCELLED:
         if (!runningAdoptionForPet || runningAdoptionForPet.userId !== userId) {
@@ -193,7 +193,6 @@ export class AdoptionService {
             status: status,
           },
         });
-        break;
 
       case AdoptionStatus.REJECTED:
         if (!runningAdoptionForPet) {
@@ -210,7 +209,6 @@ export class AdoptionService {
             reason: dto.reason,
           },
         });
-        break;
 
       case AdoptionStatus.APPROVED:
         if (!runningAdoptionForPet) {
@@ -234,7 +232,6 @@ export class AdoptionService {
           },
         });
         return updAdoption;
-        break;
 
       default:
         throw new ForbiddenException('Not sure what to do.');

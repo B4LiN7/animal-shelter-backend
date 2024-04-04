@@ -52,7 +52,10 @@ export class AuthService {
     const permissions = await this.userHelper.getUserAllPermissions(
       foundUser.userId,
     );
-    const accessToken = await this.makeAccessToken(foundUser.userId, permissions);
+    const accessToken = await this.makeAccessToken(
+      foundUser.userId,
+      permissions,
+    );
     const refreshToken = await this.makeRefreshToken(foundUser.userId);
 
     const decodedRefreshToken = await this.jwt.decode(refreshToken);
@@ -133,11 +136,9 @@ export class AuthService {
       throw new BadRequestException('No refresh token provided');
     }
 
-    const foundLogin = await this.prisma.userLogin.findFirst(
-      {
-        where: { refreshToken: refreshToken, expireAt: { gte: new Date() } },
-      },
-    );
+    const foundLogin = await this.prisma.userLogin.findFirst({
+      where: { refreshToken: refreshToken, expireAt: { gte: new Date() } },
+    });
     if (!foundLogin) {
       throw new BadRequestException('Refresh token not found');
     }
@@ -152,7 +153,10 @@ export class AuthService {
     const permissions = await this.userHelper.getUserAllPermissions(
       foundUser.userId,
     );
-    const newAccessToken = await this.makeAccessToken(foundUser.userId, permissions);
+    const newAccessToken = await this.makeAccessToken(
+      foundUser.userId,
+      permissions,
+    );
     const newRefreshToken = await this.makeRefreshToken(foundUser.userId);
 
     const decodedNewRefreshToken = await this.jwt.decode(newRefreshToken);
@@ -186,11 +190,9 @@ export class AuthService {
       throw new BadRequestException('No refresh token provided');
     }
 
-    const foundLogin = await this.prisma.userLogin.deleteMany(
-      {
-        where: { refreshToken: refreshToken },
-      },
-    );
+    const foundLogin = await this.prisma.userLogin.deleteMany({
+      where: { refreshToken: refreshToken },
+    });
     if (foundLogin.count === 0) {
       throw new BadRequestException('Refresh token not found');
     }
@@ -208,7 +210,7 @@ export class AuthService {
   private async makeAccessToken(
     userId: string,
     permissions: Permission[],
-    expire: string = '15m',
+    expire: string = '1m',
   ): Promise<string> {
     const payload = { userId, permissions };
     return await this.jwt.signAsync(payload, {
