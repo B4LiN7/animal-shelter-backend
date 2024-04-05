@@ -4,7 +4,15 @@ import { Response } from 'express';
 @Controller()
 export class AppController {
   @Get()
-  getIndex(@Res() res: Response) {
+  getRoot() {
+    return {
+      message:
+        'If you see this message, the server is running correctly (I hope).',
+    };
+  }
+
+  @Get('manual')
+  getManual(@Res() res: Response) {
     res.sendFile('index.html', { root: 'public' });
   }
 }

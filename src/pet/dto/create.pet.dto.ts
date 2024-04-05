@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsArray,
   registerDecorator,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -19,7 +20,8 @@ export class CreatePetDto {
   description: string;
 
   @IsOptional()
-  @IsString()
+  @IsArray()
+  @IsString({ each: true })
   imageUrls: string[];
 
   @IsNotEmpty()

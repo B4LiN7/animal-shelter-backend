@@ -197,6 +197,9 @@ export class AuthService {
       throw new BadRequestException('Refresh token not found');
     }
 
+    this.logger.log(
+      `User ${req.user['userId']} logged out (refresh token revoked)`,
+    );
     return { message: 'You have been logged out (refresh token revoked)' };
   }
 

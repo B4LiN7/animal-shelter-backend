@@ -14,7 +14,9 @@ export class PetHelperService {
   constructor(
     private prisma: PrismaService,
     private logger: Logger,
-  ) {}
+  ) {
+    this.logger = new Logger(PetHelperService.name);
+  }
 
   /**
    * This function gets all pets. If a search is provided, it filters the pets by the search parameters.
@@ -102,7 +104,9 @@ export class PetHelperService {
       where: { petId: id },
     });
 
-    this.logger.log(`Pet with ID ${id} deleted successfully`);
+    this.logger.log(
+      `Pet ${id} and it's statuses and connected adoptions deleted successfully`,
+    );
 
     return {
       deletedPet,

@@ -3,6 +3,7 @@ import { Response } from 'express';
 import * as path from 'path';
 import { writeFile } from 'fs/promises';
 import { MediaUploadResType } from './type/response.type';
+import { existsSync } from 'fs';
 
 @Injectable()
 export class MediaService {
@@ -12,12 +13,20 @@ export class MediaService {
 
   /**
    * Serve media files
-   * @param path - path to the file
+   * @param reqPath - path of the file
    * @param res - Response object
    * @returns - the file
    */
-  serveMedia(path: string, res: Response) {
-    res.sendFile(path, { root: './public' });
+  serveMedia(reqPath: string, res: Response) {
+    const filePath = path.join('./public', reqPath);
+    if (!existsSync(filePath)) {
+      this.logger.error(`File does not exist: ${filePath}`);
+      res.status(404).json({
+        message: 'File not found',
+      });
+      return;
+    }
+    res.sendFile(reqPath, { root: './public' });
   }
 
   /**
@@ -69,9 +78,7 @@ export class MediaService {
    * @param file - file to upload
    * @returns - status of the upload
    */
-  async uploadFile(
-    file: Express.Multer.File,
-  ): Promise<MediaUploadResType> {
+  async uploadFile(file: Express.Multer.File): Promise<MediaUploadResType> {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       return {
         status: 'failed',
