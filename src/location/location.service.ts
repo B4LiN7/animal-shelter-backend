@@ -1,18 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LocationDto } from './dto/location.dto';
-import { UserHelperService } from 'src/user/user-helper.service';
 import { Request } from 'express';
 
 @Injectable()
 export class LocationService {
-  constructor(
-    private prisma: PrismaService,
-    private userHelper: UserHelperService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getMyLocations(req: Request) {
-    const token = await this.userHelper.decodeAccessTokenFromReq(req);
+    const token = req.user['decodedToken'];
     const myLocations = await this.prisma.location.findMany({
       where: {
         userId: token.userId,
@@ -25,7 +21,7 @@ export class LocationService {
   }
 
   async addToMyLocations(dto: LocationDto, req: Request) {
-    const token = await this.userHelper.decodeAccessTokenFromReq(req);
+    const token = req.user['decodedToken'];
     delete dto.userId;
     return this.prisma.location.create({
       data: {

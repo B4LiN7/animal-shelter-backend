@@ -98,7 +98,7 @@ export class UserHelperService {
    * @param req - The (Express) Request object
    */
   async decodeAccessTokenFromReq(req: Request): Promise<AccessTokenType> {
-    const token = req.user['accessToken']
+    const token = req.user['accessToken'];
     if (!token) {
       throw new ForbiddenException('No token provided. Please log in.');
     }

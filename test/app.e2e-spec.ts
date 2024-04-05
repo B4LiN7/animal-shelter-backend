@@ -7,7 +7,7 @@ import * as CookieParser from 'cookie-parser';
 import * as process from 'process';
 import { SpeciesType } from '../src/species/type/species.type';
 
-describe('AppController (e2e)', () => {
+describe('App (e2e)', () => {
   let app: INestApplication;
   let agent: request.SuperTest<request.Test>;
   process.env.DATABASE_URL =
@@ -60,10 +60,17 @@ describe('AppController (e2e)', () => {
           expect(res.body).toHaveProperty('refresh_token');
         });
     });
+    it('should refresh token ( /auth/refresh (POST) )', async () => {
+      const tokens = await loginUser();
+      return request(app.getHttpServer())
+        .post('/auth/refresh')
+        .set('Authorization', `Bearer ${tokens.refreshToken}`)
+        .expect(200);
+    });
     it('should logout ( /auth/logout (POST) )', async () => {
-      const token = await loginUser(agent, 'test');
-      await loginUser(agent, 'test');
-      return agent
+      const token = await loginUser('test');
+      await loginUser('test');
+      return request(app.getHttpServer())
         .get('/auth/logout')
         .set('Authorization', `Bearer ${token.refreshToken}`)
         .expect(200);
@@ -72,7 +79,7 @@ describe('AppController (e2e)', () => {
 
   describe('/user endpoints', () => {
     it('should return all users (admin and test)', async () => {
-      const token = await loginUser(agent);
+      const token = await loginUser();
       return agent
         .get('/user')
         .set('Authorization', `Bearer ${token.accessToken}`)
@@ -82,7 +89,7 @@ describe('AppController (e2e)', () => {
         });
     });
     it('should return only the test user (logged in user)', async () => {
-      const token = await loginUser(agent, 'test');
+      const token = await loginUser('test');
       return agent
         .get('/user/me')
         .set('Authorization', `Bearer ${token.accessToken}`)
@@ -92,14 +99,14 @@ describe('AppController (e2e)', () => {
         });
     });
     it('should throw and unauthorized error', async () => {
-      const token = await loginUser(agent, 'test');
+      const token = await loginUser('test');
       return agent
         .get('/user')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(403);
     });
     it('should modify the test user (logged in user)', async () => {
-      const token = await loginUser(agent, 'test');
+      const token = await loginUser('test');
       return agent
         .put('/user/me')
         .set('Authorization', `Bearer ${token.accessToken}`)
@@ -114,7 +121,7 @@ describe('AppController (e2e)', () => {
     });
     it('should add a pet', async () => {
       const breedIds = await addBreeds(agent);
-      const token = await loginUser(agent);
+      const token = await loginUser();
       return agent
         .post('/pet')
         .set('Authorization', `Bearer ${token.accessToken}`)
@@ -135,11 +142,10 @@ describe('AppController (e2e)', () => {
   // Helper functions
 
   async function loginUser(
-    agent: request.SuperTest<request.Test>,
     username: string = 'admin',
     password: string = 'password',
   ) {
-    const response = await agent
+    const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ username: username, password: password })
       .expect(200);
@@ -154,7 +160,7 @@ describe('AppController (e2e)', () => {
     breedNumber: number = 1,
     speciesNumber: number = 1,
   ): Promise<string[]> {
-    const token = await loginUser(agent);
+    const token = await loginUser();
     for (let i = 0; i < speciesNumber; i++) {
       await agent
         .post('/species')

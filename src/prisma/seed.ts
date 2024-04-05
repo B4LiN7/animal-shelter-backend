@@ -426,7 +426,10 @@ async function addPets(addPetCount: number, addIfFound: boolean = false) {
     );
   }
 }
-async function addAdoptions(addIfFound: boolean = false) {
+async function addAdoptions(
+  possibility: number = 1.0,
+  addIfFound: boolean = false,
+) {
   console.log('Adding adoptions...');
 
   if (!addIfFound) {
@@ -444,8 +447,26 @@ async function addAdoptions(addIfFound: boolean = false) {
   }
 
   for (const pet of pets) {
+    if (Math.random() > possibility) {
+      continue;
+    }
+
     const randomUserIndex = Math.floor(Math.random() * users.length);
     const randomUser = users[randomUserIndex];
+
+    const existingAdoption = await prisma.adoption.findFirst({
+      where: {
+        petId: pet.petId,
+        userId: randomUser.userId,
+      },
+    });
+    if (existingAdoption) {
+      console.log(
+        `Adoption for pet ID ${pet.petId} and user ID ${randomUser.userId} already exists, skip.`,
+      );
+      continue;
+    }
+
     await prisma.adoption.create({
       data: {
         petId: pet.petId,
@@ -479,7 +500,7 @@ export async function main() {
       await addSpecies();
       await addBreeds();
       await addPets(100);
-      //await addAdoptions();
+      await addAdoptions(0.1);
       break;
     case 'test':
       console.log('Testing environment specified, executing...');

@@ -29,6 +29,14 @@ export class PermissionGuard implements CanActivate {
     const token = await this.userHelper.decodeAccessTokenFromReq(request);
     const userPermissions = token.permissions;
 
-    return requiredPermissions.some((perm) => userPermissions.includes(perm));
+    // return requiredPermissions.some((perm) => userPermissions.includes(perm)); // If only one permission is required
+
+    // If all permissions are required
+    for (const perm of requiredPermissions) {
+      if (!userPermissions.includes(perm)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

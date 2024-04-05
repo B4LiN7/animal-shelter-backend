@@ -111,7 +111,7 @@ export class UserService {
    * @returns {Promise<UserType>} - Promise with updated user (return of Prisma update method)
    */
   async updateMyUser(req: Request, dto: UpdateUserDto): Promise<UserType> {
-    const token = await this.userHelper.decodeAccessTokenFromReq(req);
+    const token = req.user['decodedToken'];
     const userId = token.userId;
     return this.updateUser(userId, dto, req);
   }
@@ -205,7 +205,7 @@ export class UserService {
     }
 
     if (dto.roles) {
-      const token = await this.userHelper.decodeAccessTokenFromReq(req);
+      const token = req.user['decodedToken'];
       if (token.permissions.includes(Perm.UPDATE_USER_ROLES)) {
         await this.setUserRoles(id, dto.roles);
       }

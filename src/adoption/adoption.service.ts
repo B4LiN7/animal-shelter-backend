@@ -9,18 +9,12 @@ import {
   PetStatusEnum as Status,
   AdoptionStatusEnum as AdoptionStatus,
 } from '@prisma/client';
-import { UserHelperService } from 'src/user/user-helper.service';
 import { UpdateAdoptionDto } from './dto/update.adoption.dto';
-import { PetHelperService } from 'src/pet/pet.helper.service';
 import { AdoptionType } from './type/adoption.type';
 
 @Injectable()
 export class AdoptionService {
-  constructor(
-    private prisma: PrismaService,
-    private petHelper: PetHelperService,
-    private userHelper: UserHelperService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Get all adoption processes
@@ -81,7 +75,7 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async startAdoptionProcess(petId: string, req: Request) {
-    const token = await this.userHelper.decodeAccessTokenFromReq(req);
+    const token = req.user['decodedToken'];
     const userId = token.userId;
 
     const pet = await this.prisma.pet.findUnique({
@@ -109,7 +103,7 @@ export class AdoptionService {
    * @param req - The Request object for userId
    */
   async cancelAdoptionProcess(petId: string, req: Request) {
-    const token = await this.userHelper.decodeAccessTokenFromReq(req);
+    const token = req.user['decodedToken'];
     const userId = token.userId;
 
     const dto: UpdateAdoptionDto = {
