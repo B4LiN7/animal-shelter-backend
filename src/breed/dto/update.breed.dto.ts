@@ -11,5 +11,5 @@ export class UpdateBreedDto {
 
   @IsOptional()
   @IsNumber()
-  speciesId: number;
+  speciesId: string;
 }

@@ -4,10 +4,8 @@ import {
   ExecutionContext,
   Logger,
 } from '@nestjs/common';
-import { Role } from '@prisma/client';
-import { UserHelperService } from 'src/user/userHelper.service';
-
-const ALWAYS_ALLOWED_ROLES: Role[] = [Role.ADMIN];
+import { UserHelperService } from 'src/user/user-helper.service';
+import { PermissionEnum as Perm } from '@prisma/client';
 
 @Injectable()
 /**
@@ -18,8 +16,8 @@ const ALWAYS_ALLOWED_ROLES: Role[] = [Role.ADMIN];
  */
 export class UserGuard implements CanActivate {
   constructor(
-    private userHelper: UserHelperService,
     private logger: Logger,
+    private userHelper: UserHelperService,
   ) {
     this.logger = new Logger(UserGuard.name);
   }
@@ -29,7 +27,7 @@ export class UserGuard implements CanActivate {
     const requestedUrl = request.url;
     const reqUserId = request.params.id;
 
-    const token = await this.userHelper.decodeTokenFromReq(request);
+    const token = await this.userHelper.decodeAccessTokenFromReq(request);
 
     if (!reqUserId) {
       // Disable logging this because it's too verbose
@@ -41,10 +39,9 @@ export class UserGuard implements CanActivate {
       return true;
     }
 
-    const userRole: Role = Role[token.role];
-    if (ALWAYS_ALLOWED_ROLES.includes(userRole)) {
+    if (token.permissions.includes(Perm.ACCESS_ANY_USER)) {
       this.logger.log(
-        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user is a(n) ${userRole} `,
+        `User with ID ${token.userId} is allowed to access the resource ${requestedUrl} because the user have ACCESS_ANY_USER permission`,
       );
       return true;
     }

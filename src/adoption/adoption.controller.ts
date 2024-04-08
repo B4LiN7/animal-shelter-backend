@@ -5,51 +5,67 @@ import {
   Get,
   HttpCode,
   Param,
-  ParseIntPipe,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from 'src/auth/guard/role.guard';
-import { Role } from 'src/auth/decorator/role.decorator';
-import { Role as R } from '@prisma/client';
-import { AdoptionDto } from './dto/adoption.dto';
+import { UpdateAdoptionDto } from './dto/update.adoption.dto';
+import { PermissionGuard } from '../auth/guard/permission.guard';
+import { PermissionEnum as Perm } from '@prisma/client';
+import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('adoption')
-@UseGuards(AuthGuard('jwt'), RoleGuard)
+@UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
   @Get()
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @Permissions(Perm.GET_ADOPTION)
   getAllAdoptionProcesses() {
-    return this.adoptionService.getAllAdoptionProcesses();
+    return this.adoptionService.getAllAdoptionProcess();
+  }
+
+  @Get(':adoptionId')
+  @Permissions(Perm.GET_ADOPTION)
+  getAdoptionProcesses(@Param('adoptionId') adoptionId: string) {
+    return this.adoptionService.getAdoptionProcess(adoptionId);
   }
 
   @Get('pet/:petId')
-  @Role(R.USER)
-  startAdoptionProcess(
-    @Param('petId', ParseIntPipe) petId: number,
-    @Req() req: Request,
-  ) {
+  @Permissions(Perm.GET_ADOPTION)
+  getAllAdoptionProcessesForPet(@Param('petId') petId: string) {
+    return this.adoptionService.getAllAdoptionProcessesForPet(petId);
+  }
+
+  @Get('pet/:petId/pending')
+  @Permissions(Perm.GET_ADOPTION)
+  getAllPendingAdoptionProcessesForPet(@Param('petId') petId: string) {
+    return this.adoptionService.getAllAdoptionProcessesForPet(petId, true);
+  }
+
+  @Post('pet/:petId')
+  @Permissions(Perm.START_ADOPTION)
+  startAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
 
   @Delete('pet/:petId')
-  cancelAdoptionProcess(
-    @Param('petId', ParseIntPipe) petId: number,
-    @Req() req: Request,
-  ) {
+  @Permissions(Perm.START_ADOPTION)
+  cancelAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
   }
 
-  @Post()
+  @Put(':adoptionId')
   @HttpCode(200)
-  @Role(R.ADMIN, R.SHELTER_WORKER)
-  setAdoptionProcess(@Body() dto: AdoptionDto) {
-    return this.adoptionService.setAdoptionProcess(dto);
+  @Permissions(Perm.SET_ADOPTION)
+  setAdoptionProcess(
+    @Param('adoptionId') adoptionId: string,
+    @Body() dto: UpdateAdoptionDto,
+  ) {
+    return this.adoptionService.setAdoptionProcess(adoptionId, dto);
   }
 }

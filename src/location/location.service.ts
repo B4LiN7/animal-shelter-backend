@@ -1,18 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LocationDto } from './dto/location.dto';
-import { UserHelperService } from 'src/user/userHelper.service';
 import { Request } from 'express';
 
 @Injectable()
 export class LocationService {
-  constructor(
-    private prisma: PrismaService,
-    private userHelper: UserHelperService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getMyLocations(req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = req.user['decodedToken'];
     const myLocations = await this.prisma.location.findMany({
       where: {
         userId: token.userId,
@@ -25,7 +21,7 @@ export class LocationService {
   }
 
   async addToMyLocations(dto: LocationDto, req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+    const token = req.user['decodedToken'];
     delete dto.userId;
     return this.prisma.location.create({
       data: {
@@ -39,7 +35,7 @@ export class LocationService {
     return this.prisma.location.findMany();
   }
 
-  async getLocation(id: number) {
+  async getLocation(id: string) {
     return this.prisma.location.findUnique({
       where: {
         locationId: id,
@@ -55,7 +51,7 @@ export class LocationService {
     });
   }
 
-  async updateLocation(id: number, dto: LocationDto) {
+  async updateLocation(id: string, dto: LocationDto) {
     return this.prisma.location.update({
       where: {
         locationId: id,
@@ -66,7 +62,7 @@ export class LocationService {
     });
   }
 
-  async deleteLocation(id: number) {
+  async deleteLocation(id: string) {
     return this.prisma.location.delete({
       where: {
         locationId: id,

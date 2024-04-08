@@ -9,13 +9,13 @@ import { LocationModule } from './location/location.module';
 import { SpeciesModule } from './species/species.module';
 import { AppController } from './app.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '2d' },
     }),
     AuthModule,
     UserModule,
@@ -25,6 +25,7 @@ import { JwtModule } from '@nestjs/jwt';
     BreedModule,
     SpeciesModule,
     AdoptionModule,
+    RoleModule,
   ],
   controllers: [AppController],
 })

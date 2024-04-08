@@ -11,16 +11,16 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { RoleGuard } from 'src/auth/guard/role.guard';
-import { Role } from 'src/auth/decorator/role.decorator';
-import { Role as R } from '@prisma/client';
+import { CreateUserDto } from './dto/create.user.dto';
 import { Request } from 'express';
 import { UserGuard } from 'src/auth/guard/user.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUserDto } from './dto/create.user.dto';
+import { PermissionGuard } from '../auth/guard/permission.guard';
+import { PermissionEnum as Perm } from '@prisma/client';
+import { Permissions } from 'src/auth/decorator/permisson.decorator';
 
 @Controller('user')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt-access-token'))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -36,14 +36,14 @@ export class UserController {
 
   /* For admins */
   @Post()
-  @UseGuards(RoleGuard)
-  @Role(R.ADMIN)
+  @UseGuards(PermissionGuard)
+  @Permissions(Perm.CREATE_USER)
   async createUser(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
   }
   @Get()
-  @UseGuards(RoleGuard)
-  @Role(R.ADMIN)
+  @UseGuards(PermissionGuard)
+  @Permissions(Perm.GET_USER)
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
@@ -71,8 +71,8 @@ export class UserController {
 
   /* For adoption: To get know what is the user's name */
   @Get('name/:id')
-  @UseGuards(RoleGuard)
-  @Role(R.ADMIN, R.SHELTER_WORKER)
+  @UseGuards(PermissionGuard)
+  @Permissions(Perm.GET_USERNAME)
   async getUserName(@Param('id') id: string) {
     return this.userService.getUserName(id);
   }

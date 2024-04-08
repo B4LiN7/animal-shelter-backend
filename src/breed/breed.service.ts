@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateBreedDto } from './dto/update.breed.dto';
 import { CreateBreedDto } from './dto/create.breed.dto';
-import { BreedDto } from './dto/breed.dto';
+import { BreedType } from './type/breed.type';
 
 @Injectable()
 export class BreedService {
@@ -10,9 +10,9 @@ export class BreedService {
 
   /**
    * Get all breeds, If not found any, throw a NotFoundException
-   * @returns {Promise<BreedDto[]>} - A promise of an array of breeds
+   * @returns {Promise<BreedType[]>} - A promise of an array of breeds
    */
-  async getAllBreeds(): Promise<BreedDto[]> {
+  async getAllBreeds(): Promise<BreedType[]> {
     const breeds = await this.prisma.breed.findMany();
     if (breeds.length === 0) {
       throw new NotFoundException('No breeds found');
@@ -23,9 +23,9 @@ export class BreedService {
   /**
    * Get a breed by ID, If not found, throw a NotFoundException
    * @param id - The ID of the breed
-   * @returns {Promise<BreedDto>} - A promise of a breed
+   * @returns {Promise<BreedType>} - A promise of a breed
    */
-  async getBreed(id: number): Promise<BreedDto> {
+  async getBreed(id: string): Promise<BreedType> {
     const breed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -38,9 +38,9 @@ export class BreedService {
   /**
    * Add a new breed
    * @param dto - The data to create a new breed
-   * @returns {Promise<BreedDto>} - The newly created breed (return of Prisma create method)
+   * @returns {Promise<BreedType>} - The newly created breed (return of Prisma create method)
    */
-  async addBreed(dto: CreateBreedDto): Promise<BreedDto> {
+  async addBreed(dto: CreateBreedDto): Promise<BreedType> {
     return this.prisma.breed.create({
       data: {
         ...dto,
@@ -52,9 +52,9 @@ export class BreedService {
    * Update a breed by ID, If not found, create a new breed
    * @param id - The ID of the breed
    * @param dto - The data to update the breed
-   * @returns {Promise<BreedDto>} - The updated (or added) breed (return of Prisma update method)
+   * @returns {Promise<BreedType>} - The updated (or added) breed (return of Prisma update method)
    */
-  async updateBreed(id: number, dto: UpdateBreedDto): Promise<BreedDto> {
+  async updateBreed(id: string, dto: UpdateBreedDto): Promise<BreedType> {
     const existingBreed = await this.prisma.breed.findUnique({
       where: { breedId: id },
     });
@@ -77,11 +77,11 @@ export class BreedService {
   /**
    * Delete a breed by ID
    * @param id - The ID of the breed
-   * @returns {Promise<{ removedBreed: BreedDto; updatedPets: number }>} - The deleted breed (return of Prisma delete method) and the number of updated pets
+   * @returns {Promise<{ removedBreed: BreedType; updatedPets: number }>} - The deleted breed (return of Prisma delete method) and the number of updated pets
    */
   async deleteBreed(
-    id: number,
-  ): Promise<{ removedBreed: BreedDto; updatedPets: number }> {
+    id: string,
+  ): Promise<{ removedBreed: BreedType; updatedPets: number }> {
     const updatedPets = await this.prisma.pet.updateMany({
       where: { breedId: id },
       data: { breedId: null },

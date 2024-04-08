@@ -5,31 +5,68 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
-import { Status, Role } from '@prisma/client';
-import { UserHelperService } from 'src/user/userHelper.service';
-import { AdoptionDto, AdoptionStatus } from './dto/adoption.dto';
-import { PetHelperService } from 'src/pet/petHelper.service';
+import {
+  PetStatusEnum as Status,
+  AdoptionStatusEnum as AdoptionStatus,
+} from '@prisma/client';
+import { UpdateAdoptionDto } from './dto/update.adoption.dto';
+import { AdoptionType } from './type/adoption.type';
 
 @Injectable()
 export class AdoptionService {
-  constructor(
-    private prisma: PrismaService,
-    private petHelper: PetHelperService,
-    private userHelper: UserHelperService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   /**
-   * Get the adoption status for a pets
-   * @returns The adoption status for the pets: userId, petId, latestStatus
+   * Get all adoption processes
+   * @returns {Promise<AdoptionType[]>}
    */
-  async getAllAdoptionProcesses() {
+  async getAllAdoptionProcess(): Promise<AdoptionType[]> {
     const adoptions = await this.prisma.adoption.findMany();
-    const adoptionsWithStatus: any[] = [];
-    for (const adoption of adoptions) {
-      const latestStatus = await this.getAdoptionStatusForPet(adoption.petId);
-      adoptionsWithStatus.push(latestStatus);
+    if (!adoptions) {
+      throw new NotFoundException('No adoptions found');
     }
-    return adoptionsWithStatus;
+    return adoptions;
+  }
+
+  /**
+   * Get the adoption status for a pet
+   * @param petId - The ID of the pet
+   * @param isPending - If the adoption is pending
+   * @returns {Promise<AdoptionType>}
+   */
+  async getAllAdoptionProcessesForPet(
+    petId: string,
+    isPending: boolean = false,
+  ): Promise<AdoptionType[]> {
+    const adoptionsForPet = await this.prisma.adoption.findMany({
+      where: {
+        petId: petId,
+        status: isPending ? AdoptionStatus.PENDING : undefined,
+      },
+    });
+    if (!adoptionsForPet) {
+      throw new NotFoundException(
+        `Adoption for pet with ID ${petId} not found`,
+      );
+    }
+    return adoptionsForPet;
+  }
+
+  /**
+   * Get the adoption process
+   * @param adoptionId - The ID of the adoption
+   * @returns {Promise<AdoptionType>}
+   */
+  async getAdoptionProcess(adoptionId: string): Promise<AdoptionType> {
+    const adoption = await this.prisma.adoption.findFirst({
+      where: {
+        adoptionId: adoptionId,
+      },
+    });
+    if (!adoption) {
+      throw new NotFoundException(`Adoption with ID ${adoptionId} not found`);
+    }
+    return adoption;
   }
 
   /**
@@ -37,8 +74,8 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @param req - The Request object for userId
    */
-  async startAdoptionProcess(petId: number, req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+  async startAdoptionProcess(petId: string, req: Request) {
+    const token = req.user['decodedToken'];
     const userId = token.userId;
 
     const pet = await this.prisma.pet.findUnique({
@@ -48,15 +85,16 @@ export class AdoptionService {
       throw new NotFoundException(`Pet with ID ${petId} not found.`);
     }
 
-    const dto: AdoptionDto = {
+    const dto: UpdateAdoptionDto = {
       petId: petId,
       userId: userId,
-      status: AdoptionStatus.ADOPTING,
+      status: AdoptionStatus.PENDING,
+      reason: null,
     };
 
-    await this.setAdoptionStatus(dto);
+    const adoption = await this.setAdoption(dto);
 
-    return await this.getAdoptionStatusForPet(petId);
+    return await this.getAdoptionProcess(adoption.adoptionId);
   }
 
   /**
@@ -64,64 +102,45 @@ export class AdoptionService {
    * @param petId - The ID of the pet
    * @param req - The Request object for userId
    */
-  async cancelAdoptionProcess(petId: number, req: Request) {
-    const token = await this.userHelper.decodeTokenFromReq(req);
+  async cancelAdoptionProcess(petId: string, req: Request) {
+    const token = req.user['decodedToken'];
     const userId = token.userId;
-    const role = Role[token.role];
-    const asAdmin: boolean =
-      role === Role.ADMIN || role === Role.SHELTER_WORKER;
 
-    const dto: AdoptionDto = {
+    const dto: UpdateAdoptionDto = {
       petId: petId,
       userId: userId,
       status: AdoptionStatus.CANCELLED,
+      reason: null,
     };
 
-    await this.setAdoptionStatus(dto, asAdmin);
+    const adoption = await this.setAdoption(dto);
 
-    return await this.getAdoptionStatusForPet(petId);
+    return await this.getAdoptionProcess(adoption.adoptionId);
   }
 
   /**
    * Set the adoption process for a pet (for admin or shelter worker only)
+   * @param adoptionId - The ID of the adoption
    * @param dto - The adoption DTO
    */
-  async setAdoptionProcess(dto: AdoptionDto) {
-    await this.setAdoptionStatus(dto, true);
-    return await this.getAdoptionStatusForPet(dto.petId);
-  }
-
-  /**
-   * Get the adoption status for a pet
-   * @param petId - The ID of the pet
-   * @returns The adoption status for the pet: userId, petId, latestStatus
-   */
-  private async getAdoptionStatusForPet(petId: number) {
-    const runningAdoption = await this.prisma.adoption.findFirst({
+  async setAdoptionProcess(adoptionId: string, dto: UpdateAdoptionDto) {
+    const adoption = await this.prisma.adoption.update({
       where: {
-        petId: petId,
+        adoptionId: adoptionId,
+      },
+      data: {
+        ...dto,
       },
     });
-    if (!runningAdoption) {
-      throw new NotFoundException(
-        `Adoption for pet with ID ${petId} not found`,
-      );
-    }
-
-    const latestStatus = await this.petHelper.getLatestStatusForPet(petId);
-    if (!latestStatus) {
-      throw new NotFoundException(`Status for pet with ID ${petId} not found`);
-    }
-
-    return { ...runningAdoption, status: latestStatus };
+    return await this.getAdoptionProcess(adoption.adoptionId);
   }
 
   /**
    * Set the adoption status for a pet
    * @param dto - The adoption DTO which contains the pet ID, user ID and the new status
-   * @param asAdmin - If the function is called by an admin
+   * @returns {Promise<string>} - The modified adoption status
    */
-  private async setAdoptionStatus(dto: AdoptionDto, asAdmin = false) {
+  private async setAdoption(dto: UpdateAdoptionDto): Promise<AdoptionType> {
     const { petId, userId, status } = dto;
 
     // Check if the pet and user exist
@@ -131,84 +150,85 @@ export class AdoptionService {
     if (!pet) {
       throw new NotFoundException(`Pet with ID ${petId} not found.`);
     }
-    const user = await this.prisma.user.findUnique({
-      where: { userId: userId },
-    });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found.`);
-    }
 
-    // Set the new status for the pet
-    let newStatus: Status = Status.UNKNOWN;
-    switch (status) {
-      case AdoptionStatus.ADOPTING:
-        newStatus = Status.ADOPTING;
-        break;
-      case AdoptionStatus.ADOPTED:
-        newStatus = Status.ADOPTED;
-        break;
-      case AdoptionStatus.CANCELLED:
-        newStatus = Status.INSHELTER;
-        break;
-    }
-
-    // Search for an existing adoption entry for the pet
-    const runningAdoption = await this.prisma.adoption.findFirst({
+    // Search for running adoptions
+    const runningAdoptionForPet = await this.prisma.adoption.findFirst({
       where: {
         petId: petId,
+        status: AdoptionStatus.PENDING,
       },
     });
 
-    // If there is a running adoption, update it otherwise, create a new one
-    if (runningAdoption) {
-      // Check if the user is allowed to change the status
-      if (runningAdoption.userId !== userId && !asAdmin) {
-        throw new ForbiddenException(
-          'You are not allowed to change the adoption status of this pet',
-        );
-      }
-
-      // If the status is cancelled, delete the adoption entry otherwise, update it
-      if (status === AdoptionStatus.CANCELLED) {
-        await this.prisma.adoption.delete({
-          where: {
-            userId_petId: {
-              userId: runningAdoption.userId,
-              petId: runningAdoption.petId,
-            },
+    switch (status) {
+      case AdoptionStatus.PENDING:
+        if (runningAdoptionForPet) {
+          throw new ForbiddenException(
+            `An adoption for pet with ID ${petId} is already pending.`,
+          );
+        }
+        delete dto.reason;
+        return this.prisma.adoption.create({
+          data: {
+            ...dto,
           },
         });
-        return;
-      } else {
-        await this.prisma.adoption.update({
+
+      case AdoptionStatus.CANCELLED:
+        if (!runningAdoptionForPet || runningAdoptionForPet.userId !== userId) {
+          throw new ForbiddenException(
+            `No pending adoption for pet with ID ${petId} found for user with ID ${userId}.`,
+          );
+        }
+        return this.prisma.adoption.update({
           where: {
-            userId_petId: {
-              userId: runningAdoption.userId,
-              petId: runningAdoption.petId,
-            },
+            adoptionId: runningAdoptionForPet.adoptionId,
           },
           data: {
-            petId: petId,
-            userId: userId,
+            status: status,
           },
         });
-      }
-    } else {
-      // If there is no running adoption, create a new adoption entry
-      await this.prisma.adoption.create({
-        data: {
-          petId: petId,
-          userId: userId,
-        },
-      });
-    }
 
-    // Create a new status entry for the pet
-    await this.prisma.petStatus.create({
-      data: {
-        petId: petId,
-        status: newStatus,
-      },
-    });
+      case AdoptionStatus.REJECTED:
+        if (!runningAdoptionForPet) {
+          throw new ForbiddenException(
+            `No pending adoption to reject for pet with ID ${petId} found.`,
+          );
+        }
+        return this.prisma.adoption.update({
+          where: {
+            adoptionId: runningAdoptionForPet.adoptionId,
+          },
+          data: {
+            status: status,
+            reason: dto.reason,
+          },
+        });
+
+      case AdoptionStatus.APPROVED:
+        if (!runningAdoptionForPet) {
+          throw new ForbiddenException(
+            `No pending adoption to approve for pet with ID ${petId} found.`,
+          );
+        }
+        const updAdoption = await this.prisma.adoption.update({
+          where: {
+            adoptionId: runningAdoptionForPet.adoptionId,
+          },
+          data: {
+            status: status,
+            reason: dto.reason,
+          },
+        });
+        await this.prisma.petStatus.create({
+          data: {
+            petId: petId,
+            status: Status.ADOPTED,
+          },
+        });
+        return updAdoption;
+
+      default:
+        throw new ForbiddenException('Not sure what to do.');
+    }
   }
 }

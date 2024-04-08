@@ -4,12 +4,21 @@ import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { AccessCookieStrategy } from './strategy/access-cookie.strategy';
+import { RoleModule } from '../role/role.module';
+import { AccessTokenStrategy } from './strategy/access-token.strategy';
+import { RefreshTokenStrategy } from './strategy/refresh-token.strategy';
 
 @Module({
-  imports: [PrismaModule, PassportModule, UserModule],
+  imports: [PrismaModule, PassportModule, RoleModule, UserModule],
   controllers: [AuthController],
-  providers: [Logger, JwtStrategy, AuthService],
-  exports: [JwtStrategy],
+  providers: [
+    Logger,
+    AuthService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+    AccessCookieStrategy,
+  ],
+  exports: [AccessCookieStrategy],
 })
 export class AuthModule {}

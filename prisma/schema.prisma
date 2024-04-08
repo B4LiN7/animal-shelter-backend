@@ -1,40 +1,128 @@
-// The docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  userId         String         @id @default(uuid())
-  username       String         @unique
-  name           String?
-  email          String?
-  hashedPassword String
-  role           Role           @default(USER)
-  createdAt      DateTime?      @default(now())
-  editedAt       DateTime?      @updatedAt
-  locations      Location[]
-  adoptions      Adoption[]
-  loginHistory   LoginHistory[]
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
-model LoginHistory {
-  loginId   Int      @id @default(autoincrement())
-  userId    String
-  loginTime DateTime @default(now())
-  ipAddress String?
-  userAgent String?
-  user      User     @relation(fields: [userId], references: [userId])
+model Pet {
+  petId     String    @id @default(uuid())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  name        String?
+  sex         PetSexEnum @default(OTHER)
+  birthDate   DateTime?
+  description String?
+  imageUrls   String[]
+
+  breedId   String?
+  breed     Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
+  adoptions Adoption[]  @relation(name: "AdoptionToPet")
+  petStatus PetStatus[] @relation(name: "PetToPetStatus")
+}
+
+enum PetSexEnum {
+  FEMALE
+  MALE
+  OTHER
+}
+
+model PetStatus {
+  petStatusId String @id @default(uuid())
+
+  status PetStatusEnum @default(UNKNOWN)
+  from   DateTime      @default(now())
+
+  petId String
+  pet   Pet    @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
+}
+
+enum PetStatusEnum {
+  UNKNOWN
+  INCOMING
+  INSHELTER
+  ADOPTED
+  ILL
+  DECEASED
+}
+
+model Breed {
+  breedId String @id @default(uuid())
+
+  name        String  @unique
+  description String?
+
+  speciesId String?
+  species   Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
+  pets      Pet[]    @relation(name: "BreedToPet")
+}
+
+model Species {
+  speciesId String @id @default(uuid())
+
+  name        String  @unique
+  description String?
+
+  breeds Breed[] @relation(name: "BreedToSpecies")
+}
+
+model Adoption {
+  adoptionId String @id @default(uuid())
+
+  status AdoptionStatusEnum
+  reason String?
+
+  userId String
+  petId  String
+  user   User   @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
+  pet    Pet    @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
+}
+
+enum AdoptionStatusEnum {
+  PENDING
+  CANCELLED
+  APPROVED
+  REJECTED
+}
+
+model User {
+  userId    String    @id @default(uuid())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  username        String  @unique
+  hashedPassword  String
+  name            String?
+  email           String?
+  profileImageUrl String?
+
+  locations Location[]  @relation(name: "LocationToUser")
+  adoptions Adoption[]  @relation(name: "AdoptionToUser")
+  userLogin UserLogin[] @relation(name: "UserLoginToUser")
+  userRoles UserRole[]  @relation(name: "UserRoleToUser")
+}
+
+model UserLogin {
+  userLoginId String @id @default(uuid())
+
+  createdAt    DateTime  @default(now())
+  refreshedAt  DateTime  @default(now())
+  refreshToken String?
+  expireAt     DateTime?
+  ipAddress    String?
+  userAgent    String?
+
+  userId String
+  user   User   @relation(name: "UserLoginToUser", fields: [userId], references: [userId])
 }
 
 model Location {
-  locationId   Int     @id @default(autoincrement())
-  userId       String
+  locationId String @id @default(uuid())
+
   name         String?
   country      String
   state        String?
@@ -42,75 +130,62 @@ model Location {
   zipCode      Int
   address      String
   addressExtra String?
-  user         User    @relation(fields: [userId], references: [userId])
-}
 
-model Adoption {
   userId String
-  petId  Int    @unique
-  user   User   @relation(fields: [userId], references: [userId])
-  pet    Pet    @relation(fields: [petId], references: [petId])
-
-  @@id([userId, petId])
+  user   User   @relation(name: "LocationToUser", fields: [userId], references: [userId])
 }
 
-model Pet {
-  petId       Int         @id @default(autoincrement())
-  name        String?
-  sex         Sex         @default(OTHER)
+model UserRole {
+  userId String
+  roleId String
+  user   User   @relation(name: "UserRoleToUser", fields: [userId], references: [userId])
+  role   Role   @relation(name: "UserRoleToRole", fields: [roleId], references: [roleId])
+
+  @@id([userId, roleId])
+}
+
+model Role {
+  roleId String @id @default(uuid())
+
+  roleName    String           @unique
   description String?
-  birthDate   DateTime?
-  imageUrl    String?
-  breedId     Int?
-  breed       Breed?      @relation(fields: [breedId], references: [breedId])
-  createdAt   DateTime?   @default(now())
-  editedAt    DateTime?   @updatedAt
-  adoptions   Adoption[]
-  petStatus   PetStatus[]
+  permissions PermissionEnum[]
+
+  userRoles UserRole[] @relation(name: "UserRoleToRole")
 }
 
-model PetStatus {
-  petStatusId Int      @id @default(autoincrement())
-  status      Status   @default(UNKNOWN)
-  from        DateTime @default(now())
-  petId       Int
-  pet         Pet      @relation(fields: [petId], references: [petId])
-}
+enum PermissionEnum {
+  ACCESS_ANY_LOCATION
+  ACCESS_ANY_USER
 
-model Breed {
-  breedId     Int      @id @default(autoincrement())
-  name        String   @unique
-  description String?
-  speciesId   Int?
-  species     Species? @relation(fields: [speciesId], references: [speciesId])
-  pets        Pet[]
-}
+  UPDATE_USER_ROLES
 
-model Species {
-  speciesId   Int     @id @default(autoincrement())
-  name        String  @unique
-  description String?
-  breeds      Breed[]
-}
+  GET_USER
+  GET_USERNAME
+  CREATE_USER
+  UPDATE_USER
+  DELETE_USER
 
-enum Role {
-  ADMIN
-  USER
-  SHELTER_WORKER
-}
+  UPLOAD_IMAGE
 
-enum Sex {
-  FEMALE
-  MALE
-  OTHER
-}
+  GET_LOCATION
+  CREATE_LOCATION
+  UPDATE_LOCATION
+  DELETE_LOCATION
 
-enum Status {
-  UNKNOWN
-  INCOMING
-  INSHELTER
-  ADOPTING
-  ADOPTED
-  ILL
-  DECEASED
+  START_ADOPTION
+  GET_ADOPTION
+  SET_ADOPTION
+
+  CREATE_PET
+  UPDATE_PET
+  DELETE_PET
+
+  CREATE_BREED
+  UPDATE_BREED
+  DELETE_BREED
+
+  CREATE_SPECIES
+  UPDATE_SPECIES
+  DELETE_SPECIES
 }
