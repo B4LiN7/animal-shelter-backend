@@ -10,6 +10,6 @@ export class UpdateBreedDto {
   description: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   speciesId: string;
 }
