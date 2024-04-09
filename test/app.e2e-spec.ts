@@ -3,13 +3,11 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { PrismaExceptionFilter } from 'src/prisma/exception/prisma.exception';
-import * as CookieParser from 'cookie-parser';
 import * as process from 'process';
 import { SpeciesType } from '../src/species/type/species.type';
 
 describe('App (e2e)', () => {
   let app: INestApplication;
-  let agent: request.SuperTest<request.Test>;
   process.env.DATABASE_URL =
     'postgresql://postgres:postgres@localhost:5432/shelter-test';
 
@@ -26,14 +24,11 @@ describe('App (e2e)', () => {
         whitelist: true,
       }),
     );
-    app.use(CookieParser());
 
     await app.init();
-
-    agent = request.agent(app.getHttpServer());
   });
 
-  it('should reach root ( / ) reachable)', () => {
+  it('should reach root)', () => {
     return request(app.getHttpServer()).get('/').expect(200);
   });
 
@@ -78,9 +73,9 @@ describe('App (e2e)', () => {
   });
 
   describe('/user endpoints', () => {
-    it('should return all users (admin and test)', async () => {
+    it('should return all users', async () => {
       const token = await loginUser();
-      return agent
+      return request(app.getHttpServer())
         .get('/user')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200)
@@ -90,7 +85,7 @@ describe('App (e2e)', () => {
     });
     it('should return only the test user (logged in user)', async () => {
       const token = await loginUser('test');
-      return agent
+      return request(app.getHttpServer())
         .get('/user/me')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200)
@@ -100,18 +95,54 @@ describe('App (e2e)', () => {
     });
     it('should throw and unauthorized error', async () => {
       const token = await loginUser('test');
-      return agent
+      return request(app.getHttpServer())
         .get('/user')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(403);
     });
     it('should modify the test user (logged in user)', async () => {
       const token = await loginUser('test');
-      return agent
+      return request(app.getHttpServer())
         .put('/user/me')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send({ password: 'password2' })
         .expect(200);
+    });
+  });
+
+  describe('/location endpoints', () => {
+    it('should get the user locations which is zero', async () => {
+      const tokens = await loginUser();
+      return request(app.getHttpServer())
+        .get('/location/my')
+        .set('Authorization', `Bearer ${tokens.refreshToken}`)
+        .expect(404);
+    });
+    it('should add a location to user', async () => {
+      const tokens = await loginUser();
+      await request(app.getHttpServer())
+        .post('/location/my')
+        .set('Authorization', `Bearer ${tokens.accessToken}`)
+        .send({
+          name: 'test',
+          description: 'test',
+          country: 'test',
+          city: 'test',
+          zipCode: 1234,
+          address: 'test',
+          addressExtra: 'test',
+        })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('locationId');
+        });
+      return request(app.getHttpServer())
+        .get('/location/my')
+        .set('Authorization', `Bearer ${tokens.accessToken}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveLength(1);
+        });
     });
   });
 
@@ -120,9 +151,9 @@ describe('App (e2e)', () => {
       return request(app.getHttpServer()).get('/pet').expect(200).expect([]);
     });
     it('should add a pet', async () => {
-      const breedIds = await addBreeds(agent);
+      const breedIds = await addBreeds();
       const token = await loginUser();
-      return agent
+      const createdPet = await request(app.getHttpServer())
         .post('/pet')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
@@ -136,33 +167,69 @@ describe('App (e2e)', () => {
         .expect((res) => {
           expect(res.body).toHaveProperty('petId');
         });
+      return request(app.getHttpServer())
+        .get(`/pet/${createdPet.body.petId}`)
+        .expect(200);
+    });
+    it('should return all pets', async () => {
+      const token = await loginUser();
+      const breedIds = await request(app.getHttpServer())
+        .get('/breed')
+        .expect(200)
+        .then((res) => {
+          return res.body.map((breed: any) => breed.breedId);
+        });
+      await request(app.getHttpServer())
+        .post('/pet')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send({
+          name: 'test',
+          breedId: getRandomElement(breedIds),
+          description: 'test',
+          sex: 'MALE',
+          birthDate: '2020-01-01T00:00:00.000Z',
+        })
+        .expect(201);
+      return request(app.getHttpServer())
+        .get('/pet')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveLength(2);
+        });
     });
   });
 
   // Helper functions
-
   async function loginUser(
     username: string = 'admin',
     password: string = 'password',
+    verbose: boolean = false,
   ) {
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ username: username, password: password })
-      .expect(200);
+      .expect((res) => {
+        if (verbose) {
+          console.log(
+            `Login response from /auth/login (username: ${username}, password: ${password}):\n${JSON.stringify(res.body)}`,
+          );
+        }
+        expect(res.body).toHaveProperty('access_token');
+        expect(res.body).toHaveProperty('refresh_token');
+      });
     return {
       accessToken: response.body.access_token,
       refreshToken: response.body.refresh_token,
     };
   }
-
   async function addBreeds(
-    agent: request.SuperTest<request.Test>,
     breedNumber: number = 1,
     speciesNumber: number = 1,
   ): Promise<string[]> {
     const token = await loginUser();
     for (let i = 0; i < speciesNumber; i++) {
-      await agent
+      await request(app.getHttpServer())
         .post('/species')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
@@ -171,7 +238,7 @@ describe('App (e2e)', () => {
         })
         .expect(201);
     }
-    const speciesIds = await agent
+    const speciesIds = await request(app.getHttpServer())
       .get('/species')
       .set('Authorization', `Bearer ${token.accessToken}`)
       .expect(200)
@@ -179,7 +246,7 @@ describe('App (e2e)', () => {
         return res.body.map((species: SpeciesType) => species.speciesId);
       });
     for (let i = 0; i < breedNumber; i++) {
-      await agent
+      await request(app.getHttpServer())
         .post('/breed')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
@@ -189,7 +256,7 @@ describe('App (e2e)', () => {
         })
         .expect(201);
     }
-    return await agent
+    return await request(app.getHttpServer())
       .get('/breed')
       .set('Authorization', `Bearer ${token.accessToken}`)
       .expect(200)
@@ -197,7 +264,6 @@ describe('App (e2e)', () => {
         return res.body.map((breed: any) => breed.breedId);
       });
   }
-
   function getRandomElement(array: string[]): string {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];

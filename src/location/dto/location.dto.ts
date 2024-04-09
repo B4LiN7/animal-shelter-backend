@@ -37,6 +37,6 @@ export class LocationDto {
   address: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   addressExtra: string;
 }
