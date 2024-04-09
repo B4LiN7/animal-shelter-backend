@@ -10,6 +10,7 @@ import { SpeciesModule } from './species/species.module';
 import { AppController } from './app.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { RoleModule } from './role/role.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RoleModule } from './role/role.module';
       global: true,
       secret: process.env.JWT_SECRET,
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     LocationModule,

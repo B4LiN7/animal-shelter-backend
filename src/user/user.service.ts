@@ -200,8 +200,10 @@ export class UserService {
     newUser.email = dto.email ?? newUser.email;
     newUser.username = dto.username ?? newUser.username;
     newUser.name = dto.name ?? newUser.name;
+
+    let hashedPassword: string = undefined;
     if (dto.password) {
-      newUser.hashedPassword = await this.hashPassword(dto.password);
+      hashedPassword = await this.hashPassword(dto.password);
     }
 
     if (dto.roles) {
@@ -211,11 +213,16 @@ export class UserService {
       }
     }
 
+    delete dto.password;
+    delete dto.roles;
     await this.prisma.user.update({
       where: {
         userId: id,
       },
-      data: newUser,
+      data: {
+        hashedPassword: hashedPassword,
+        ...dto,
+      },
     });
 
     return this.getUser(id);
@@ -306,6 +313,7 @@ export class UserService {
         username: true,
         hashedPassword: true,
         name: true,
+        profileImageUrl: true,
       },
     });
     if (!foundUser) {

@@ -213,7 +213,7 @@ export class AuthService {
   private async makeAccessToken(
     userId: string,
     permissions: Permission[],
-    expire: string = '1m',
+    expire: string = '30m',
   ): Promise<string> {
     const payload = { userId, permissions };
     return await this.jwt.signAsync(payload, {
