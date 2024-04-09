@@ -25,7 +25,7 @@ export class UpdateUserDto {
   email: string;
 
   @IsOptional()
-  @IsEmail()
+  @IsString()
   profileImageUrl: string;
 
   @IsOptional()

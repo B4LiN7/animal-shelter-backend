@@ -45,7 +45,7 @@ export class CreatePetDto {
   birthDate: Date;
 }
 
-function IsDateInPast() {
+export function IsDateInPast() {
   return function (object: NonNullable<unknown>, propertyName: string) {
     registerDecorator({
       name: 'isDateInPast',

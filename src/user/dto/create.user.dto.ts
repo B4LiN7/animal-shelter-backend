@@ -31,7 +31,7 @@ export class CreateUserDto {
   email: string;
 
   @IsOptional()
-  @IsEmail()
+  @IsString()
   profileImageUrl: string;
 
   @IsNotEmpty()
