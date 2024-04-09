@@ -35,7 +35,7 @@
 
 #### Defined in
 
-[src/auth/dto/register.dto.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/dto/register.dto.ts#L24)
+[src/auth/dto/register.dto.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/dto/register.dto.ts#L24)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/auth/dto/register.dto.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/dto/register.dto.ts#L28)
+[src/auth/dto/register.dto.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/dto/register.dto.ts#L28)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/auth/dto/register.dto.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/dto/register.dto.ts#L20)
+[src/auth/dto/register.dto.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/dto/register.dto.ts#L20)
 
 ___
 
@@ -65,4 +65,4 @@ ___
 
 #### Defined in
 
-[src/auth/dto/register.dto.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/dto/register.dto.ts#L12)
+[src/auth/dto/register.dto.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/dto/register.dto.ts#L12)

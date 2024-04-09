@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/auth/decorator/permisson.decorator.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/decorator/permisson.decorator.ts#L4)
+[src/auth/decorator/permisson.decorator.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/decorator/permisson.decorator.ts#L4)
 
 ## Functions
 
@@ -40,4 +40,4 @@
 
 #### Defined in
 
-[src/auth/decorator/permisson.decorator.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/decorator/permisson.decorator.ts#L6)
+[src/auth/decorator/permisson.decorator.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/decorator/permisson.decorator.ts#L6)

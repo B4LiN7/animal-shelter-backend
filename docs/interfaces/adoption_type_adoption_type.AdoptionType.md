@@ -22,7 +22,7 @@
 
 #### Defined in
 
-[src/adoption/type/adoption.type.ts:2](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/type/adoption.type.ts#L2)
+[src/adoption/type/adoption.type.ts:2](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/type/adoption.type.ts#L2)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[src/adoption/type/adoption.type.ts:3](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/type/adoption.type.ts#L3)
+[src/adoption/type/adoption.type.ts:3](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/type/adoption.type.ts#L3)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/adoption/type/adoption.type.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/type/adoption.type.ts#L6)
+[src/adoption/type/adoption.type.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/type/adoption.type.ts#L6)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/adoption/type/adoption.type.ts:5](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/type/adoption.type.ts#L5)
+[src/adoption/type/adoption.type.ts:5](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/type/adoption.type.ts#L5)
 
 ___
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-[src/adoption/type/adoption.type.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/type/adoption.type.ts#L4)
+[src/adoption/type/adoption.type.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/type/adoption.type.ts#L4)

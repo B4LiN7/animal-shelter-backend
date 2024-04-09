@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/media/media.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/media/media.service.ts#L10)
+[src/media/media.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L10)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/media/media.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/media/media.service.ts#L10)
+[src/media/media.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L10)
 
 ## Methods
 
@@ -74,7 +74,7 @@ Serve media files
 
 #### Defined in
 
-[src/media/media.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/media/media.service.ts#L20)
+[src/media/media.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L20)
 
 ___
 
@@ -98,7 +98,7 @@ Upload file
 
 #### Defined in
 
-[src/media/media.service.ts:81](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/media/media.service.ts#L81)
+[src/media/media.service.ts:81](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L81)
 
 ___
 
@@ -121,7 +121,7 @@ Upload files
 
 #### Defined in
 
-[src/media/media.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/media/media.service.ts#L37)
+[src/media/media.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L37)
 
 ___
 
@@ -146,4 +146,4 @@ Upload single file
 
 #### Defined in
 
-[src/media/media.service.ts:67](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/media/media.service.ts#L67)
+[src/media/media.service.ts:67](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L67)

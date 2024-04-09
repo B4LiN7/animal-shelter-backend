@@ -58,7 +58,7 @@ PassportStrategy(
 
 #### Defined in
 
-[src/auth/strategy/access-cookie.strategy.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/access-cookie.strategy.ts#L17)
+[src/auth/strategy/access-cookie.strategy.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/access-cookie.strategy.ts#L17)
 
 ## Properties
 
@@ -68,7 +68,7 @@ PassportStrategy(
 
 #### Defined in
 
-[src/auth/strategy/access-cookie.strategy.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/access-cookie.strategy.ts#L19)
+[src/auth/strategy/access-cookie.strategy.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/access-cookie.strategy.ts#L19)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[src/auth/strategy/access-cookie.strategy.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/access-cookie.strategy.ts#L18)
+[src/auth/strategy/access-cookie.strategy.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/access-cookie.strategy.ts#L18)
 
 ## Methods
 
@@ -353,4 +353,4 @@ ___
 
 #### Defined in
 
-[src/auth/strategy/access-cookie.strategy.ts:30](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/access-cookie.strategy.ts#L30)
+[src/auth/strategy/access-cookie.strategy.ts:30](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/access-cookie.strategy.ts#L30)

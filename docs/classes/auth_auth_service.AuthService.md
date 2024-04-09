@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/auth/auth.service.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L15)
+[src/auth/auth.service.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L15)
 
 ## Properties
 
@@ -59,7 +59,7 @@
 
 #### Defined in
 
-[src/auth/auth.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L17)
+[src/auth/auth.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L17)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.service.ts:16](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L16)
+[src/auth/auth.service.ts:16](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L16)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.service.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L18)
+[src/auth/auth.service.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L18)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.service.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L19)
+[src/auth/auth.service.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L19)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L20)
+[src/auth/auth.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L20)
 
 ## Methods
 
@@ -123,7 +123,7 @@ Logs in the user and sets the token cookie
 
 #### Defined in
 
-[src/auth/auth.service.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L31)
+[src/auth/auth.service.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L31)
 
 ___
 
@@ -145,7 +145,7 @@ Logs out the user by clearing the token cookie
 
 #### Defined in
 
-[src/auth/auth.service.ts:187](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L187)
+[src/auth/auth.service.ts:187](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L187)
 
 ___
 
@@ -171,7 +171,7 @@ The access token
 
 #### Defined in
 
-[src/auth/auth.service.ts:213](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L213)
+[src/auth/auth.service.ts:213](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L213)
 
 ___
 
@@ -196,7 +196,7 @@ The refresh token
 
 #### Defined in
 
-[src/auth/auth.service.ts:230](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L230)
+[src/auth/auth.service.ts:230](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L230)
 
 ___
 
@@ -217,7 +217,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.service.ts:133](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L133)
+[src/auth/auth.service.ts:133](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L133)
 
 ___
 
@@ -241,4 +241,4 @@ Registers a new user
 
 #### Defined in
 
-[src/auth/auth.service.ts:89](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.service.ts#L89)
+[src/auth/auth.service.ts:89](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.service.ts#L89)

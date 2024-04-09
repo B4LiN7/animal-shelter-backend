@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[src/location/location.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L24)
+[src/location/location.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L24)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/location/location.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L24)
+[src/location/location.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L24)
 
 ## Methods
 
@@ -73,7 +73,7 @@
 
 #### Defined in
 
-[src/location/location.controller.ts:66](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L66)
+[src/location/location.controller.ts:66](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L66)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:32](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L32)
+[src/location/location.controller.ts:32](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L32)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:52](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L52)
+[src/location/location.controller.ts:52](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L52)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L60)
+[src/location/location.controller.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L60)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:42](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L42)
+[src/location/location.controller.ts:42](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L42)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L28)
+[src/location/location.controller.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L28)
 
 ___
 
@@ -189,4 +189,4 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:47](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.controller.ts#L47)
+[src/location/location.controller.ts:47](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L47)

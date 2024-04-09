@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[src/pet/pet.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L20)
+[src/pet/pet.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L20)
 
 ## Properties
 
@@ -53,7 +53,7 @@
 
 #### Defined in
 
-[src/pet/pet.service.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L22)
+[src/pet/pet.service.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L22)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/pet/pet.service.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L21)
+[src/pet/pet.service.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L21)
 
 ## Methods
 
@@ -87,7 +87,7 @@ Create a new pet
 
 #### Defined in
 
-[src/pet/pet.service.ts:56](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L56)
+[src/pet/pet.service.ts:56](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L56)
 
 ___
 
@@ -111,7 +111,7 @@ The deleted pet, adoptions and statuses
 
 #### Defined in
 
-[src/pet/pet.service.ts:154](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L154)
+[src/pet/pet.service.ts:154](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L154)
 
 ___
 
@@ -135,7 +135,7 @@ Get all pets
 
 #### Defined in
 
-[src/pet/pet.service.ts:30](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L30)
+[src/pet/pet.service.ts:30](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L30)
 
 ___
 
@@ -159,7 +159,7 @@ Get a pet by ID
 
 #### Defined in
 
-[src/pet/pet.service.ts:47](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L47)
+[src/pet/pet.service.ts:47](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L47)
 
 ___
 
@@ -183,7 +183,7 @@ Get the status history of a pet
 
 #### Defined in
 
-[src/pet/pet.service.ts:163](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L163)
+[src/pet/pet.service.ts:163](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L163)
 
 ___
 
@@ -208,4 +208,4 @@ Update a pet
 
 #### Defined in
 
-[src/pet/pet.service.ts:89](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/pet.service.ts#L89)
+[src/pet/pet.service.ts:89](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L89)

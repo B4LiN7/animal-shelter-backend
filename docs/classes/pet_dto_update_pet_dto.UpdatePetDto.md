@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:36](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L36)
+[src/pet/dto/update.pet.dto.ts:38](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L38)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L21)
+[src/pet/dto/update.pet.dto.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L22)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L12)
+[src/pet/dto/update.pet.dto.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L13)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L17)
+[src/pet/dto/update.pet.dto.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L18)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L8)
+[src/pet/dto/update.pet.dto.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L9)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L26)
+[src/pet/dto/update.pet.dto.ts:27](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L27)
 
 ___
 
@@ -98,4 +98,4 @@ ___
 
 #### Defined in
 
-[src/pet/dto/update.pet.dto.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/dto/update.pet.dto.ts#L31)
+[src/pet/dto/update.pet.dto.ts:32](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/update.pet.dto.ts#L32)

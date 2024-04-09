@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L11)
+[src/pet/type/pet.type.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L11)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L13)
+[src/pet/type/pet.type.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L13)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:5](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L5)
+[src/pet/type/pet.type.ts:5](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L5)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L8)
+[src/pet/type/pet.type.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L8)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L9)
+[src/pet/type/pet.type.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L9)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:7](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L7)
+[src/pet/type/pet.type.ts:7](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L7)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L4)
+[src/pet/type/pet.type.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L4)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L10)
+[src/pet/type/pet.type.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L10)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L12)
+[src/pet/type/pet.type.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L12)
 
 ___
 
@@ -117,4 +117,4 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet.type.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet.type.ts#L6)
+[src/pet/type/pet.type.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet.type.ts#L6)

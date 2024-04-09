@@ -13,7 +13,6 @@
 ### Properties
 
 - [prisma](location_location_service.LocationService.md#prisma)
-- [userHelper](location_location_service.LocationService.md#userhelper)
 
 ### Methods
 
@@ -29,14 +28,13 @@
 
 ### constructor
 
-• **new LocationService**(`prisma`, `userHelper`): [`LocationService`](location_location_service.LocationService.md)
+• **new LocationService**(`prisma`): [`LocationService`](location_location_service.LocationService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `prisma` | [`PrismaService`](prisma_prisma_service.PrismaService.md) |
-| `userHelper` | [`UserHelperService`](user_user_helper_service.UserHelperService.md) |
 
 #### Returns
 
@@ -44,7 +42,7 @@
 
 #### Defined in
 
-[src/location/location.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L9)
+[src/location/location.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L8)
 
 ## Properties
 
@@ -54,17 +52,7 @@
 
 #### Defined in
 
-[src/location/location.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L10)
-
-___
-
-### userHelper
-
-• `Private` **userHelper**: [`UserHelperService`](user_user_helper_service.UserHelperService.md)
-
-#### Defined in
-
-[src/location/location.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L11)
+[src/location/location.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L8)
 
 ## Methods
 
@@ -84,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:50](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L50)
+[src/location/location.service.ts:46](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L46)
 
 ___
 
@@ -105,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:27](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L27)
+[src/location/location.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L23)
 
 ___
 
@@ -125,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:69](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L69)
+[src/location/location.service.ts:65](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L65)
 
 ___
 
@@ -139,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:38](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L38)
+[src/location/location.service.ts:34](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L34)
 
 ___
 
@@ -159,7 +147,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:42](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L42)
+[src/location/location.service.ts:38](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L38)
 
 ___
 
@@ -179,7 +167,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L14)
+[src/location/location.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L10)
 
 ___
 
@@ -200,4 +188,4 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:58](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/location/location.service.ts#L58)
+[src/location/location.service.ts:54](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L54)

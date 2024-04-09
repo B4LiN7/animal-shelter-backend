@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L17)
+[src/adoption/adoption.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L17)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L17)
+[src/adoption/adoption.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L17)
 
 ## Methods
 
@@ -75,7 +75,7 @@ Finish the adoption process for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:105](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L105)
+[src/adoption/adoption.service.ts:105](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L105)
 
 ___
 
@@ -97,7 +97,7 @@ Get the adoption process
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L60)
+[src/adoption/adoption.service.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L60)
 
 ___
 
@@ -113,7 +113,7 @@ Get all adoption processes
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L23)
+[src/adoption/adoption.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L23)
 
 ___
 
@@ -136,7 +136,7 @@ Get the adoption status for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L37)
+[src/adoption/adoption.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L37)
 
 ___
 
@@ -160,7 +160,7 @@ Set the adoption status for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:143](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L143)
+[src/adoption/adoption.service.ts:143](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L143)
 
 ___
 
@@ -183,7 +183,7 @@ Set the adoption process for a pet (for admin or shelter worker only)
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:126](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L126)
+[src/adoption/adoption.service.ts:126](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L126)
 
 ___
 
@@ -206,4 +206,4 @@ Start the adoption process for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:77](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/adoption/adoption.service.ts#L77)
+[src/adoption/adoption.service.ts:77](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L77)

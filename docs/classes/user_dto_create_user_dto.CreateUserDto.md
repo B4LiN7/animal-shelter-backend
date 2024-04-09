@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[src/user/dto/create.user.dto.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/user/dto/create.user.dto.ts#L31)
+[src/user/dto/create.user.dto.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/dto/create.user.dto.ts#L31)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/user/dto/create.user.dto.ts:27](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/user/dto/create.user.dto.ts#L27)
+[src/user/dto/create.user.dto.ts:27](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/dto/create.user.dto.ts#L27)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/user/dto/create.user.dto.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/user/dto/create.user.dto.ts#L23)
+[src/user/dto/create.user.dto.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/dto/create.user.dto.ts#L23)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/user/dto/create.user.dto.ts:35](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/user/dto/create.user.dto.ts#L35)
+[src/user/dto/create.user.dto.ts:35](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/dto/create.user.dto.ts#L35)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/user/dto/create.user.dto.ts:46](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/user/dto/create.user.dto.ts#L46)
+[src/user/dto/create.user.dto.ts:46](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/dto/create.user.dto.ts#L46)
 
 ___
 
@@ -87,4 +87,4 @@ ___
 
 #### Defined in
 
-[src/user/dto/create.user.dto.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/user/dto/create.user.dto.ts#L15)
+[src/user/dto/create.user.dto.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/dto/create.user.dto.ts#L15)

@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[src/prisma/seed.ts:483](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/prisma/seed.ts#L483)
+[src/prisma/seed.ts:483](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/seed.ts#L483)

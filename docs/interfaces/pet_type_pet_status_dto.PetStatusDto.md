@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/pet/type/pet-status.dto.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet-status.dto.ts#L4)
+[src/pet/type/pet-status.dto.ts:4](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet-status.dto.ts#L4)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet-status.dto.ts:2](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet-status.dto.ts#L2)
+[src/pet/type/pet-status.dto.ts:2](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet-status.dto.ts#L2)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[src/pet/type/pet-status.dto.ts:3](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/pet/type/pet-status.dto.ts#L3)
+[src/pet/type/pet-status.dto.ts:3](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/type/pet-status.dto.ts#L3)

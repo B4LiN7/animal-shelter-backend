@@ -49,7 +49,7 @@ PassportStrategy(
 
 #### Defined in
 
-[src/auth/strategy/refresh-cookie.strategy.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/refresh-cookie.strategy.ts#L13)
+[src/auth/strategy/refresh-cookie.strategy.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/refresh-cookie.strategy.ts#L13)
 
 ## Properties
 
@@ -323,4 +323,4 @@ ___
 
 #### Defined in
 
-[src/auth/strategy/refresh-cookie.strategy.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/refresh-cookie.strategy.ts#L23)
+[src/auth/strategy/refresh-cookie.strategy.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/refresh-cookie.strategy.ts#L23)

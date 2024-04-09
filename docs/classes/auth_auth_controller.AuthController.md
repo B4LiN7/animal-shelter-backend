@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/auth/auth.controller.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.controller.ts#L19)
+[src/auth/auth.controller.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.controller.ts#L19)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/auth/auth.controller.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.controller.ts#L19)
+[src/auth/auth.controller.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.controller.ts#L19)
 
 ## Methods
 
@@ -71,7 +71,7 @@
 
 #### Defined in
 
-[src/auth/auth.controller.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.controller.ts#L23)
+[src/auth/auth.controller.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.controller.ts#L23)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.controller.ts:50](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.controller.ts#L50)
+[src/auth/auth.controller.ts:50](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.controller.ts#L50)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[src/auth/auth.controller.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.controller.ts#L43)
+[src/auth/auth.controller.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.controller.ts#L43)
 
 ___
 
@@ -134,4 +134,4 @@ ___
 
 #### Defined in
 
-[src/auth/auth.controller.ts:32](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/auth.controller.ts#L32)
+[src/auth/auth.controller.ts:32](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/auth.controller.ts#L32)

@@ -49,7 +49,7 @@ PassportStrategy(
 
 #### Defined in
 
-[src/auth/strategy/refresh-token.strategy.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/refresh-token.strategy.ts#L14)
+[src/auth/strategy/refresh-token.strategy.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/refresh-token.strategy.ts#L14)
 
 ## Properties
 
@@ -324,4 +324,4 @@ ___
 
 #### Defined in
 
-[src/auth/strategy/refresh-token.strategy.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/strategy/refresh-token.strategy.ts#L22)
+[src/auth/strategy/refresh-token.strategy.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/strategy/refresh-token.strategy.ts#L22)

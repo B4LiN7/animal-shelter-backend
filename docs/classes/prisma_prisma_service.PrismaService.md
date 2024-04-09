@@ -74,7 +74,7 @@ PrismaClient.constructor
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/prisma/prisma.service.ts#L6)
+[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L6)
 
 ## Properties
 
@@ -88,7 +88,7 @@ PrismaClient.$extends
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:273
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:270
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/prisma/prisma.service.ts#L6)
+[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L6)
 
 ## Accessors
 
@@ -123,7 +123,7 @@ PrismaClient.adoption
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:323
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:320
 
 ___
 
@@ -148,7 +148,7 @@ PrismaClient.breed
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:303
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:300
 
 ___
 
@@ -173,7 +173,7 @@ PrismaClient.location
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:353
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:350
 
 ___
 
@@ -198,7 +198,7 @@ PrismaClient.pet
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:283
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:280
 
 ___
 
@@ -223,7 +223,7 @@ PrismaClient.petStatus
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:293
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:290
 
 ___
 
@@ -248,7 +248,7 @@ PrismaClient.role
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:373
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:370
 
 ___
 
@@ -273,7 +273,7 @@ PrismaClient.species
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:313
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:310
 
 ___
 
@@ -298,7 +298,7 @@ PrismaClient.user
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:333
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:330
 
 ___
 
@@ -323,7 +323,7 @@ PrismaClient.userLogin
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:343
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:340
 
 ___
 
@@ -348,7 +348,7 @@ PrismaClient.userRole
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:363
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:360
 
 ## Methods
 
@@ -368,7 +368,7 @@ PrismaClient.$connect
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:195
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:192
 
 ___
 
@@ -388,7 +388,7 @@ PrismaClient.$disconnect
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:200
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:197
 
 ___
 
@@ -429,7 +429,7 @@ PrismaClient.$executeRaw
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:218
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:215
 
 ___
 
@@ -471,7 +471,7 @@ PrismaClient.$executeRawUnsafe
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:230
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:227
 
 ___
 
@@ -502,7 +502,7 @@ PrismaClient.$on
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:190
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:187
 
 ___
 
@@ -543,7 +543,7 @@ PrismaClient.$queryRaw
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:241
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:238
 
 ___
 
@@ -585,7 +585,7 @@ PrismaClient.$queryRawUnsafe
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:253
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:250
 
 ___
 
@@ -631,7 +631,7 @@ PrismaClient.$transaction
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:268
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:265
 
 ▸ **$transaction**\<`R`\>(`fn`, `options?`): `Promise`\<`R`\>
 
@@ -661,7 +661,7 @@ PrismaClient.$transaction
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:270
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:267
 
 ___
 
@@ -695,7 +695,7 @@ PrismaClient.$use
 
 #### Defined in
 
-node_modules/.pnpm/@prisma+client@5.12.0_prisma@5.12.0/node_modules/.prisma/client/index.d.ts:207
+node_modules/.pnpm/@prisma+client@5.12.1_prisma@5.12.1/node_modules/.prisma/client/index.d.ts:204
 
 ___
 
@@ -709,7 +709,7 @@ ___
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/prisma/prisma.service.ts#L20)
+[src/prisma/prisma.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L20)
 
 ___
 
@@ -727,4 +727,4 @@ OnModuleInit.onModuleInit
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/prisma/prisma.service.ts#L11)
+[src/prisma/prisma.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L11)

@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[src/role/role.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L8)
+[src/role/role.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L8)
 
 ## Properties
 
@@ -57,7 +57,7 @@
 
 #### Defined in
 
-[src/role/role.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L8)
+[src/role/role.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L8)
 
 ## Methods
 
@@ -77,7 +77,7 @@
 
 #### Defined in
 
-[src/role/role.service.ts:102](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L102)
+[src/role/role.service.ts:102](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L102)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:78](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L78)
+[src/role/role.service.ts:78](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L78)
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L11)
+[src/role/role.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L11)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:45](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L45)
+[src/role/role.service.ts:45](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L45)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:54](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L54)
+[src/role/role.service.ts:54](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L54)
 
 ___
 
@@ -178,7 +178,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L19)
+[src/role/role.service.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L19)
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L26)
+[src/role/role.service.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L26)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:16](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L16)
+[src/role/role.service.ts:16](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L16)
 
 ___
 
@@ -232,7 +232,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:115](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L115)
+[src/role/role.service.ts:115](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L115)
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:90](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L90)
+[src/role/role.service.ts:90](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L90)
 
 ___
 
@@ -274,7 +274,7 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:66](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L66)
+[src/role/role.service.ts:66](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L66)
 
 ___
 
@@ -295,4 +295,4 @@ ___
 
 #### Defined in
 
-[src/role/role.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/role/role.service.ts#L37)
+[src/role/role.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/role.service.ts#L37)

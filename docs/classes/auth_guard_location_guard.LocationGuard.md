@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/guard/location.guard.ts#L20)
+[src/auth/guard/location.guard.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L20)
 
 ## Properties
 
@@ -54,7 +54,7 @@
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/guard/location.guard.ts#L22)
+[src/auth/guard/location.guard.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L22)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/guard/location.guard.ts#L21)
+[src/auth/guard/location.guard.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L21)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/guard/location.guard.ts#L23)
+[src/auth/guard/location.guard.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L23)
 
 ## Methods
 
@@ -98,4 +98,4 @@ CanActivate.canActivate
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/5a6ce9f/src/auth/guard/location.guard.ts#L28)
+[src/auth/guard/location.guard.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L28)
