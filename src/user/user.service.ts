@@ -196,11 +196,6 @@ export class UserService {
       throw new BadRequestException('User with this username already exists');
     }
 
-    // Update only the fields that are given in the dto
-    newUser.email = dto.email ?? newUser.email;
-    newUser.username = dto.username ?? newUser.username;
-    newUser.name = dto.name ?? newUser.name;
-
     let hashedPassword: string = undefined;
     if (dto.password) {
       hashedPassword = await this.hashPassword(dto.password);
