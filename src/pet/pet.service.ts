@@ -6,13 +6,13 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePetDto } from './dto/create.pet.dto';
 import { UpdatePetDto } from './dto/update.pet.dto';
-import { PetHelperService } from './pet.helper.service';
+import { PetHelperService } from './pet-helper.service';
 import { SearchPetDto } from './dto/search.pet.dto';
 import { PetType } from './type/pet.type';
 import { PetStatusDto } from './type/pet-status.dto';
 import {
-  PetStatusEnum as Status,
   AdoptionStatusEnum as AdoptionStatus,
+  PetStatusEnum as Status,
 } from '@prisma/client';
 
 @Injectable()
@@ -29,12 +29,7 @@ export class PetService {
    */
   async getAllPets(search?: SearchPetDto): Promise<PetType[]> {
     if (search) {
-      const foundPets = await this.petHelper.getPetsBySearch(search);
-      return Promise.all(
-        foundPets.map(async (pet) => {
-          return await this.petHelper.getPetWithLatestStatus(pet.petId);
-        }),
-      );
+      return await this.petHelper.getPetsBySearch(search);
     }
     return await this.petHelper.getPetsWithLatestStatus();
   }
@@ -87,16 +82,16 @@ export class PetService {
    * @returns {Promise<PetType>} - The updated pet
    */
   async updatePet(id: string, dto: UpdatePetDto): Promise<PetType> {
-    const { status, ...newPet } = dto;
+    const { status, ...pet } = dto;
 
     const existingPet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });
     if (
       !existingPet &&
-      (newPet.breedId === undefined ||
-        newPet.birthDate === undefined ||
-        newPet.sex === undefined)
+      (pet.breedId === undefined ||
+        pet.birthDate === undefined ||
+        pet.sex === undefined)
     ) {
       throw new BadRequestException(
         `Pet with ID ${id} does not exist, try to create a new pet, breedId or/and birthDate is missing`,
@@ -120,11 +115,17 @@ export class PetService {
         },
       });
     }
+    // TODO: Check if the pet is adopted and the status change is not ADOPTED
+    else if (pendingAdoption && status !== Status.ADOPTED) {
+      throw new BadRequestException(
+        `Pet with ID ${id} has been adopted, to modify status change or delete the adoption status first.`,
+      );
+    }
 
     await this.prisma.pet.update({
       where: { petId: id },
       data: {
-        ...newPet,
+        ...pet,
       },
     });
 

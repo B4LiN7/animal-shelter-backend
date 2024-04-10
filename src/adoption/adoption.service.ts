@@ -53,6 +53,21 @@ export class AdoptionService {
   }
 
   /**
+   * Get the pending adoption processes
+   */
+  async getPendingAdoptionProcess() {
+    const adoptions = await this.prisma.adoption.findMany({
+      where: {
+        status: AdoptionStatus.PENDING,
+      },
+    });
+    if (!adoptions) {
+      throw new NotFoundException('No pending adoptions found');
+    }
+    return adoptions;
+  }
+
+  /**
    * Get the adoption process
    * @param adoptionId - The ID of the adoption
    * @returns {Promise<AdoptionType>}

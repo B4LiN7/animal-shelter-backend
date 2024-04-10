@@ -35,6 +35,12 @@ export class AdoptionController {
     return this.adoptionService.getAdoptionProcess(adoptionId);
   }
 
+  @Get('pending')
+  @Permissions(Perm.GET_ADOPTION)
+  getPendingAdoptionProcesses() {
+    return this.adoptionService.getPendingAdoptionProcess();
+  }
+
   @Get('pet/:petId')
   @Permissions(Perm.GET_ADOPTION)
   getAllAdoptionProcessesForPet(@Param('petId') petId: string) {

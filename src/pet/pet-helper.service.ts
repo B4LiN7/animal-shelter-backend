@@ -23,7 +23,7 @@ export class PetHelperService {
    * @param search The search parameters to filter the pets.
    */
   async getPetsBySearch(search: SearchPetDto) {
-    const { status, breed } = search;
+    const { status, breed, name } = search;
     let statusEnum: Status;
     if (status) {
       statusEnum = Status[status.toUpperCase() as keyof typeof Status] ?? null;
@@ -32,12 +32,13 @@ export class PetHelperService {
     const foundPets = pets.filter((pet) => {
       const statusMatch = statusEnum ? pet.status === statusEnum : true;
       const breedMatch = breed ? pet.breedId === breed : true;
-      return statusMatch && breedMatch;
+      const nameMatch = name ? pet.name === name : true;
+      return statusMatch && breedMatch && nameMatch;
     });
 
     if (foundPets.length === 0) {
       throw new NotFoundException(
-        `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breed})`,
+        `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breed}, Name: ${name})`,
       );
     }
     return foundPets;

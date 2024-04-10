@@ -25,7 +25,7 @@ export class PetController {
   /* Anyone can get pets */
   @Get()
   async readAllPets(@Query() dto: SearchPetDto) {
-    if (dto.status || dto.breed) {
+    if (dto.status || dto.breed || dto.name) {
       return this.petService.getAllPets(dto);
     }
     return this.petService.getAllPets();

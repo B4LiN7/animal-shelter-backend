@@ -1,5 +1,4 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class AppController {
@@ -9,10 +8,5 @@ export class AppController {
       message:
         'If you see this message, the server is running correctly (I hope).',
     };
-  }
-
-  @Get('manual')
-  getManual(@Res() res: Response) {
-    res.sendFile('index.html', { root: 'public' });
   }
 }
