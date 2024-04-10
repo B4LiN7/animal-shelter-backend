@@ -48,7 +48,7 @@ export class LocationController {
     return this.locationService.updateLocation(id, dto);
   }
   @Delete(':id')
-  @UseGuards(LocationGuard)
+  @UseGuards(AuthGuard('jwt-access-token'), LocationGuard)
   async deleteLocation(@Param('id') id: string) {
     return this.locationService.deleteLocation(id);
   }

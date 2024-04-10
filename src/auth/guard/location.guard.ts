@@ -3,11 +3,10 @@ import {
   CanActivate,
   ExecutionContext,
   Logger,
-  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PermissionEnum as Perm } from '@prisma/client';
-import { UserHelperService } from 'src/user/user-helper.service';
+import { Request } from 'express';
 
 @Injectable()
 /**
@@ -20,20 +19,15 @@ export class LocationGuard implements CanActivate {
   constructor(
     private prisma: PrismaService,
     private logger: Logger,
-    private userHelper: UserHelperService,
   ) {
     this.logger = new Logger(LocationGuard.name);
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
     const reqUrl = request.url;
     const reqLocationId = request.params.id;
-    const token = await this.userHelper.decodeAccessTokenFromReq(request);
-
-    if (isNaN(reqLocationId)) {
-      throw new BadRequestException('Invalid location ID');
-    }
+    const token = request.user['decodedToken'];
 
     if (token.permissions.includes(Perm.ACCESS_ANY_LOCATION)) {
       this.logger.log(

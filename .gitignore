@@ -1,7 +1,6 @@
-# compiled output
+# Complied and bundled files
 /dist
 /node_modules
-
 /prisma/migrations
 /public/uploads
 

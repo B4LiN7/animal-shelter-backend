@@ -1,19 +1,13 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 import { PermissionEnum as Permission } from '@prisma/client';
-import { AccessTokenType } from '../auth/type/access-token.type';
 
 @Injectable()
 /**
  * The UserHelperService provides helper functions for user-related operations
  */
 export class UserHelperService {
-  constructor(
-    private prisma: PrismaService,
-    private jwt: JwtService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Get all permissions for a user
@@ -97,6 +91,7 @@ export class UserHelperService {
    * Decode the access token from the request
    * @param req - The (Express) Request object
    */
+  /*
   async decodeAccessTokenFromReq(req: Request): Promise<AccessTokenType> {
     const token = req.user['accessToken'];
     if (!token) {
@@ -115,4 +110,5 @@ export class UserHelperService {
 
     return decodedToken;
   }
+  */
 }

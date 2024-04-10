@@ -4,7 +4,6 @@ import {
   ExecutionContext,
   Logger,
 } from '@nestjs/common';
-import { UserHelperService } from 'src/user/user-helper.service';
 import { PermissionEnum as Perm } from '@prisma/client';
 
 @Injectable()
@@ -15,10 +14,7 @@ import { PermissionEnum as Perm } from '@prisma/client';
  * - The user is the owner of the resource
  */
 export class UserGuard implements CanActivate {
-  constructor(
-    private logger: Logger,
-    private userHelper: UserHelperService,
-  ) {
+  constructor(private logger: Logger) {
     this.logger = new Logger(UserGuard.name);
   }
 
@@ -27,7 +23,7 @@ export class UserGuard implements CanActivate {
     const requestedUrl = request.url;
     const reqUserId = request.params.id;
 
-    const token = await this.userHelper.decodeAccessTokenFromReq(request);
+    const token = request.user['decodedToken'];
 
     if (!reqUserId) {
       // Disable logging this because it's too verbose

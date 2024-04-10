@@ -1,6 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserHelperService } from '../../user/user-helper.service';
 import { PermissionEnum as Permission } from '@prisma/client';
 import { PERMISSION_KEY } from '../decorator/permisson.decorator';
 
@@ -10,10 +9,7 @@ import { PERMISSION_KEY } from '../decorator/permisson.decorator';
  * If undefined (not given), the user can access the resource.
  */
 export class PermissionGuard implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    private userHelper: UserHelperService,
-  ) {}
+  constructor(private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredPermissions: Permission[] = this.reflector.get<Permission[]>(
@@ -26,7 +22,7 @@ export class PermissionGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = await this.userHelper.decodeAccessTokenFromReq(request);
+    const token = request.user['decodedToken'];
     const userPermissions = token.permissions;
 
     // return requiredPermissions.some((perm) => userPermissions.includes(perm)); // If only one permission is required

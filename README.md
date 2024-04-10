@@ -134,3 +134,22 @@ status: Status enum in string,
 - DELETE /:id
 - GET status/:id 
   - (Elözmények lekérdezése a pet-hez)
+
+### Adoption (/adoption)
+```
+adoptionId: string,
+petId: string,
+userId: string,
+status: string,
+reason: string
+```
+- GET /
+  - Összes adoptálási folyamat 
+- GET /:id
+  - Egy adoptálási folyamat adatai 
+- POST /pet/:id
+  - Felhasználó elinditja az adoptálási folyamatot
+- DELETE /pet/:id
+  - Felhasználó megszakítja az adoptálási folyamatot
+- PUT /:id
+  - SET_ADOPTION engedéllyek rendelkező felhasználó módosithatja az adoptálási folyamatot
