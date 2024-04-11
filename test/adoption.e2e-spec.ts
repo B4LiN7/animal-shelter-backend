@@ -1,0 +1,187 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import * as request from 'supertest';
+import { AppModule } from 'src/app.module';
+import * as process from 'process';
+import { SpeciesType } from '../src/species/type/species.type';
+
+describe('Adoption (e2e)', () => {
+  let app: INestApplication;
+  process.env.DATABASE_URL =
+    'postgresql://postgres:postgres@localhost:5432/shelter-test';
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+      }),
+    );
+
+    await app.init();
+  });
+
+  afterAll(async () => {
+    const token = await loginUser();
+
+    const adoptions = await request(app.getHttpServer())
+      .get('/adoption')
+      .set('Authorization', `Bearer ${token.accessToken}`);
+    for (const adoption of adoptions.body) {
+      await request(app.getHttpServer())
+        .delete(`/adoption/${adoption.adoptionId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+    }
+
+    const species = await request(app.getHttpServer())
+      .get('/species')
+      .set('Authorization', `Bearer ${token.accessToken}`);
+    for (const specie of species.body) {
+      await request(app.getHttpServer())
+        .delete(`/species/${specie.speciesId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+    }
+
+    const breeds = await request(app.getHttpServer())
+      .get('/breed');
+    for (const breed of breeds.body) {
+      await request(app.getHttpServer())
+        .delete(`/breed/${breed.breedId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+    }
+
+    const pets = await request(app.getHttpServer())
+      .get('/pet');
+    for (const pet of pets.body) {
+      await request(app.getHttpServer())
+        .delete(`/pet/${pet.petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+    }
+  });
+
+  describe('/adoption endpoints', () => {
+    it('should return nothing', async () => {
+      const token = await loginUser();
+      return request(app.getHttpServer())
+        .get('/adoption')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200)
+        .expect([]);
+    });
+
+    it('should make an adoption', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      const response = await request(app.getHttpServer())
+        .post('/adoption/pet/${petId}')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect((res) => {
+          console.log(res.body);
+          expect(res.body).toHaveProperty('petId');
+        });
+    });
+  });
+
+  // Helper functions
+  async function loginUser(
+    username: string = 'admin',
+    password: string = 'password',
+  ) {
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ username: username, password: password })
+      .expect((res) => {
+        expect(res.body).toHaveProperty('access_token');
+        expect(res.body).toHaveProperty('refresh_token');
+      });
+    return {
+      accessToken: response.body.access_token,
+      refreshToken: response.body.refresh_token,
+    };
+  }
+  async function makeUser(username: string) {
+    const registeredUser = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({ username: username, password: 'password' })
+      .expect(201);
+    return {
+      accessToken: registeredUser.body.access_token,
+      refreshToken: registeredUser.body.refresh_token,
+    };
+  }
+
+  async function getPet() {
+    const token = await loginUser();
+    const breedIds = await getBreeds();
+    const response = await request(app.getHttpServer())
+      .post('/pet')
+      .set('Authorization', `Bearer ${token.accessToken}`)
+      .send({
+        name: 'test',
+        breedId: getRandomElement(breedIds),
+        sex: 'FEMALE',
+        birthDate: '2020-01-01T00:00:00.000Z',
+        description: 'test',
+      })
+      .expect(201);
+    return response.body.petId;
+  }
+  async function getBreeds(
+    breedNumber: number = 1,
+    speciesNumber: number = 1,
+  ): Promise<string[]> {
+    const token = await loginUser();
+    for (let i = 0; i < speciesNumber; i++) {
+      await request(app.getHttpServer())
+        .post('/species')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send({
+          name: Math.random().toString(),
+          description: Math.random().toString(),
+        })
+        .expect(201);
+    }
+    const speciesIds = await request(app.getHttpServer())
+      .get('/species')
+      .set('Authorization', `Bearer ${token.accessToken}`)
+      .expect(200)
+      .then((res) => {
+        return res.body.map((species: SpeciesType) => species.speciesId);
+      });
+    for (let i = 0; i < breedNumber; i++) {
+      await request(app.getHttpServer())
+        .post('/breed')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send({
+          name: Math.random().toString(),
+          description: Math.random().toString(),
+          speciesId: getRandomElement(speciesIds),
+        })
+        .expect(201);
+    }
+    return await request(app.getHttpServer())
+      .get('/breed')
+      .set('Authorization', `Bearer ${token.accessToken}`)
+      .expect(200)
+      .then((res) => {
+        return res.body.map((breed: any) => breed.breedId);
+      });
+  }
+  function getRandomElement(array: string[]): string {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+  }
+});
+function except(arg0: (res: any) => void) {
+  throw new Error('Function not implemented.');
+}
+

@@ -70,7 +70,7 @@ export class AuthService {
     });
 
     this.logger.log(
-      `User '${foundUser.userId}' logged in from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
+      `User ${foundUser.userId} logged in from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
     res.json({
@@ -101,6 +101,9 @@ export class AuthService {
       username: newUsername,
       ...dto,
     } as CreateUserDto);
+
+    return this.login({ username: newUsername, password: dto.password }, req, res);
+   /*
     const permissions = await this.userHelper.getUserAllPermissions(
       newUser.userId,
     );
@@ -120,7 +123,7 @@ export class AuthService {
     });
 
     this.logger.log(
-      `User '${newUser.userId}' created (and logged in) from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
+      `User ${newUser.userId} created (and logged in) from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
     );
 
     res.json({
@@ -128,6 +131,7 @@ export class AuthService {
       access_token: accessToken,
       refresh_token: refreshToken,
     });
+    */
   }
 
   async refresh(req: Request, res: Response) {

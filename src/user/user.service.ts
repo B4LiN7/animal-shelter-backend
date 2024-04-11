@@ -167,7 +167,7 @@ export class UserService {
     );
 
     this.logger.log(
-      `User with user ID '${newUser.userId}' and username '${newUser.username}' has been created`,
+      `User ${newUser.userId} created with username '${newUser.username}' has been created`,
     );
 
     return this.getUser(newUser.userId);
