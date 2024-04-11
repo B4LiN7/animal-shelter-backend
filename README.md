@@ -147,9 +147,13 @@ reason: string
   - Összes adoptálási folyamat 
 - GET /:id
   - Egy adoptálási folyamat adatai 
-- POST /pet/:id
+- GET /:petId/pending
+  - Fúggöben lévő adoptálási folyamat lekérdezése a pet-hez
+- POST /pet/:petId
   - Felhasználó elinditja az adoptálási folyamatot
-- DELETE /pet/:id
+- DELETE /pet/:petId
   - Felhasználó megszakítja az adoptálási folyamatot
-- PUT /:id
+- PUT /
   - SET_ADOPTION engedéllyek rendelkező felhasználó módosithatja az adoptálási folyamatot
+- DELETE /:adoptionId
+  - SET_ADOPTION engedéllyek rendelkező felhasználó törölheti az adoptálási folyamatot

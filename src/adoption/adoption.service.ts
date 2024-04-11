@@ -146,12 +146,14 @@ export class AdoptionService {
         adoptionId: adoptionId,
       },
     });
-    await this.prisma.petStatus.create({
-      data: {
-        petId: deletedAdoption.petId,
-        status: Status.UNKNOWN,
-      },
-    });
+    if (deletedAdoption.status === AdoptionStatus.APPROVED) {
+      await this.prisma.petStatus.create({
+        data: {
+          petId: deletedAdoption.petId,
+          status: Status.UNKNOWN,
+        },
+      });
+    }
     return deletedAdoption;
   }
 
