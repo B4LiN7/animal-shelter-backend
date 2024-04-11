@@ -85,6 +85,27 @@ export class AdoptionService {
   }
 
   /**
+   * Get the adoption process for the user
+   * @param req - The Request object for userId
+   */
+  async getMyAdoptionProcess(req: Request): Promise<AdoptionType[]> {
+    const token = req.user['decodedToken'];
+    const userId = token.userId;
+
+    const adoptions = await this.prisma.adoption.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+    if (!adoptions) {
+      throw new NotFoundException(
+        `No adoptions found for user with ID ${userId}`,
+      );
+    }
+    return adoptions;
+  }
+
+  /**
    * Start the adoption process for a pet
    * @param petId - The ID of the pet
    * @param req - The Request object for userId

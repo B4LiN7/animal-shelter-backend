@@ -200,6 +200,17 @@ describe('App (e2e)', () => {
     });
   });
 
+  describe('/adoption endpoints', () => {
+    it('should return nothing', async () => {
+      const token = await loginUser();
+      return request(app.getHttpServer())
+        .get('/adoption')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200)
+        .expect([]);
+    });
+  });
+
   // Helper functions
   async function loginUser(
     username: string = 'admin',
@@ -223,6 +234,34 @@ describe('App (e2e)', () => {
       refreshToken: response.body.refresh_token,
     };
   }
+  async function makeUser(username: string) {
+    const registeredUser = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({ username: username, password: 'password' })
+      .expect(201);
+    return {
+      accessToken: registeredUser.body.access_token,
+      refreshToken: registeredUser.body.refresh_token,
+    };
+  }
+  async function getPet() {
+    const token = await loginUser();
+    const breedIds = await addBreeds();
+    return request(app.getHttpServer())
+      .post('/pet')
+      .set('Authorization', `Bearer ${token.accessToken}`)
+      .send({
+        name: 'test',
+        breedId: getRandomElement(breedIds),
+        sex: 'FEMALE',
+        birthDate: '2020-01-01T00:00:00.000Z',
+        description: 'test',
+      })
+      .expect(201)
+      .expect((res) => {
+        return res.body;
+      });
+  }
   async function addBreeds(
     breedNumber: number = 1,
     speciesNumber: number = 1,
@@ -233,8 +272,8 @@ describe('App (e2e)', () => {
         .post('/species')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
-          name: `test_species_${i}`,
-          description: `test_description_${i}`,
+          name: Math.random().toString(),
+          description: Math.random().toString(),
         })
         .expect(201);
     }
@@ -250,8 +289,8 @@ describe('App (e2e)', () => {
         .post('/breed')
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
-          name: `test_breed_${i}`,
-          description: `test_description_${i}`,
+          name: Math.random().toString(),
+          description: Math.random().toString(),
           speciesId: getRandomElement(speciesIds),
         })
         .expect(201);

@@ -53,6 +53,12 @@ export class AdoptionController {
     return this.adoptionService.getAllAdoptionProcessesForPet(petId, true);
   }
 
+  @Get('my')
+  @Permissions(Perm.START_ADOPTION)
+  getMyAdoptionProcesses(@Req() req: Request) {
+    return this.adoptionService.getMyAdoptionProcess(req);
+  }
+
   @Post('pet/:petId')
   @Permissions(Perm.START_ADOPTION)
   startAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
