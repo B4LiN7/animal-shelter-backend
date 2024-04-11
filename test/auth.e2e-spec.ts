@@ -4,7 +4,6 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import * as process from 'process';
 
-
 describe('Auth, user and location (e2e)', () => {
   let app: INestApplication;
   process.env.DATABASE_URL =
@@ -32,10 +31,12 @@ describe('Auth, user and location (e2e)', () => {
       .get('/user')
       .set('Authorization', `Bearer ${token.accessToken}`);
     for (const user of users.body) {
-      if (user.username === 'admin') { continue; }
+      if (user.username === 'admin') {
+        continue;
+      }
       await request(app.getHttpServer())
         .delete(`/user/${user.userId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
+        .set('Authorization', `Bearer ${token.accessToken}`);
     }
   });
 

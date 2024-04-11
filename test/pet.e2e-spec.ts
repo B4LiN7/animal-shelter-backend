@@ -32,32 +32,35 @@ describe('Pet, breed and species (e2e)', () => {
     const species = await request(app.getHttpServer())
       .get('/species')
       .set('Authorization', `Bearer ${token.accessToken}`);
-    for (const specie of species.body) {
-      await request(app.getHttpServer())
-        .delete(`/species/${specie.speciesId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
+    if (species.body.length > 0) {
+      for (const specie of species.body) {
+        await request(app.getHttpServer())
+          .delete(`/species/${specie.speciesId}`)
+          .set('Authorization', `Bearer ${token.accessToken}`)
+          .expect(200);
+      }
     }
 
-    const breeds = await request(app.getHttpServer())
-      .get('/breed');
-    for (const breed of breeds.body) {
-      await request(app.getHttpServer())
-        .delete(`/breed/${breed.breedId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
+    const breeds = await request(app.getHttpServer()).get('/breed');
+    if (breeds.body.length > 0) {
+      for (const breed of breeds.body) {
+        await request(app.getHttpServer())
+          .delete(`/breed/${breed.breedId}`)
+          .set('Authorization', `Bearer ${token.accessToken}`)
+          .expect(200);
+      }
     }
 
-    const pets = await request(app.getHttpServer())
-      .get('/pet');
-    for (const pet of pets.body) {
-      await request(app.getHttpServer())
-        .delete(`/pet/${pet.petId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
+    const pets = await request(app.getHttpServer()).get('/pet');
+    if (pets.body.length > 0) {
+      for (const pet of pets.body) {
+        await request(app.getHttpServer())
+          .delete(`/pet/${pet.petId}`)
+          .set('Authorization', `Bearer ${token.accessToken}`)
+          .expect(200);
+      }
     }
   });
-
 
   describe('/pet endpoints', () => {
     it('should return nothing', () => {
@@ -88,6 +91,7 @@ describe('Pet, breed and species (e2e)', () => {
 
     it('should return all pets', async () => {
       const token = await loginUser();
+      await addBreeds(1, 1);
       const breedIds = await request(app.getHttpServer())
         .get('/breed')
         .expect(200)
@@ -110,12 +114,10 @@ describe('Pet, breed and species (e2e)', () => {
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200)
         .expect((res) => {
-          expect(res.body).toContain(addedPet.body);
+          expect(res.body).toContainEqual(addedPet.body);
         });
     });
   });
-
-
 
   // Helper functions
   async function loginUser(

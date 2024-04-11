@@ -35,36 +35,34 @@ describe('Adoption (e2e)', () => {
     for (const adoption of adoptions.body) {
       await request(app.getHttpServer())
         .delete(`/adoption/${adoption.adoptionId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
+        .set('Authorization', `Bearer ${token.accessToken}`);
+    }
+
+    const pets = await request(app.getHttpServer()).get('/pet');
+    for (const pet of pets.body) {
+      await request(app.getHttpServer())
+        .delete(`/pet/${pet.petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`);
+    }
+
+    const breeds = await request(app.getHttpServer()).get('/breed');
+    if (breeds.body.length > 0) {
+      for (const breed of breeds.body) {
+        await request(app.getHttpServer())
+          .delete(`/breed/${breed.breedId}`)
+          .set('Authorization', `Bearer ${token.accessToken}`);
+      }
     }
 
     const species = await request(app.getHttpServer())
       .get('/species')
       .set('Authorization', `Bearer ${token.accessToken}`);
-    for (const specie of species.body) {
-      await request(app.getHttpServer())
-        .delete(`/species/${specie.speciesId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
-    }
-
-    const breeds = await request(app.getHttpServer())
-      .get('/breed');
-    for (const breed of breeds.body) {
-      await request(app.getHttpServer())
-        .delete(`/breed/${breed.breedId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
-    }
-
-    const pets = await request(app.getHttpServer())
-      .get('/pet');
-    for (const pet of pets.body) {
-      await request(app.getHttpServer())
-        .delete(`/pet/${pet.petId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(200);
+    if (species.body.length > 0) {
+      for (const specie of species.body) {
+        await request(app.getHttpServer())
+          .delete(`/species/${specie.speciesId}`)
+          .set('Authorization', `Bearer ${token.accessToken}`);
+      }
     }
   });
 
@@ -81,11 +79,11 @@ describe('Adoption (e2e)', () => {
     it('should make an adoption', async () => {
       const token = await loginUser();
       const petId = await getPet();
-      const response = await request(app.getHttpServer())
-        .post('/adoption/pet/${petId}')
+      return request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
         .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(201)
         .expect((res) => {
-          console.log(res.body);
           expect(res.body).toHaveProperty('petId');
         });
     });
@@ -184,4 +182,3 @@ describe('Adoption (e2e)', () => {
 function except(arg0: (res: any) => void) {
   throw new Error('Function not implemented.');
 }
-
