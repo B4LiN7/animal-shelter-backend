@@ -147,7 +147,7 @@ export class AdoptionService {
    * Modify the adoption process. This can be used to approve or reject the adoption (You can cancel and start it, but it's not recommended)
    * @param dto - The adoption DTO
    */
-  async modifyTheAdoption(dto: UpdateAdoptionDto) {
+  async modifyTheAdoption(dto: UpdateAdoptionDto): Promise<AdoptionType> {
     const dto2: UpdateAdoptionDto = {
       petId: dto.petId,
       userId: dto.userId,
@@ -161,7 +161,7 @@ export class AdoptionService {
    * Delete the adoption process and set the pet status to unknown
    * @param adoptionId - The ID of the adoption
    */
-  async deleteAdoptionProcess(adoptionId: string) {
+  async deleteAdoptionProcess(adoptionId: string): Promise<AdoptionType> {
     const deletedAdoption = await this.prisma.adoption.delete({
       where: {
         adoptionId: adoptionId,

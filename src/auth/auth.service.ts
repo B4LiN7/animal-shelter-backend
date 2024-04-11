@@ -103,37 +103,13 @@ export class AuthService {
     } as CreateUserDto);
 
     return this.login({ username: newUsername, password: dto.password }, req, res);
-   /*
-    const permissions = await this.userHelper.getUserAllPermissions(
-      newUser.userId,
-    );
-
-    const accessToken = await this.makeAccessToken(newUser.userId, permissions);
-    const refreshToken = await this.makeRefreshToken(newUser.userId);
-
-    const decodedRefreshToken = await this.jwt.decode(refreshToken);
-    const loginHistory = await this.prisma.userLogin.create({
-      data: {
-        userId: newUser.userId,
-        refreshToken: refreshToken,
-        expireAt: new Date(decodedRefreshToken.exp),
-        ipAddress: req.ip,
-        userAgent: req.headers['user-agent'],
-      },
-    });
-
-    this.logger.log(
-      `User ${newUser.userId} created (and logged in) from IP ${loginHistory.ipAddress} and user agent '${loginHistory.userAgent}'`,
-    );
-
-    res.json({
-      message: `User '${newUser.username}' (ID: ${newUser.userId}) created`,
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    });
-    */
   }
 
+  /**
+   * Refreshes the user's access and refresh tokens
+   * @param req - Request object
+   * @param res - Response object
+   */
   async refresh(req: Request, res: Response) {
     const refreshToken = req.user['refreshToken'];
     if (!refreshToken) {
@@ -217,7 +193,7 @@ export class AuthService {
   private async makeAccessToken(
     userId: string,
     permissions: Permission[],
-    expire: string = '30m',
+    expire: string = '10m',
   ): Promise<string> {
     const payload = { userId, permissions };
     return await this.jwt.signAsync(payload, {
