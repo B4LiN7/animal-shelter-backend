@@ -65,13 +65,16 @@ export class AdoptionController {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
   }
 
-  @Put(':adoptionId')
+  @Put()
   @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
-  setAdoptionProcess(
-    @Param('adoptionId') adoptionId: string,
-    @Body() dto: UpdateAdoptionDto,
-  ) {
-    return this.adoptionService.setAdoptionProcess(adoptionId, dto);
+  setAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
+    return this.adoptionService.modifyTheAdoption(dto);
+  }
+
+  @Delete(':adoptionId')
+  @Permissions(Perm.SET_ADOPTION)
+  deleteAdoptionProcess(@Param('adoptionId') adoptionId: string) {
+    return this.adoptionService.deleteAdoptionProcess(adoptionId);
   }
 }

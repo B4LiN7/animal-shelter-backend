@@ -100,23 +100,32 @@ export class PetService {
       return await this.createPet(dto);
     }
 
-    const pendingAdoption = await this.prisma.adoption.findFirst({
-      where: { petId: id, status: AdoptionStatus.PENDING },
+    const petAdoptions = await this.prisma.adoption.findMany({
+      where: {
+        petId: id,
+        status: { in: [AdoptionStatus.PENDING, AdoptionStatus.APPROVED] },
+      },
     });
+    const runningAdoptionForPet = petAdoptions.find(
+      (adoption) => adoption.status === AdoptionStatus.PENDING,
+    );
+    const adoptedPet = petAdoptions.find(
+      (adoption) => adoption.status === AdoptionStatus.APPROVED,
+    );
+
     if (
-      pendingAdoption &&
+      runningAdoptionForPet &&
       (status === Status.ILL || status === Status.DECEASED)
     ) {
       await this.prisma.adoption.update({
-        where: { adoptionId: pendingAdoption.adoptionId },
+        where: { adoptionId: runningAdoptionForPet.adoptionId },
         data: {
-          status: AdoptionStatus.CANCELLED,
-          reason: `The adoption automatically cancelled because '${existingPet?.name}' is ${status}.`,
+          status: AdoptionStatus.REJECTED,
+          reason: `The adoption automatically rejected because '${existingPet?.name}' is ${status}.`,
         },
       });
     }
-    // TODO: Check if the pet is adopted and the status change is not ADOPTED
-    else if (pendingAdoption && status !== Status.ADOPTED) {
+    if (adoptedPet && status !== Status.ADOPTED) {
       throw new BadRequestException(
         `Pet with ID ${id} has been adopted, to modify status change or delete the adoption status first.`,
       );

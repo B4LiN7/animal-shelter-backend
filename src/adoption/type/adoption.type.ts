@@ -1,7 +1,9 @@
+import { AdoptionStatusEnum as AdoptionStatus } from '@prisma/client';
+
 export interface AdoptionType {
   adoptionId: string;
   petId: string;
   userId: string;
-  status: string;
+  status: AdoptionStatus;
   reason: string;
 }

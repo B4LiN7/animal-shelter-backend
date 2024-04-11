@@ -111,7 +111,7 @@ export class PetHelperService {
 
     return {
       deletedPet,
-      deletedAdoptions,
+      deletedAdoptions: deletedAdoptions.count,
       deletedStatuses: deletedStatuses.count,
     };
   }
