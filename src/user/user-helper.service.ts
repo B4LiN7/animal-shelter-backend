@@ -86,29 +86,4 @@ export class UserHelperService {
       },
     });
   }
-
-  /**
-   * Decode the access token from the request
-   * @param req - The (Express) Request object
-   */
-  /*
-  async decodeAccessTokenFromReq(req: Request): Promise<AccessTokenType> {
-    const token = req.user['accessToken'];
-    if (!token) {
-      throw new ForbiddenException('No token provided. Please log in.');
-    }
-
-    const tokenParts = token.split('.');
-    if (tokenParts.length !== 3) {
-      throw new ForbiddenException('Invalid token format. Please log in.');
-    }
-
-    const decodedToken = await this.jwt.verifyAsync(token);
-    if (!decodedToken) {
-      throw new ForbiddenException('Invalid token. Please log in.');
-    }
-
-    return decodedToken;
-  }
-  */
 }

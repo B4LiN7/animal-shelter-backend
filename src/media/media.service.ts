@@ -3,11 +3,17 @@ import { Response } from 'express';
 import * as path from 'path';
 import { writeFile } from 'fs/promises';
 import { MediaUploadResType } from './type/response.type';
-import { existsSync } from 'fs';
+import { existsSync, readdir } from 'fs';
+import { unlink } from 'fs/promises';
+import { Cron } from '@nestjs/schedule';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MediaService {
-  constructor(private logger: Logger) {
+  constructor(
+    private prisma: PrismaService,
+    private logger: Logger,
+  ) {
     this.logger = new Logger(MediaService.name);
   }
 
@@ -121,5 +127,88 @@ export class MediaService {
         message: `Error uploading file: ${err}`,
       };
     }
+  }
+
+  @Cron('0 0 * * *')
+  /**
+   * Clear unused files every day at midnight
+   */
+  async clearUnusedFiles() {
+    const directory = path.resolve('public', 'uploads');
+    const fileLinks = await this.getFileLinksInDB(true);
+    const filesInDirectory = await this.getFilesInDirectory(directory);
+
+    const notUsedFiles = filesInDirectory.filter(
+      (file) => !fileLinks.includes(file),
+    );
+
+    for (const file of notUsedFiles) {
+      const filePath = path.join(directory, file);
+      this.logger.log(`Removing unused files...`);
+      await this.removeFile(filePath);
+    }
+  }
+
+  /**
+   * Remove file
+   * @param filePath - path of the file to remove
+   */
+  async removeFile(filePath: string): Promise<void> {
+    try {
+      await unlink(filePath);
+      this.logger.log(`File removed: ${filePath}`);
+    } catch (err) {
+      this.logger.error(`Error removing file: ${filePath}, Error: ${err}`);
+    }
+  }
+
+  /**
+   * Get files in directory
+   * @param directory - directory to get files from
+   */
+  async getFilesInDirectory(directory: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      readdir(directory, (err, files) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(files);
+        }
+      });
+    });
+  }
+
+  /**
+   * Get file links in the database
+   * @param formatToUploadsFolderContext - format the links to the uploads folder context (default: false) - if true, the links will be formatted to the uploads folder context (just file names)
+   */
+  async getFileLinksInDB(
+    formatToUploadsFolderContext: boolean = false,
+  ): Promise<string[]> {
+    const linksInDB: string[] = [];
+
+    const petImages = await this.prisma.pet.findMany({
+      select: {
+        imageUrls: true,
+      },
+    });
+    for (const pet of petImages) {
+      if (pet.imageUrls) linksInDB.push(...pet.imageUrls);
+    }
+
+    const userImages = await this.prisma.user.findMany({
+      select: {
+        profileImageUrl: true,
+      },
+    });
+    for (const user of userImages) {
+      if (user.profileImageUrl) linksInDB.push(user.profileImageUrl);
+    }
+
+    if (formatToUploadsFolderContext) {
+      return linksInDB.map((link) => link.replace('/media/uploads/', ''));
+    }
+
+    return linksInDB;
   }
 }

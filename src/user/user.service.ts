@@ -185,13 +185,13 @@ export class UserService {
     dto: UpdateUserDto,
     req: Request,
   ): Promise<UserType> {
-    const newUser = await this.getRawUser(id);
+    const newUser = await this.getUser(id);
 
     // Check if the new username is given or already used by another user
     if (
       dto.username &&
       newUser.username !== dto.username &&
-      (await this.isUserExists(dto.username))
+      (await this.isUsernameExists(dto.username))
     ) {
       throw new BadRequestException('User with this username already exists');
     }
@@ -298,25 +298,6 @@ export class UserService {
     }
   }
 
-  private async getRawUser(id: string) {
-    const foundUser = await this.prisma.user.findUnique({
-      where: {
-        userId: id,
-      },
-      select: {
-        email: true,
-        username: true,
-        hashedPassword: true,
-        name: true,
-        profileImageUrl: true,
-      },
-    });
-    if (!foundUser) {
-      throw new BadRequestException('User with this ID does not exist');
-    }
-    return foundUser;
-  }
-
   /**
    * Hashes a password using bcrypt
    * @param password - The password to hash
@@ -328,11 +309,11 @@ export class UserService {
   }
 
   /**
-   * Checks if a user exists in the database
+   * Checks if a user exists in the database by username
    * @param username - The username to check (string)
    * @returns {Promise<boolean>} - True if the user exists, false otherwise
    */
-  private async isUserExists(username: string): Promise<boolean> {
+  private async isUsernameExists(username: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
       where: { username: username },
     });
