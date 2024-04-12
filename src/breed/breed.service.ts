@@ -14,9 +14,9 @@ export class BreedService {
    */
   async getAllBreeds(): Promise<BreedType[]> {
     const breeds = await this.prisma.breed.findMany();
-    if (breeds.length === 0) {
+    /*if (breeds.length === 0) {
       throw new NotFoundException('No breeds found');
-    }
+    }*/
     return breeds;
   }
 

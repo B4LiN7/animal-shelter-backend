@@ -32,13 +32,13 @@ export class PetHelperService {
     const foundPets = pets.filter((pet) => {
       const statusMatch = statusEnum ? pet.status === statusEnum : true;
       const breedMatch = breed ? pet.breedId === breed : true;
-      const nameMatch = name ? pet.name === name : true;
+      const nameMatch = name ? pet.name.toLocaleLowerCase().includes(name.toLocaleLowerCase()) : true;
       return statusMatch && breedMatch && nameMatch;
     });
 
     if (foundPets.length === 0) {
       throw new NotFoundException(
-        `No pets found with the given search parameters (Status: ${statusEnum}, Breed: ${breed}, Name: ${name})`,
+        `No pets found with the given search parameters (${status ? `Status: ${statusEnum} ` : ''}${ breed ? `Breed: ${breed} ` : ''}${ name ? `Name: ${name}` : ''})`,
       );
     }
     return foundPets;

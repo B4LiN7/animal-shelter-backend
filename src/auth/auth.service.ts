@@ -44,7 +44,7 @@ export class AuthService {
     );
     if (!isPasswordMatch) {
       this.logger.log(
-        `Wrong password given for user '${foundUser.userId}' from IP address ${req.ip} and user agent '${req.headers['user-agent']}'`,
+        `Wrong password given for user ${foundUser.userId} from IP address ${req.ip} and user agent '${req.headers['user-agent']}'`,
       );
       throw new BadRequestException('Wrong credentials');
     }
@@ -97,12 +97,16 @@ export class AuthService {
     }
 
     delete dto.username;
-    const newUser = await this.user.createUser({
+    await this.user.createUser({
       username: newUsername,
       ...dto,
     } as CreateUserDto);
 
-    return this.login({ username: newUsername, password: dto.password }, req, res);
+    return this.login(
+      { username: newUsername, password: dto.password },
+      req,
+      res,
+    );
   }
 
   /**

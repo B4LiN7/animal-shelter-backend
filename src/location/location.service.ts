@@ -14,9 +14,9 @@ export class LocationService {
         userId: token.userId,
       },
     });
-    if (myLocations.length === 0) {
+    /*if (myLocations.length === 0) {
       throw new NotFoundException(`You don't have any locations, yet.`);
-    }
+    }*/
     return myLocations;
   }
 

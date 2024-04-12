@@ -14,9 +14,9 @@ export class SpeciesService {
    */
   async getAllSpecies(): Promise<SpeciesType[]> {
     const species = await this.prisma.species.findMany();
-    if (species.length === 0) {
+    /*if (species.length === 0) {
       throw new NotFoundException('No species in the database');
-    }
+    }*/
     return species;
   }
 
