@@ -12,13 +12,11 @@
 
 ### Properties
 
-- [jwt](user_user_helper_service.UserHelperService.md#jwt)
 - [prisma](user_user_helper_service.UserHelperService.md#prisma)
 
 ### Methods
 
 - [addRoleToUser](user_user_helper_service.UserHelperService.md#addroletouser)
-- [decodeAccessTokenFromReq](user_user_helper_service.UserHelperService.md#decodeaccesstokenfromreq)
 - [getUserAllPermissions](user_user_helper_service.UserHelperService.md#getuserallpermissions)
 - [getUserRoleNames](user_user_helper_service.UserHelperService.md#getuserrolenames)
 - [removeRoleFromUser](user_user_helper_service.UserHelperService.md#removerolefromuser)
@@ -27,14 +25,13 @@
 
 ### constructor
 
-• **new UserHelperService**(`prisma`, `jwt`): [`UserHelperService`](user_user_helper_service.UserHelperService.md)
+• **new UserHelperService**(`prisma`): [`UserHelperService`](user_user_helper_service.UserHelperService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `prisma` | [`PrismaService`](prisma_prisma_service.PrismaService.md) |
-| `jwt` | `JwtService` |
 
 #### Returns
 
@@ -42,19 +39,9 @@
 
 #### Defined in
 
-[src/user/user-helper.service.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L13)
+[src/user/user-helper.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user-helper.service.ts#L10)
 
 ## Properties
-
-### jwt
-
-• `Private` **jwt**: `JwtService`
-
-#### Defined in
-
-[src/user/user-helper.service.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L15)
-
-___
 
 ### prisma
 
@@ -62,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/user/user-helper.service.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L14)
+[src/user/user-helper.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user-helper.service.ts#L10)
 
 ## Methods
 
@@ -85,29 +72,7 @@ Add a role to a user
 
 #### Defined in
 
-[src/user/user-helper.service.ts:65](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L65)
-
-___
-
-### decodeAccessTokenFromReq
-
-▸ **decodeAccessTokenFromReq**(`req`): `Promise`\<[`AccessTokenType`](../interfaces/auth_type_access_token_type.AccessTokenType.md)\>
-
-Decode the access token from the request
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `req` | `Request`\<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`\<`string`, `any`\>\> | The (Express) Request object |
-
-#### Returns
-
-`Promise`\<[`AccessTokenType`](../interfaces/auth_type_access_token_type.AccessTokenType.md)\>
-
-#### Defined in
-
-[src/user/user-helper.service.ts:100](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L100)
+[src/user/user-helper.service.ts:59](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user-helper.service.ts#L59)
 
 ___
 
@@ -131,7 +96,7 @@ Get all permissions for a user
 
 #### Defined in
 
-[src/user/user-helper.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L23)
+[src/user/user-helper.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user-helper.service.ts#L17)
 
 ___
 
@@ -155,7 +120,7 @@ Get all roles' name for a user
 
 #### Defined in
 
-[src/user/user-helper.service.ts:48](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L48)
+[src/user/user-helper.service.ts:42](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user-helper.service.ts#L42)
 
 ___
 
@@ -178,4 +143,4 @@ Remove a role from a user
 
 #### Defined in
 
-[src/user/user-helper.service.ts:87](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user-helper.service.ts#L87)
+[src/user/user-helper.service.ts:81](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user-helper.service.ts#L81)

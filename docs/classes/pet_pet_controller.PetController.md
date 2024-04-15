@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[src/pet/pet.controller.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L23)
+[src/pet/pet.controller.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L23)
 
 ## Properties
 
@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[src/pet/pet.controller.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L23)
+[src/pet/pet.controller.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L23)
 
 ## Methods
 
@@ -71,13 +71,13 @@
 
 #### Defined in
 
-[src/pet/pet.controller.ts:41](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L41)
+[src/pet/pet.controller.ts:41](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L41)
 
 ___
 
 ### deletePet
 
-▸ **deletePet**(`id`): `Promise`\<\{ `deletedAdoptions`: `BatchPayload` ; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
+▸ **deletePet**(`id`): `Promise`\<\{ `deletedAdoptions`: `number` = deletedAdoptions.count; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
 
 #### Parameters
 
@@ -87,11 +87,11 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `deletedAdoptions`: `BatchPayload` ; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
+`Promise`\<\{ `deletedAdoptions`: `number` = deletedAdoptions.count; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
 
 #### Defined in
 
-[src/pet/pet.controller.ts:55](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L55)
+[src/pet/pet.controller.ts:55](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L55)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/pet/pet.controller.ts:27](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L27)
+[src/pet/pet.controller.ts:27](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L27)
 
 ___
 
@@ -131,13 +131,13 @@ ___
 
 #### Defined in
 
-[src/pet/pet.controller.ts:34](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L34)
+[src/pet/pet.controller.ts:34](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L34)
 
 ___
 
 ### readPetStatus
 
-▸ **readPetStatus**(`id`): `Promise`\<[`PetStatusDto`](../interfaces/pet_type_pet_status_dto.PetStatusDto.md)[]\>
+▸ **readPetStatus**(`id`): `Promise`\<[`PetStatusType`](../interfaces/pet_type_pet_status_type.PetStatusType.md)[]\>
 
 #### Parameters
 
@@ -147,11 +147,11 @@ ___
 
 #### Returns
 
-`Promise`\<[`PetStatusDto`](../interfaces/pet_type_pet_status_dto.PetStatusDto.md)[]\>
+`Promise`\<[`PetStatusType`](../interfaces/pet_type_pet_status_type.PetStatusType.md)[]\>
 
 #### Defined in
 
-[src/pet/pet.controller.ts:62](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L62)
+[src/pet/pet.controller.ts:62](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L62)
 
 ___
 
@@ -172,4 +172,4 @@ ___
 
 #### Defined in
 
-[src/pet/pet.controller.ts:48](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.controller.ts#L48)
+[src/pet/pet.controller.ts:48](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.controller.ts#L48)

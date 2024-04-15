@@ -1,12 +1,6 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 
-export class LocationDto {
+export class UpdateLocationDto {
   @IsOptional()
   @IsString()
   userId: string;
@@ -15,7 +9,7 @@ export class LocationDto {
   @IsString()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   country: string;
 
@@ -23,16 +17,16 @@ export class LocationDto {
   @IsString()
   state: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   city: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @IsPositive()
   zipCode: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   address: string;
 

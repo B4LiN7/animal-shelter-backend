@@ -18,7 +18,6 @@
 
 - [logger](auth_guard_location_guard.LocationGuard.md#logger)
 - [prisma](auth_guard_location_guard.LocationGuard.md#prisma)
-- [userHelper](auth_guard_location_guard.LocationGuard.md#userhelper)
 
 ### Methods
 
@@ -28,7 +27,7 @@
 
 ### constructor
 
-• **new LocationGuard**(`prisma`, `logger`, `userHelper`): [`LocationGuard`](auth_guard_location_guard.LocationGuard.md)
+• **new LocationGuard**(`prisma`, `logger`): [`LocationGuard`](auth_guard_location_guard.LocationGuard.md)
 
 #### Parameters
 
@@ -36,7 +35,6 @@
 | :------ | :------ |
 | `prisma` | [`PrismaService`](prisma_prisma_service.PrismaService.md) |
 | `logger` | `Logger` |
-| `userHelper` | [`UserHelperService`](user_user_helper_service.UserHelperService.md) |
 
 #### Returns
 
@@ -44,7 +42,7 @@
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L20)
+[src/auth/guard/location.guard.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/location.guard.ts#L19)
 
 ## Properties
 
@@ -54,7 +52,7 @@
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L22)
+[src/auth/guard/location.guard.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/location.guard.ts#L21)
 
 ___
 
@@ -64,17 +62,7 @@ ___
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L21)
-
-___
-
-### userHelper
-
-• `Private` **userHelper**: [`UserHelperService`](user_user_helper_service.UserHelperService.md)
-
-#### Defined in
-
-[src/auth/guard/location.guard.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L23)
+[src/auth/guard/location.guard.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/location.guard.ts#L20)
 
 ## Methods
 
@@ -98,4 +86,4 @@ CanActivate.canActivate
 
 #### Defined in
 
-[src/auth/guard/location.guard.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/location.guard.ts#L28)
+[src/auth/guard/location.guard.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/location.guard.ts#L26)

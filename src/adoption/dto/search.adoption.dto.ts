@@ -1,11 +1,16 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { AdoptionStatusEnum as AdoptionStatus } from '@prisma/client';
 
 export class SearchAdoptionDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   petId?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   userId?: string;
+
+  @IsEnum(AdoptionStatus)
+  @IsOptional()
+  status?: AdoptionStatus;
 }

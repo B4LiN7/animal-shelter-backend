@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[src/pet/pet.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L20)
+[src/pet/pet.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L20)
 
 ## Properties
 
@@ -53,7 +53,7 @@
 
 #### Defined in
 
-[src/pet/pet.service.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L22)
+[src/pet/pet.service.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L22)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/pet/pet.service.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L21)
+[src/pet/pet.service.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L21)
 
 ## Methods
 
@@ -87,13 +87,13 @@ Create a new pet
 
 #### Defined in
 
-[src/pet/pet.service.ts:56](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L56)
+[src/pet/pet.service.ts:51](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L51)
 
 ___
 
 ### deletePet
 
-▸ **deletePet**(`id`): `Promise`\<\{ `deletedAdoptions`: `BatchPayload` ; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
+▸ **deletePet**(`id`): `Promise`\<\{ `deletedAdoptions`: `number` = deletedAdoptions.count; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
 
 Delete a pet
 
@@ -105,13 +105,13 @@ Delete a pet
 
 #### Returns
 
-`Promise`\<\{ `deletedAdoptions`: `BatchPayload` ; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
+`Promise`\<\{ `deletedAdoptions`: `number` = deletedAdoptions.count; `deletedPet`: \{ `birthDate`: `Date` ; `breedId`: `string` ; `createdAt`: `Date` ; `description`: `string` ; `imageUrls`: `string`[] ; `name`: `string` ; `petId`: `string` ; `sex`: `PetSexEnum` ; `updatedAt`: `Date`  } ; `deletedStatuses`: `number` = deletedStatuses.count }\>
 
 The deleted pet, adoptions and statuses
 
 #### Defined in
 
-[src/pet/pet.service.ts:154](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L154)
+[src/pet/pet.service.ts:164](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L164)
 
 ___
 
@@ -135,7 +135,7 @@ Get all pets
 
 #### Defined in
 
-[src/pet/pet.service.ts:30](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L30)
+[src/pet/pet.service.ts:30](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L30)
 
 ___
 
@@ -159,13 +159,13 @@ Get a pet by ID
 
 #### Defined in
 
-[src/pet/pet.service.ts:47](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L47)
+[src/pet/pet.service.ts:42](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L42)
 
 ___
 
 ### getPetStatus
 
-▸ **getPetStatus**(`id`): `Promise`\<[`PetStatusDto`](../interfaces/pet_type_pet_status_dto.PetStatusDto.md)[]\>
+▸ **getPetStatus**(`id`): `Promise`\<[`PetStatusType`](../interfaces/pet_type_pet_status_type.PetStatusType.md)[]\>
 
 Get the status history of a pet
 
@@ -177,13 +177,13 @@ Get the status history of a pet
 
 #### Returns
 
-`Promise`\<[`PetStatusDto`](../interfaces/pet_type_pet_status_dto.PetStatusDto.md)[]\>
+`Promise`\<[`PetStatusType`](../interfaces/pet_type_pet_status_type.PetStatusType.md)[]\>
 
 - The status history of the pet
 
 #### Defined in
 
-[src/pet/pet.service.ts:163](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L163)
+[src/pet/pet.service.ts:173](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L173)
 
 ___
 
@@ -208,4 +208,4 @@ Update a pet
 
 #### Defined in
 
-[src/pet/pet.service.ts:89](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/pet.service.ts#L89)
+[src/pet/pet.service.ts:84](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/pet.service.ts#L84)

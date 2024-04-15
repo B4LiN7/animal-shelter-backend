@@ -9,7 +9,7 @@ import { UpdatePetDto } from './dto/update.pet.dto';
 import { PetHelperService } from './pet-helper.service';
 import { SearchPetDto } from './dto/search.pet.dto';
 import { PetType } from './type/pet.type';
-import { PetStatusDto } from './type/pet-status.dto';
+import { PetStatusType } from './type/pet-status.type';
 import {
   AdoptionStatusEnum as AdoptionStatus,
   PetStatusEnum as Status,
@@ -168,9 +168,9 @@ export class PetService {
   /**
    * Get the status history of a pet
    * @param id - Pet's ID
-   * @returns {Promise<PetStatusDto[]>} - The status history of the pet
+   * @returns {Promise<PetStatusType[]>} - The status history of the pet
    */
-  async getPetStatus(id: string): Promise<PetStatusDto[]> {
+  async getPetStatus(id: string): Promise<PetStatusType[]> {
     return this.prisma.petStatus.findMany({
       where: { petId: id },
       orderBy: { from: 'desc' },

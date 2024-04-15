@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[src/location/location.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L8)
+[src/location/location.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L9)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/location/location.service.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L8)
+[src/location/location.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L9)
 
 ## Methods
 
@@ -64,7 +64,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `dto` | [`LocationDto`](location_dto_location_dto.LocationDto.md) |
+| `dto` | [`CreateLocationDto`](location_dto_create_location_dto.CreateLocationDto.md) |
 
 #### Returns
 
@@ -72,7 +72,7 @@
 
 #### Defined in
 
-[src/location/location.service.ts:46](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L46)
+[src/location/location.service.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L43)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `dto` | [`LocationDto`](location_dto_location_dto.LocationDto.md) |
+| `dto` | [`CreateLocationDto`](location_dto_create_location_dto.CreateLocationDto.md) |
 | `req` | `Request`\<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`\<`string`, `any`\>\> |
 
 #### Returns
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L23)
+[src/location/location.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L20)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:65](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L65)
+[src/location/location.service.ts:62](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L62)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:34](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L34)
+[src/location/location.service.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L31)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:38](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L38)
+[src/location/location.service.ts:35](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L35)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L10)
+[src/location/location.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L11)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `id` | `string` |
-| `dto` | [`LocationDto`](location_dto_location_dto.LocationDto.md) |
+| `dto` | [`UpdateLocationDto`](location_dto_update_location_dto.UpdateLocationDto.md) |
 
 #### Returns
 
@@ -188,4 +188,4 @@ ___
 
 #### Defined in
 
-[src/location/location.service.ts:54](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.service.ts#L54)
+[src/location/location.service.ts:51](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.service.ts#L51)

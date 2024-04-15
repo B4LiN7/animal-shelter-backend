@@ -17,7 +17,6 @@
 ### Properties
 
 - [reflector](auth_guard_permission_guard.PermissionGuard.md#reflector)
-- [userHelper](auth_guard_permission_guard.PermissionGuard.md#userhelper)
 
 ### Methods
 
@@ -27,14 +26,13 @@
 
 ### constructor
 
-• **new PermissionGuard**(`reflector`, `userHelper`): [`PermissionGuard`](auth_guard_permission_guard.PermissionGuard.md)
+• **new PermissionGuard**(`reflector`): [`PermissionGuard`](auth_guard_permission_guard.PermissionGuard.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `reflector` | `Reflector` |
-| `userHelper` | [`UserHelperService`](user_user_helper_service.UserHelperService.md) |
 
 #### Returns
 
@@ -42,7 +40,7 @@
 
 #### Defined in
 
-[src/auth/guard/permission.guard.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/permission.guard.ts#L13)
+[src/auth/guard/permission.guard.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/permission.guard.ts#L12)
 
 ## Properties
 
@@ -52,17 +50,7 @@
 
 #### Defined in
 
-[src/auth/guard/permission.guard.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/permission.guard.ts#L14)
-
-___
-
-### userHelper
-
-• `Private` **userHelper**: [`UserHelperService`](user_user_helper_service.UserHelperService.md)
-
-#### Defined in
-
-[src/auth/guard/permission.guard.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/permission.guard.ts#L15)
+[src/auth/guard/permission.guard.ts:12](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/permission.guard.ts#L12)
 
 ## Methods
 
@@ -86,4 +74,4 @@ CanActivate.canActivate
 
 #### Defined in
 
-[src/auth/guard/permission.guard.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/permission.guard.ts#L18)
+[src/auth/guard/permission.guard.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/permission.guard.ts#L14)

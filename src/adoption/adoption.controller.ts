@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -17,67 +18,53 @@ import { UpdateAdoptionDto } from './dto/update.adoption.dto';
 import { PermissionGuard } from '../auth/guard/permission.guard';
 import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
+import { SearchAdoptionDto } from './dto/search.adoption.dto';
 
 @Controller('adoption')
 @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
 
-  @Get()
-  @Permissions(Perm.GET_ADOPTION)
-  getAllAdoptionProcesses() {
-    return this.adoptionService.getAllAdoptionProcess();
-  }
-
-  @Get(':adoptionId')
-  @Permissions(Perm.GET_ADOPTION)
-  getAdoptionProcesses(@Param('adoptionId') adoptionId: string) {
-    return this.adoptionService.getAdoptionProcess(adoptionId);
-  }
-
-  @Get('pending')
-  @Permissions(Perm.GET_ADOPTION)
-  getPendingAdoptionProcesses() {
-    return this.adoptionService.getPendingAdoptionProcess();
-  }
-
-  @Get('pet/:petId')
-  @Permissions(Perm.GET_ADOPTION)
-  getAllAdoptionProcessesForPet(@Param('petId') petId: string) {
-    return this.adoptionService.getAllAdoptionProcessesForPet(petId);
-  }
-
-  @Get('pet/:petId/pending')
-  @Permissions(Perm.GET_ADOPTION)
-  getAllPendingAdoptionProcessesForPet(@Param('petId') petId: string) {
-    return this.adoptionService.getAllAdoptionProcessesForPet(petId, true);
-  }
-
+  /* For users. Get, start and cancel adoption process */
   @Get('my')
   @Permissions(Perm.START_ADOPTION)
   getMyAdoptionProcesses(@Req() req: Request) {
-    return this.adoptionService.getMyAdoptionProcess(req);
+    return this.adoptionService.getMyAdoptionProcesses(req);
   }
-
   @Post('pet/:petId')
   @Permissions(Perm.START_ADOPTION)
   startAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
   }
-
   @Delete('pet/:petId')
   @Permissions(Perm.START_ADOPTION)
   cancelAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
     return this.adoptionService.cancelAdoptionProcess(petId, req);
   }
 
+  /* For vets. Get, update and delete adoption processes. */
+  @Get()
+  @Permissions(Perm.GET_ADOPTION)
+  getAllAdoptionProcesses(@Query() search: SearchAdoptionDto) {
+    return this.adoptionService.getAllAdoptionProcess(search);
+  }
+  @Get(':adoptionId')
+  @Permissions(Perm.GET_ADOPTION)
+  getAdoptionProcesses(@Param('adoptionId') adoptionId: string) {
+    return this.adoptionService.getAdoptionProcess(adoptionId);
+  }
+  @Post()
+  @HttpCode(201)
+  @Permissions(Perm.SET_ADOPTION)
+  createAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
+    return this.adoptionService.setAdoption(dto);
+  }
   @Put()
   @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
   setAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
-    return this.adoptionService.modifyTheAdoption(dto);
+    return this.adoptionService.setAdoption(dto);
   }
-
   @Delete(':adoptionId')
   @Permissions(Perm.SET_ADOPTION)
   deleteAdoptionProcess(@Param('adoptionId') adoptionId: string) {

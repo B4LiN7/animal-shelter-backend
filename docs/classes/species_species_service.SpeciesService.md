@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[src/species/species.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L9)
+[src/species/species.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L9)
 
 ## Properties
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[src/species/species.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L9)
+[src/species/species.service.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L9)
 
 ## Methods
 
@@ -74,7 +74,7 @@ Create a new species
 
 #### Defined in
 
-[src/species/species.service.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L43)
+[src/species/species.service.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L43)
 
 ___
 
@@ -98,7 +98,7 @@ Delete a species
 
 #### Defined in
 
-[src/species/species.service.ts:76](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L76)
+[src/species/species.service.ts:76](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L76)
 
 ___
 
@@ -116,7 +116,7 @@ Get all species
 
 #### Defined in
 
-[src/species/species.service.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L15)
+[src/species/species.service.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L15)
 
 ___
 
@@ -140,7 +140,7 @@ Get a species by ID
 
 #### Defined in
 
-[src/species/species.service.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L28)
+[src/species/species.service.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L28)
 
 ___
 
@@ -165,4 +165,4 @@ Update a species, If the species does not exist, create a new one
 
 #### Defined in
 
-[src/species/species.service.ts:53](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/species/species.service.ts#L53)
+[src/species/species.service.ts:53](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/species/species.service.ts#L53)

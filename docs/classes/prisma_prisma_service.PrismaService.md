@@ -74,7 +74,7 @@ PrismaClient.constructor
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L6)
+[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/prisma.service.ts#L6)
 
 ## Properties
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L6)
+[src/prisma/prisma.service.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/prisma.service.ts#L6)
 
 ## Accessors
 
@@ -709,7 +709,7 @@ ___
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L20)
+[src/prisma/prisma.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/prisma.service.ts#L20)
 
 ___
 
@@ -727,4 +727,4 @@ OnModuleInit.onModuleInit
 
 #### Defined in
 
-[src/prisma/prisma.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/prisma.service.ts#L11)
+[src/prisma/prisma.service.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/prisma.service.ts#L11)

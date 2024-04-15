@@ -17,7 +17,6 @@
 ### Properties
 
 - [logger](auth_guard_user_guard.UserGuard.md#logger)
-- [userHelper](auth_guard_user_guard.UserGuard.md#userhelper)
 
 ### Methods
 
@@ -27,14 +26,13 @@
 
 ### constructor
 
-• **new UserGuard**(`logger`, `userHelper`): [`UserGuard`](auth_guard_user_guard.UserGuard.md)
+• **new UserGuard**(`logger`): [`UserGuard`](auth_guard_user_guard.UserGuard.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `logger` | `Logger` |
-| `userHelper` | [`UserHelperService`](user_user_helper_service.UserHelperService.md) |
 
 #### Returns
 
@@ -42,7 +40,7 @@
 
 #### Defined in
 
-[src/auth/guard/user.guard.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/user.guard.ts#L18)
+[src/auth/guard/user.guard.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/user.guard.ts#L17)
 
 ## Properties
 
@@ -52,17 +50,7 @@
 
 #### Defined in
 
-[src/auth/guard/user.guard.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/user.guard.ts#L19)
-
-___
-
-### userHelper
-
-• `Private` **userHelper**: [`UserHelperService`](user_user_helper_service.UserHelperService.md)
-
-#### Defined in
-
-[src/auth/guard/user.guard.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/user.guard.ts#L20)
+[src/auth/guard/user.guard.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/user.guard.ts#L17)
 
 ## Methods
 
@@ -86,4 +74,4 @@ CanActivate.canActivate
 
 #### Defined in
 
-[src/auth/guard/user.guard.ts:25](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/auth/guard/user.guard.ts#L25)
+[src/auth/guard/user.guard.ts:21](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/auth/guard/user.guard.ts#L21)

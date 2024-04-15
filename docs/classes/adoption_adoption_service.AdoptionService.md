@@ -17,11 +17,11 @@
 ### Methods
 
 - [cancelAdoptionProcess](adoption_adoption_service.AdoptionService.md#canceladoptionprocess)
+- [deleteAdoptionProcess](adoption_adoption_service.AdoptionService.md#deleteadoptionprocess)
 - [getAdoptionProcess](adoption_adoption_service.AdoptionService.md#getadoptionprocess)
 - [getAllAdoptionProcess](adoption_adoption_service.AdoptionService.md#getalladoptionprocess)
-- [getAllAdoptionProcessesForPet](adoption_adoption_service.AdoptionService.md#getalladoptionprocessesforpet)
+- [getMyAdoptionProcesses](adoption_adoption_service.AdoptionService.md#getmyadoptionprocesses)
 - [setAdoption](adoption_adoption_service.AdoptionService.md#setadoption)
-- [setAdoptionProcess](adoption_adoption_service.AdoptionService.md#setadoptionprocess)
 - [startAdoptionProcess](adoption_adoption_service.AdoptionService.md#startadoptionprocess)
 
 ## Constructors
@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L17)
+[src/adoption/adoption.service.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L18)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:17](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L17)
+[src/adoption/adoption.service.ts:18](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L18)
 
 ## Methods
 
@@ -75,7 +75,29 @@ Finish the adoption process for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:105](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L105)
+[src/adoption/adoption.service.ts:105](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L105)
+
+___
+
+### deleteAdoptionProcess
+
+▸ **deleteAdoptionProcess**(`adoptionId`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+
+Delete the adoption process and set the pet status to unknown
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `adoptionId` | `string` | The ID of the adoption |
+
+#### Returns
+
+`Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+
+#### Defined in
+
+[src/adoption/adoption.service.ts:123](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L123)
 
 ___
 
@@ -97,46 +119,55 @@ Get the adoption process
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L60)
+[src/adoption/adoption.service.ts:54](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L54)
 
 ___
 
 ### getAllAdoptionProcess
 
-▸ **getAllAdoptionProcess**(): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
+▸ **getAllAdoptionProcess**(`search?`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
 
 Get all adoption processes
 
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `search?` | [`SearchAdoptionDto`](adoption_dto_search_adoption_dto.SearchAdoptionDto.md) |
+
 #### Returns
 
 `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
 
+- The list of adoption processes
+
 #### Defined in
 
-[src/adoption/adoption.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L23)
+[src/adoption/adoption.service.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L24)
 
 ___
 
-### getAllAdoptionProcessesForPet
+### getMyAdoptionProcesses
 
-▸ **getAllAdoptionProcessesForPet**(`petId`, `isPending?`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
+▸ **getMyAdoptionProcesses**(`req`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
 
-Get the adoption status for a pet
+Get the adoption processes for the user
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `petId` | `string` | `undefined` | The ID of the pet |
-| `isPending` | `boolean` | `false` | If the adoption is pending |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `req` | `Request`\<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`\<`string`, `any`\>\> | The Request object for userId |
 
 #### Returns
 
 `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
 
+- The list of adoption processes
+
 #### Defined in
 
-[src/adoption/adoption.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L37)
+[src/adoption/adoption.service.ts:71](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L71)
 
 ___
 
@@ -160,30 +191,7 @@ Set the adoption status for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:143](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L143)
-
-___
-
-### setAdoptionProcess
-
-▸ **setAdoptionProcess**(`adoptionId`, `dto`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
-
-Set the adoption process for a pet (for admin or shelter worker only)
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `adoptionId` | `string` | The ID of the adoption |
-| `dto` | [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) | The adoption DTO |
-
-#### Returns
-
-`Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
-
-#### Defined in
-
-[src/adoption/adoption.service.ts:126](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L126)
+[src/adoption/adoption.service.ts:158](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L158)
 
 ___
 
@@ -206,4 +214,4 @@ Start the adoption process for a pet
 
 #### Defined in
 
-[src/adoption/adoption.service.ts:77](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.service.ts#L77)
+[src/adoption/adoption.service.ts:86](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.service.ts#L86)

@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[src/location/location.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L24)
+[src/location/location.controller.ts:25](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L25)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/location/location.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L24)
+[src/location/location.controller.ts:25](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L25)
 
 ## Methods
 
@@ -64,7 +64,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `dto` | [`LocationDto`](location_dto_location_dto.LocationDto.md) |
+| `dto` | [`CreateLocationDto`](location_dto_create_location_dto.CreateLocationDto.md) |
 | `req` | `Request`\<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`\<`string`, `any`\>\> |
 
 #### Returns
@@ -73,7 +73,7 @@
 
 #### Defined in
 
-[src/location/location.controller.ts:66](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L66)
+[src/location/location.controller.ts:70](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L70)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `dto` | [`LocationDto`](location_dto_location_dto.LocationDto.md) |
+| `dto` | [`CreateLocationDto`](location_dto_create_location_dto.CreateLocationDto.md) |
 | `req` | `Request`\<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`\<`string`, `any`\>\> |
 
 #### Returns
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:32](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L32)
+[src/location/location.controller.ts:33](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L33)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:52](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L52)
+[src/location/location.controller.ts:56](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L56)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L60)
+[src/location/location.controller.ts:64](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L64)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:42](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L42)
+[src/location/location.controller.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L43)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L28)
+[src/location/location.controller.ts:29](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L29)
 
 ___
 
@@ -181,7 +181,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `id` | `string` |
-| `dto` | [`LocationDto`](location_dto_location_dto.LocationDto.md) |
+| `dto` | [`UpdateLocationDto`](location_dto_update_location_dto.UpdateLocationDto.md) |
 
 #### Returns
 
@@ -189,4 +189,4 @@ ___
 
 #### Defined in
 
-[src/location/location.controller.ts:47](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/location/location.controller.ts#L47)
+[src/location/location.controller.ts:48](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/location/location.controller.ts#L48)

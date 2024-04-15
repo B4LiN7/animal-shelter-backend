@@ -13,9 +13,14 @@
 ### Properties
 
 - [logger](media_media_service.MediaService.md#logger)
+- [prisma](media_media_service.MediaService.md#prisma)
 
 ### Methods
 
+- [clearUnusedFiles](media_media_service.MediaService.md#clearunusedfiles)
+- [getFileLinksInDB](media_media_service.MediaService.md#getfilelinksindb)
+- [getFilesInDirectory](media_media_service.MediaService.md#getfilesindirectory)
+- [removeFile](media_media_service.MediaService.md#removefile)
 - [serveMedia](media_media_service.MediaService.md#servemedia)
 - [uploadFile](media_media_service.MediaService.md#uploadfile)
 - [uploadFiles](media_media_service.MediaService.md#uploadfiles)
@@ -25,12 +30,13 @@
 
 ### constructor
 
-• **new MediaService**(`logger`): [`MediaService`](media_media_service.MediaService.md)
+• **new MediaService**(`prisma`, `logger`): [`MediaService`](media_media_service.MediaService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
+| `prisma` | [`PrismaService`](prisma_prisma_service.PrismaService.md) |
 | `logger` | `Logger` |
 
 #### Returns
@@ -39,7 +45,7 @@
 
 #### Defined in
 
-[src/media/media.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L10)
+[src/media/media.service.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L13)
 
 ## Properties
 
@@ -49,9 +55,99 @@
 
 #### Defined in
 
-[src/media/media.service.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L10)
+[src/media/media.service.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L15)
+
+___
+
+### prisma
+
+• `Private` **prisma**: [`PrismaService`](prisma_prisma_service.PrismaService.md)
+
+#### Defined in
+
+[src/media/media.service.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L14)
 
 ## Methods
+
+### clearUnusedFiles
+
+▸ **clearUnusedFiles**(): `Promise`\<`void`\>
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Defined in
+
+[src/media/media.service.ts:136](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L136)
+
+___
+
+### getFileLinksInDB
+
+▸ **getFileLinksInDB**(`formatToUploadsFolderContext?`): `Promise`\<`string`[]\>
+
+Get file links in the database
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `formatToUploadsFolderContext` | `boolean` | `false` | format the links to the uploads folder context (default: false) - if true, the links will be formatted to the uploads folder context (just file names) |
+
+#### Returns
+
+`Promise`\<`string`[]\>
+
+#### Defined in
+
+[src/media/media.service.ts:185](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L185)
+
+___
+
+### getFilesInDirectory
+
+▸ **getFilesInDirectory**(`directory`): `Promise`\<`string`[]\>
+
+Get files in directory
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `directory` | `string` | directory to get files from |
+
+#### Returns
+
+`Promise`\<`string`[]\>
+
+#### Defined in
+
+[src/media/media.service.ts:169](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L169)
+
+___
+
+### removeFile
+
+▸ **removeFile**(`filePath`): `Promise`\<`void`\>
+
+Remove file
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `filePath` | `string` | path of the file to remove |
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Defined in
+
+[src/media/media.service.ts:156](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L156)
+
+___
 
 ### serveMedia
 
@@ -74,7 +170,7 @@ Serve media files
 
 #### Defined in
 
-[src/media/media.service.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L20)
+[src/media/media.service.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L26)
 
 ___
 
@@ -98,7 +194,7 @@ Upload file
 
 #### Defined in
 
-[src/media/media.service.ts:81](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L81)
+[src/media/media.service.ts:87](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L87)
 
 ___
 
@@ -121,7 +217,7 @@ Upload files
 
 #### Defined in
 
-[src/media/media.service.ts:37](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L37)
+[src/media/media.service.ts:43](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L43)
 
 ___
 
@@ -146,4 +242,4 @@ Upload single file
 
 #### Defined in
 
-[src/media/media.service.ts:67](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/media/media.service.ts#L67)
+[src/media/media.service.ts:73](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/media/media.service.ts#L73)

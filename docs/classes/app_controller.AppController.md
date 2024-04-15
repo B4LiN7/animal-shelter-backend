@@ -12,7 +12,6 @@
 
 ### Methods
 
-- [getManual](app_controller.AppController.md#getmanual)
 - [getRoot](app_controller.AppController.md#getroot)
 
 ## Constructors
@@ -26,26 +25,6 @@
 [`AppController`](app_controller.AppController.md)
 
 ## Methods
-
-### getManual
-
-▸ **getManual**(`res`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `res` | `Response`\<`any`, `Record`\<`string`, `any`\>\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/app.controller.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/app.controller.ts#L15)
-
-___
 
 ### getRoot
 
@@ -61,4 +40,4 @@ ___
 
 #### Defined in
 
-[src/app.controller.ts:7](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/app.controller.ts#L7)
+[src/app.controller.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/app.controller.ts#L6)

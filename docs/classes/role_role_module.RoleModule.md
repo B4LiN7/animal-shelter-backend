@@ -4,6 +4,9 @@
 
 [role/role.module](../modules/role_role_module.md).RoleModule
 
+Role module
+Will not be used fully because of the lack of time
+
 ## Table of contents
 
 ### Constructors

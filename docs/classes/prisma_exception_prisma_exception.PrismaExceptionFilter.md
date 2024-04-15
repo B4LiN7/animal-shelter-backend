@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[src/prisma/exception/prisma.exception.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/exception/prisma.exception.ts#L9)
+[src/prisma/exception/prisma.exception.ts:9](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/exception/prisma.exception.ts#L9)
 
 ## Properties
 
@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[src/prisma/exception/prisma.exception.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/exception/prisma.exception.ts#L8)
+[src/prisma/exception/prisma.exception.ts:8](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/exception/prisma.exception.ts#L8)
 
 ## Methods
 
@@ -69,4 +69,4 @@ ExceptionFilter.catch
 
 #### Defined in
 
-[src/prisma/exception/prisma.exception.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/prisma/exception/prisma.exception.ts#L13)
+[src/prisma/exception/prisma.exception.ts:13](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/prisma/exception/prisma.exception.ts#L13)

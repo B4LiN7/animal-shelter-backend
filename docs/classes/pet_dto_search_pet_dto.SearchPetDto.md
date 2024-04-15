@@ -13,6 +13,7 @@
 ### Properties
 
 - [breed](pet_dto_search_pet_dto.SearchPetDto.md#breed)
+- [name](pet_dto_search_pet_dto.SearchPetDto.md#name)
 - [status](pet_dto_search_pet_dto.SearchPetDto.md#status)
 
 ## Constructors
@@ -33,7 +34,17 @@
 
 #### Defined in
 
-[src/pet/dto/search.pet.dto.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/search.pet.dto.ts#L10)
+[src/pet/dto/search.pet.dto.ts:10](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/dto/search.pet.dto.ts#L10)
+
+___
+
+### name
+
+• `Optional` **name**: `string`
+
+#### Defined in
+
+[src/pet/dto/search.pet.dto.ts:14](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/dto/search.pet.dto.ts#L14)
 
 ___
 
@@ -43,4 +54,4 @@ ___
 
 #### Defined in
 
-[src/pet/dto/search.pet.dto.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/pet/dto/search.pet.dto.ts#L6)
+[src/pet/dto/search.pet.dto.ts:6](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/pet/dto/search.pet.dto.ts#L6)

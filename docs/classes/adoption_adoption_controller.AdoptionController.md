@@ -17,10 +17,11 @@
 ### Methods
 
 - [cancelAdoptionProcess](adoption_adoption_controller.AdoptionController.md#canceladoptionprocess)
+- [createAdoptionProcess](adoption_adoption_controller.AdoptionController.md#createadoptionprocess)
+- [deleteAdoptionProcess](adoption_adoption_controller.AdoptionController.md#deleteadoptionprocess)
 - [getAdoptionProcesses](adoption_adoption_controller.AdoptionController.md#getadoptionprocesses)
 - [getAllAdoptionProcesses](adoption_adoption_controller.AdoptionController.md#getalladoptionprocesses)
-- [getAllAdoptionProcessesForPet](adoption_adoption_controller.AdoptionController.md#getalladoptionprocessesforpet)
-- [getAllPendingAdoptionProcessesForPet](adoption_adoption_controller.AdoptionController.md#getallpendingadoptionprocessesforpet)
+- [getMyAdoptionProcesses](adoption_adoption_controller.AdoptionController.md#getmyadoptionprocesses)
 - [setAdoptionProcess](adoption_adoption_controller.AdoptionController.md#setadoptionprocess)
 - [startAdoptionProcess](adoption_adoption_controller.AdoptionController.md#startadoptionprocess)
 
@@ -42,7 +43,7 @@
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L24)
+[src/adoption/adoption.controller.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L26)
 
 ## Properties
 
@@ -52,7 +53,7 @@
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L24)
+[src/adoption/adoption.controller.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L26)
 
 ## Methods
 
@@ -73,7 +74,47 @@
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:58](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L58)
+[src/adoption/adoption.controller.ts:41](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L41)
+
+___
+
+### createAdoptionProcess
+
+▸ **createAdoptionProcess**(`dto`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `dto` | [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) |
+
+#### Returns
+
+`Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+
+#### Defined in
+
+[src/adoption/adoption.controller.ts:59](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L59)
+
+___
+
+### deleteAdoptionProcess
+
+▸ **deleteAdoptionProcess**(`adoptionId`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `adoptionId` | `string` |
+
+#### Returns
+
+`Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+
+#### Defined in
+
+[src/adoption/adoption.controller.ts:70](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L70)
 
 ___
 
@@ -93,33 +134,19 @@ ___
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:34](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L34)
+[src/adoption/adoption.controller.ts:53](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L53)
 
 ___
 
 ### getAllAdoptionProcesses
 
-▸ **getAllAdoptionProcesses**(): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
-
-#### Returns
-
-`Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
-
-#### Defined in
-
-[src/adoption/adoption.controller.ts:28](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L28)
-
-___
-
-### getAllAdoptionProcessesForPet
-
-▸ **getAllAdoptionProcessesForPet**(`petId`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
+▸ **getAllAdoptionProcesses**(`search`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `petId` | `string` |
+| `search` | [`SearchAdoptionDto`](adoption_dto_search_adoption_dto.SearchAdoptionDto.md) |
 
 #### Returns
 
@@ -127,19 +154,19 @@ ___
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:40](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L40)
+[src/adoption/adoption.controller.ts:48](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L48)
 
 ___
 
-### getAllPendingAdoptionProcessesForPet
+### getMyAdoptionProcesses
 
-▸ **getAllPendingAdoptionProcessesForPet**(`petId`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
+▸ **getMyAdoptionProcesses**(`req`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `petId` | `string` |
+| `req` | `Request`\<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`\<`string`, `any`\>\> |
 
 #### Returns
 
@@ -147,19 +174,18 @@ ___
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:46](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L46)
+[src/adoption/adoption.controller.ts:31](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L31)
 
 ___
 
 ### setAdoptionProcess
 
-▸ **setAdoptionProcess**(`adoptionId`, `dto`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
+▸ **setAdoptionProcess**(`dto`): `Promise`\<[`AdoptionType`](../interfaces/adoption_type_adoption_type.AdoptionType.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `adoptionId` | `string` |
 | `dto` | [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) |
 
 #### Returns
@@ -168,7 +194,7 @@ ___
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:65](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L65)
+[src/adoption/adoption.controller.ts:65](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L65)
 
 ___
 
@@ -189,4 +215,4 @@ ___
 
 #### Defined in
 
-[src/adoption/adoption.controller.ts:52](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/adoption/adoption.controller.ts#L52)
+[src/adoption/adoption.controller.ts:36](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/adoption.controller.ts#L36)

@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LocationDto } from './dto/location.dto';
+import { CreateLocationDto } from './dto/create.location.dto';
 import { Request } from 'express';
+import { UpdateLocationDto } from './dto/update.location.dto';
 
 @Injectable()
 export class LocationService {
@@ -9,18 +10,14 @@ export class LocationService {
 
   async getMyLocations(req: Request) {
     const token = req.user['decodedToken'];
-    const myLocations = await this.prisma.location.findMany({
+    return this.prisma.location.findMany({
       where: {
         userId: token.userId,
       },
     });
-    /*if (myLocations.length === 0) {
-      throw new NotFoundException(`You don't have any locations, yet.`);
-    }*/
-    return myLocations;
   }
 
-  async addToMyLocations(dto: LocationDto, req: Request) {
+  async addToMyLocations(dto: CreateLocationDto, req: Request) {
     const token = req.user['decodedToken'];
     delete dto.userId;
     return this.prisma.location.create({
@@ -43,7 +40,7 @@ export class LocationService {
     });
   }
 
-  async addLocation(dto: LocationDto) {
+  async addLocation(dto: CreateLocationDto) {
     return this.prisma.location.create({
       data: {
         ...dto,
@@ -51,7 +48,7 @@ export class LocationService {
     });
   }
 
-  async updateLocation(id: string, dto: LocationDto) {
+  async updateLocation(id: string, dto: UpdateLocationDto) {
     return this.prisma.location.update({
       where: {
         locationId: id,

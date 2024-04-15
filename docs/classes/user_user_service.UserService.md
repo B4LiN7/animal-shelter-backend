@@ -24,11 +24,10 @@
 - [deleteUserRoleConnections](user_user_service.UserService.md#deleteuserroleconnections)
 - [getAllUsers](user_user_service.UserService.md#getallusers)
 - [getMyUser](user_user_service.UserService.md#getmyuser)
-- [getRawUser](user_user_service.UserService.md#getrawuser)
 - [getUser](user_user_service.UserService.md#getuser)
 - [getUserName](user_user_service.UserService.md#getusername)
 - [hashPassword](user_user_service.UserService.md#hashpassword)
-- [isUserExists](user_user_service.UserService.md#isuserexists)
+- [isUsernameExists](user_user_service.UserService.md#isusernameexists)
 - [setUserRoles](user_user_service.UserService.md#setuserroles)
 - [updateMyUser](user_user_service.UserService.md#updatemyuser)
 - [updateUser](user_user_service.UserService.md#updateuser)
@@ -54,7 +53,7 @@
 
 #### Defined in
 
-[src/user/user.service.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L22)
+[src/user/user.service.ts:22](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L22)
 
 ## Properties
 
@@ -64,7 +63,7 @@
 
 #### Defined in
 
-[src/user/user.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L23)
+[src/user/user.service.ts:23](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L23)
 
 ___
 
@@ -74,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/user/user.service.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L24)
+[src/user/user.service.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L24)
 
 ___
 
@@ -84,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/user/user.service.ts:25](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L25)
+[src/user/user.service.ts:25](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L25)
 
 ___
 
@@ -94,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/user/user.service.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L26)
+[src/user/user.service.ts:26](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L26)
 
 ## Methods
 
@@ -118,7 +117,7 @@ Create user
 
 #### Defined in
 
-[src/user/user.service.ts:124](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L124)
+[src/user/user.service.ts:124](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L124)
 
 ___
 
@@ -140,7 +139,7 @@ Delete user
 
 #### Defined in
 
-[src/user/user.service.ts:228](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L228)
+[src/user/user.service.ts:230](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L230)
 
 ___
 
@@ -162,7 +161,7 @@ Delete all user's role connections
 
 #### Defined in
 
-[src/user/user.service.ts:244](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L244)
+[src/user/user.service.ts:246](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L246)
 
 ___
 
@@ -180,7 +179,7 @@ Get all users
 
 #### Defined in
 
-[src/user/user.service.ts:35](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L35)
+[src/user/user.service.ts:35](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L35)
 
 ___
 
@@ -204,27 +203,7 @@ Get user who is currently logged in
 
 #### Defined in
 
-[src/user/user.service.ts:101](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L101)
-
-___
-
-### getRawUser
-
-▸ **getRawUser**(`id`): `Promise`\<\{ `email`: `string` ; `hashedPassword`: `string` ; `name`: `string` ; `username`: `string`  }\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `id` | `string` |
-
-#### Returns
-
-`Promise`\<\{ `email`: `string` ; `hashedPassword`: `string` ; `name`: `string` ; `username`: `string`  }\>
-
-#### Defined in
-
-[src/user/user.service.ts:299](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L299)
+[src/user/user.service.ts:101](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L101)
 
 ___
 
@@ -248,7 +227,7 @@ Get user by ID
 
 #### Defined in
 
-[src/user/user.service.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L60)
+[src/user/user.service.ts:60](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L60)
 
 ___
 
@@ -272,7 +251,7 @@ Get user's username and name by ID
 
 #### Defined in
 
-[src/user/user.service.ts:84](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L84)
+[src/user/user.service.ts:84](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L84)
 
 ___
 
@@ -296,15 +275,15 @@ Hashes a password using bcrypt
 
 #### Defined in
 
-[src/user/user.service.ts:322](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L322)
+[src/user/user.service.ts:306](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L306)
 
 ___
 
-### isUserExists
+### isUsernameExists
 
-▸ **isUserExists**(`username`): `Promise`\<`boolean`\>
+▸ **isUsernameExists**(`username`): `Promise`\<`boolean`\>
 
-Checks if a user exists in the database
+Checks if a user exists in the database by username
 
 #### Parameters
 
@@ -320,7 +299,7 @@ Checks if a user exists in the database
 
 #### Defined in
 
-[src/user/user.service.ts:332](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L332)
+[src/user/user.service.ts:316](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L316)
 
 ___
 
@@ -343,7 +322,7 @@ Set the roles for a user
 
 #### Defined in
 
-[src/user/user.service.ts:257](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L257)
+[src/user/user.service.ts:259](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L259)
 
 ___
 
@@ -368,7 +347,7 @@ Update user who is currently logged in
 
 #### Defined in
 
-[src/user/user.service.ts:113](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L113)
+[src/user/user.service.ts:113](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L113)
 
 ___
 
@@ -394,4 +373,4 @@ Update user
 
 #### Defined in
 
-[src/user/user.service.ts:183](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/user/user.service.ts#L183)
+[src/user/user.service.ts:183](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/user/user.service.ts#L183)

@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[src/role/dto/create.role.dto.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/dto/create.role.dto.ts#L20)
+[src/role/dto/create.role.dto.ts:20](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/role/dto/create.role.dto.ts#L20)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[src/role/dto/create.role.dto.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/dto/create.role.dto.ts#L24)
+[src/role/dto/create.role.dto.ts:24](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/role/dto/create.role.dto.ts#L24)
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 #### Defined in
 
-[src/role/dto/create.role.dto.ts:16](https://github.com/B4LiN7/animal-shelter-backend/blob/1dff22f62fa53a2f3b721b18c90a57a5c18f4cde/src/role/dto/create.role.dto.ts#L16)
+[src/role/dto/create.role.dto.ts:16](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/role/dto/create.role.dto.ts#L16)
