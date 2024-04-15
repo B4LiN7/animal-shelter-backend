@@ -64,7 +64,7 @@ export class AdoptionController {
   @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
   setAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
-    return this.adoptionService.setAdoption(dto);
+    return this.adoptionService.finishAdoptionProcess(dto);
   }
   @Delete(':adoptionId')
   @Permissions(Perm.SET_ADOPTION)

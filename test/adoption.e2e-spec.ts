@@ -31,11 +31,11 @@ describe('Adoption (e2e)', () => {
   });
 
   afterAll(async () => {
-    await prisma.species.deleteMany();
-    await prisma.breed.deleteMany();
     await prisma.adoption.deleteMany();
     await prisma.petStatus.deleteMany();
     await prisma.pet.deleteMany();
+    await prisma.breed.deleteMany();
+    await prisma.species.deleteMany();
   });
 
   describe('/adoption endpoints', () => {
@@ -60,7 +60,7 @@ describe('Adoption (e2e)', () => {
         });
     });
 
-    it('should return the already running adooption', async () => {
+    it('should return the already running adoption', async () => {
       const token = await loginUser();
       const petId = await getPet();
       const adoption = await request(app.getHttpServer())
@@ -90,6 +90,47 @@ describe('Adoption (e2e)', () => {
         .expect((res) => {
           expect(res.body.length).toBeGreaterThan(0);
         });
+    });
+
+    it('should cancel adoption', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      await request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      return request(app.getHttpServer())
+        .delete(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+    });
+
+    it('should not cancel adoption', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      return request(app.getHttpServer())
+        .delete(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(404);
+    });
+
+    it('should finish adoption', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      const adoption = await request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      await request(app.getHttpServer())
+        .put(`/adoption`)
+        .send({
+          status: 'APPROVED',
+          reason: 'test',
+          userId: adoption.body.userId,
+          petId: adoption.body.petId,
+        })
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
     });
   });
 

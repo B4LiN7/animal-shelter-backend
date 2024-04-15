@@ -150,6 +150,19 @@ export class AdoptionService {
     return deletedAdoption;
   }
 
+  finishAdoptionProcess(dto: UpdateAdoptionDto): Promise<AdoptionType> {
+    const dtoToAdoption: UpdateAdoptionDto = {
+      petId: dto.petId,
+      userId: dto.userId,
+      status:
+        dto.status === AdoptionStatus.APPROVED
+          ? AdoptionStatus.APPROVED
+          : AdoptionStatus.REJECTED,
+      reason: dto.reason,
+    };
+    return this.setAdoption(dtoToAdoption);
+  }
+
   /**
    * Set the adoption status for a pet
    * @param dto - The adoption DTO which contains the pet ID, user ID and the new status
@@ -210,7 +223,7 @@ export class AdoptionService {
 
       case AdoptionStatus.CANCELLED:
         if (!runningAdoptionForPet || runningAdoptionForPet.userId !== userId) {
-          throw new ForbiddenException(
+          throw new NotFoundException(
             `No pending adoption for pet ${petId} found for user ${userId}.`,
           );
         }
@@ -225,7 +238,7 @@ export class AdoptionService {
 
       case AdoptionStatus.REJECTED:
         if (!runningAdoptionForPet) {
-          throw new ForbiddenException(
+          throw new NotFoundException(
             `No pending adoption to reject for pet ${petId} found.`,
           );
         }
@@ -241,7 +254,7 @@ export class AdoptionService {
 
       case AdoptionStatus.APPROVED:
         if (!runningAdoptionForPet) {
-          throw new ForbiddenException(
+          throw new NotFoundException(
             `No pending adoption to approve for pet with ID ${petId} found.`,
           );
         }

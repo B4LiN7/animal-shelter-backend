@@ -20,7 +20,7 @@ model Pet {
   imageUrls   String[]
 
   breedId   String?
-  breed     Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId])
+  breed     Breed?      @relation(name: "BreedToPet", fields: [breedId], references: [breedId], onDelete: SetNull)
   adoptions Adoption[]  @relation(name: "AdoptionToPet")
   petStatus PetStatus[] @relation(name: "PetToPetStatus")
 }
@@ -38,7 +38,7 @@ model PetStatus {
   from   DateTime      @default(now())
 
   petId String
-  pet   Pet    @relation(name: "PetToPetStatus", fields: [petId], references: [petId])
+  pet   Pet    @relation(name: "PetToPetStatus", fields: [petId], references: [petId], onDelete: Cascade)
 }
 
 enum PetStatusEnum {
@@ -57,7 +57,7 @@ model Breed {
   description String?
 
   speciesId String?
-  species   Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId])
+  species   Species? @relation(name: "BreedToSpecies", fields: [speciesId], references: [speciesId], onDelete: SetNull)
   pets      Pet[]    @relation(name: "BreedToPet")
 }
 
@@ -139,7 +139,7 @@ model UserRole {
   userId String
   roleId String
   user   User   @relation(name: "UserRoleToUser", fields: [userId], references: [userId], onDelete: Cascade)
-  role   Role   @relation(name: "UserRoleToRole", fields: [roleId], references: [roleId])
+  role   Role   @relation(name: "UserRoleToRole", fields: [roleId], references: [roleId], onDelete: Cascade)
 
   @@id([userId, roleId])
 }
