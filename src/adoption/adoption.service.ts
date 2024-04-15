@@ -188,7 +188,11 @@ export class AdoptionService {
 
     switch (status) {
       case AdoptionStatus.PENDING:
-        if (runningAdoptionForPet) {
+        if (runningAdoptionForPet && runningAdoptionForPet.userId === userId) {
+          return {
+            ...runningAdoptionForPet,
+          };
+        } else if (runningAdoptionForPet) {
           throw new ForbiddenException(
             `An adoption for pet with ID ${petId} is already pending.`,
           );

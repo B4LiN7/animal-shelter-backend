@@ -31,13 +31,11 @@ describe('Adoption (e2e)', () => {
   });
 
   afterAll(async () => {
-    await prisma.$connect();
     await prisma.species.deleteMany();
     await prisma.breed.deleteMany();
-    await prisma.petStatus.deleteMany();
     await prisma.adoption.deleteMany();
+    await prisma.petStatus.deleteMany();
     await prisma.pet.deleteMany();
-    await prisma.$disconnect();
   });
 
   describe('/adoption endpoints', () => {
@@ -56,9 +54,41 @@ describe('Adoption (e2e)', () => {
       return request(app.getHttpServer())
         .post(`/adoption/pet/${petId}`)
         .set('Authorization', `Bearer ${token.accessToken}`)
-        .expect(201)
+        .expect(200)
         .expect((res) => {
           expect(res.body).toHaveProperty('petId');
+        });
+    });
+
+    it('should return the already running adooption', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      const adoption = await request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      return request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toEqual(adoption.body);
+        });
+    });
+
+    it('should list my adoptions', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      await request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      return request(app.getHttpServer())
+        .get('/adoption')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.length).toBeGreaterThan(0);
         });
     });
   });

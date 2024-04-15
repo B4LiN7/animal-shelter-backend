@@ -32,6 +32,7 @@ export class AdoptionController {
     return this.adoptionService.getMyAdoptionProcesses(req);
   }
   @Post('pet/:petId')
+  @HttpCode(200)
   @Permissions(Perm.START_ADOPTION)
   startAdoptionProcess(@Param('petId') petId: string, @Req() req: Request) {
     return this.adoptionService.startAdoptionProcess(petId, req);
@@ -54,7 +55,7 @@ export class AdoptionController {
     return this.adoptionService.getAdoptionProcess(adoptionId);
   }
   @Post()
-  @HttpCode(201)
+  @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
   createAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
     return this.adoptionService.setAdoption(dto);

@@ -79,7 +79,7 @@ model Adoption {
   userId String
   petId  String
   user   User   @relation(name: "AdoptionToUser", fields: [userId], references: [userId])
-  pet    Pet    @relation(name: "AdoptionToPet", fields: [petId], references: [petId])
+  pet    Pet    @relation(name: "AdoptionToPet", fields: [petId], references: [petId], onDelete: Cascade)
 }
 
 enum AdoptionStatusEnum {
