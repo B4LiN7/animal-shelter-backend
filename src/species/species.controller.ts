@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UseGuards,
@@ -25,7 +26,7 @@ export class SpeciesController {
     return this.speciesService.getAllSpecies();
   }
   @Get('/:id')
-  async getSpecies(@Param('id') id: string) {
+  async getSpecies(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.speciesService.getSpecies(id);
   }
 
@@ -39,14 +40,17 @@ export class SpeciesController {
   @Put('/:id')
   @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.UPDATE_SPECIES)
-  async updateSpecies(@Param('id') id: string, @Body() dto: CreateSpeciesDto) {
+  async updateSpecies(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: CreateSpeciesDto,
+  ) {
     return this.speciesService.updateSpecies(id, dto);
   }
 
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
   @Permissions(Perm.DELETE_SPECIES)
-  async deleteSpecies(@Param('id') id: string) {
+  async deleteSpecies(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.speciesService.deleteSpecies(id);
   }
 }

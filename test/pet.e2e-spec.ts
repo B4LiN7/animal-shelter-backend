@@ -4,9 +4,11 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import * as process from 'process';
 import { SpeciesType } from '../src/species/type/species.type';
+import { PrismaClient } from '@prisma/client';
 
 describe('Pet, breed and species (e2e)', () => {
   let app: INestApplication;
+  let prisma: PrismaClient;
   process.env.DATABASE_URL =
     'postgresql://postgres:postgres@localhost:5432/shelter-test';
 
@@ -23,43 +25,18 @@ describe('Pet, breed and species (e2e)', () => {
       }),
     );
 
+    prisma = new PrismaClient();
+
     await app.init();
   });
 
   afterAll(async () => {
-    const token = await loginUser();
-
-    const species = await request(app.getHttpServer())
-      .get('/species')
-      .set('Authorization', `Bearer ${token.accessToken}`);
-    if (species.body.length > 0) {
-      for (const specie of species.body) {
-        await request(app.getHttpServer())
-          .delete(`/species/${specie.speciesId}`)
-          .set('Authorization', `Bearer ${token.accessToken}`)
-          .expect(200);
-      }
-    }
-
-    const breeds = await request(app.getHttpServer()).get('/breed');
-    if (breeds.body.length > 0) {
-      for (const breed of breeds.body) {
-        await request(app.getHttpServer())
-          .delete(`/breed/${breed.breedId}`)
-          .set('Authorization', `Bearer ${token.accessToken}`)
-          .expect(200);
-      }
-    }
-
-    const pets = await request(app.getHttpServer()).get('/pet');
-    if (pets.body.length > 0) {
-      for (const pet of pets.body) {
-        await request(app.getHttpServer())
-          .delete(`/pet/${pet.petId}`)
-          .set('Authorization', `Bearer ${token.accessToken}`)
-          .expect(200);
-      }
-    }
+    await prisma.$connect();
+    await prisma.species.deleteMany();
+    await prisma.breed.deleteMany();
+    await prisma.petStatus.deleteMany();
+    await prisma.pet.deleteMany();
+    await prisma.$disconnect();
   });
 
   describe('/pet endpoints', () => {
@@ -135,34 +112,6 @@ describe('Pet, breed and species (e2e)', () => {
       accessToken: response.body.access_token,
       refreshToken: response.body.refresh_token,
     };
-  }
-  async function makeUser(username: string) {
-    const registeredUser = await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({ username: username, password: 'password' })
-      .expect(201);
-    return {
-      accessToken: registeredUser.body.access_token,
-      refreshToken: registeredUser.body.refresh_token,
-    };
-  }
-  async function getPet() {
-    const token = await loginUser();
-    const breedIds = await addBreeds();
-    return request(app.getHttpServer())
-      .post('/pet')
-      .set('Authorization', `Bearer ${token.accessToken}`)
-      .send({
-        name: 'test',
-        breedId: getRandomElement(breedIds),
-        sex: 'FEMALE',
-        birthDate: '2020-01-01T00:00:00.000Z',
-        description: 'test',
-      })
-      .expect(201)
-      .expect((res) => {
-        return res.body;
-      });
   }
   async function addBreeds(
     breedNumber: number = 1,

@@ -4,9 +4,11 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import * as process from 'process';
 import { SpeciesType } from '../src/species/type/species.type';
+import { PrismaClient } from '@prisma/client';
 
 describe('Adoption (e2e)', () => {
   let app: INestApplication;
+  let prisma: PrismaClient;
   process.env.DATABASE_URL =
     'postgresql://postgres:postgres@localhost:5432/shelter-test';
 
@@ -23,47 +25,19 @@ describe('Adoption (e2e)', () => {
       }),
     );
 
+    prisma = new PrismaClient();
+
     await app.init();
   });
 
   afterAll(async () => {
-    const token = await loginUser();
-
-    const adoptions = await request(app.getHttpServer())
-      .get('/adoption')
-      .set('Authorization', `Bearer ${token.accessToken}`);
-    for (const adoption of adoptions.body) {
-      await request(app.getHttpServer())
-        .delete(`/adoption/${adoption.adoptionId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`);
-    }
-
-    const pets = await request(app.getHttpServer()).get('/pet');
-    for (const pet of pets.body) {
-      await request(app.getHttpServer())
-        .delete(`/pet/${pet.petId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`);
-    }
-
-    const breeds = await request(app.getHttpServer()).get('/breed');
-    if (breeds.body.length > 0) {
-      for (const breed of breeds.body) {
-        await request(app.getHttpServer())
-          .delete(`/breed/${breed.breedId}`)
-          .set('Authorization', `Bearer ${token.accessToken}`);
-      }
-    }
-
-    const species = await request(app.getHttpServer())
-      .get('/species')
-      .set('Authorization', `Bearer ${token.accessToken}`);
-    if (species.body.length > 0) {
-      for (const specie of species.body) {
-        await request(app.getHttpServer())
-          .delete(`/species/${specie.speciesId}`)
-          .set('Authorization', `Bearer ${token.accessToken}`);
-      }
-    }
+    await prisma.$connect();
+    await prisma.species.deleteMany();
+    await prisma.breed.deleteMany();
+    await prisma.petStatus.deleteMany();
+    await prisma.adoption.deleteMany();
+    await prisma.pet.deleteMany();
+    await prisma.$disconnect();
   });
 
   describe('/adoption endpoints', () => {
@@ -104,16 +78,6 @@ describe('Adoption (e2e)', () => {
     return {
       accessToken: response.body.access_token,
       refreshToken: response.body.refresh_token,
-    };
-  }
-  async function makeUser(username: string) {
-    const registeredUser = await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({ username: username, password: 'password' })
-      .expect(201);
-    return {
-      accessToken: registeredUser.body.access_token,
-      refreshToken: registeredUser.body.refresh_token,
     };
   }
 
@@ -179,6 +143,3 @@ describe('Adoption (e2e)', () => {
     return array[randomIndex];
   }
 });
-function except(arg0: (res: any) => void) {
-  throw new Error('Function not implemented.');
-}

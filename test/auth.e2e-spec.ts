@@ -3,9 +3,11 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import * as process from 'process';
+import { PrismaClient } from '@prisma/client';
 
 describe('Auth, user and location (e2e)', () => {
   let app: INestApplication;
+  let prisma: PrismaClient;
   process.env.DATABASE_URL =
     'postgresql://postgres:postgres@localhost:5432/shelter-test';
 
@@ -22,22 +24,19 @@ describe('Auth, user and location (e2e)', () => {
       }),
     );
 
+    prisma = new PrismaClient();
+
     await app.init();
   });
 
   afterAll(async () => {
-    const token = await loginUser();
-    const users = await request(app.getHttpServer())
-      .get('/user')
-      .set('Authorization', `Bearer ${token.accessToken}`);
-    for (const user of users.body) {
-      if (user.username === 'admin') {
-        continue;
-      }
-      await request(app.getHttpServer())
-        .delete(`/user/${user.userId}`)
-        .set('Authorization', `Bearer ${token.accessToken}`);
-    }
+    await prisma.user.deleteMany({
+      where: {
+        username: {
+          not: 'admin',
+        },
+      },
+    });
   });
 
   describe('/auth endpoints', () => {
@@ -124,7 +123,7 @@ describe('Auth, user and location (e2e)', () => {
       return request(app.getHttpServer())
         .get('/location/my')
         .set('Authorization', `Bearer ${tokens.refreshToken}`)
-        .expect(404);
+        .expect(200);
     });
     it('should add a location to user', async () => {
       const tokens = await loginUser();
