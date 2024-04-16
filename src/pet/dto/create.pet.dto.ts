@@ -1,14 +1,15 @@
 import { PetSexEnum as Sex, PetStatusEnum as Status } from '@prisma/client';
 import {
+  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsArray,
   registerDecorator,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsEnumAndTransform, PetStatusDtoEnum } from './pet-status.validator';
 
 export class CreatePetDto {
   @IsOptional()
@@ -35,7 +36,7 @@ export class CreatePetDto {
 
   @IsOptional()
   @IsString()
-  @IsEnum(Status)
+  @IsEnumAndTransform(PetStatusDtoEnum, Status)
   status: Status = Status.UNKNOWN;
 
   @IsNotEmpty()
