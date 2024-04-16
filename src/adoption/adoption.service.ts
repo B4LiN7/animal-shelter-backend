@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
@@ -17,7 +18,12 @@ import { UpdateAdoptionDto } from './dto/update.adoption.dto';
 
 @Injectable()
 export class AdoptionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private logger: Logger,
+    private prisma: PrismaService,
+  ) {
+    this.logger = new Logger(AdoptionService.name);
+  }
 
   /**
    * Get all adoption processes
@@ -224,6 +230,10 @@ export class AdoptionService {
       });
     }
 
+    this.logger.log(
+      `Adoption process ${updAdoption.adoptionId} updated: ${updAdoption.status} ${updAdoption.reason ? `(${updAdoption.reason})` : ''}`,
+    );
+
     return updAdoption;
   }
 
@@ -290,6 +300,9 @@ export class AdoptionService {
             status: Status.ADOPTING,
           },
         });
+        this.logger.log(
+          `Adoption process started by user ${userId} for pet ${petId}`,
+        );
         return newAdoption;
 
       case AdoptionStatus.CANCELLED:
@@ -312,6 +325,9 @@ export class AdoptionService {
             status: Status.UNKNOWN,
           },
         });
+        this.logger.log(
+          `Adoption process cancelled by user ${userId} for pet ${petId}`,
+        );
         return cancelledAdoption;
       /*
       * This code is commented out because it is not used in this part of application

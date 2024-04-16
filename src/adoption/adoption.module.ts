@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
 import { AdoptionController } from './adoption.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
@@ -9,6 +9,6 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [PrismaModule, AuthModule, PetModule, UserModule],
   controllers: [AdoptionController],
-  providers: [AdoptionService],
+  providers: [AdoptionService, Logger],
 })
 export class AdoptionModule {}

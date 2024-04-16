@@ -142,9 +142,9 @@ export class MediaService {
       (file) => !fileLinks.includes(file),
     );
 
+    this.logger.log(`Removing ${notUsedFiles.length} unused file(s)...`);
     for (const file of notUsedFiles) {
       const filePath = path.join(directory, file);
-      this.logger.log(`Removing unused files...`);
       await this.removeFile(filePath);
     }
   }
