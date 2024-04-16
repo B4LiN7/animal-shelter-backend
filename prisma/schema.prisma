@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+  binaryTargets = ["windows", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
 model Pet {
@@ -45,6 +45,7 @@ enum PetStatusEnum {
   UNKNOWN
   INCOMING
   INSHELTER
+  ADOPTING
   ADOPTED
   ILL
   DECEASED
@@ -87,6 +88,7 @@ enum AdoptionStatusEnum {
   CANCELLED
   APPROVED
   REJECTED
+  RETURNED
 }
 
 model User {

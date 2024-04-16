@@ -1,8 +1,8 @@
-[animal-shelter-backend](../README.md) / [Exports](../modules.md) / [adoption/dto/update.adoption.dto](../modules/adoption_dto_update_adoption_dto.md) / UpdateAdoptionDto
+[animal-shelter-backend](../README.md) / [Exports](../modules.md) / [adoption/dto/update.adoption.dto](../modules/adoption_dto_update_adoption_dto.md) / CreateAdoptionDto
 
-# Class: UpdateAdoptionDto
+# Class: CreateAdoptionDto
 
-[adoption/dto/update.adoption.dto](../modules/adoption_dto_update_adoption_dto.md).UpdateAdoptionDto
+[adoption/dto/update.adoption.dto](../modules/adoption_dto_update_adoption_dto.md).CreateAdoptionDto
 
 ## Table of contents
 
@@ -21,11 +21,11 @@
 
 ### constructor
 
-• **new UpdateAdoptionDto**(): [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md)
+• **new CreateAdoptionDto**(): [`CreateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md)
 
 #### Returns
 
-[`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md)
+[`CreateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md)
 
 ## Properties
 
@@ -35,7 +35,7 @@
 
 #### Defined in
 
-[src/adoption/dto/update.adoption.dto.ts:7](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L7)
+[src/adoption/dto/create.adoption.dto.ts:7](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L7)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/adoption/dto/update.adoption.dto.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L19)
+[src/adoption/dto/create.adoption.dto.ts:19](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L19)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/adoption/dto/update.adoption.dto.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L15)
+[src/adoption/dto/create.adoption.dto.ts:15](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L15)
 
 ___
 
@@ -65,4 +65,4 @@ ___
 
 #### Defined in
 
-[src/adoption/dto/update.adoption.dto.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L11)
+[src/adoption/dto/create.adoption.dto.ts:11](https://github.com/B4LiN7/animal-shelter-backend/blob/433cf0c1c0d87c638e9f68cdba4d5975f6f24447/src/adoption/dto/update.adoption.dto.ts#L11)

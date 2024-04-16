@@ -86,7 +86,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `dto` | [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) |
+| `dto` | [`CreateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) |
 
 #### Returns
 
@@ -186,7 +186,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `dto` | [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) |
+| `dto` | [`CreateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) |
 
 #### Returns
 

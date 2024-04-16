@@ -197,7 +197,7 @@ export class AuthService {
   private async makeAccessToken(
     userId: string,
     permissions: Permission[],
-    expire: string = '10m',
+    expire: string = '60m',
   ): Promise<string> {
     const payload = { userId, permissions };
     return await this.jwt.signAsync(payload, {

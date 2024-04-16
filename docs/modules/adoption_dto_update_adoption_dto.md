@@ -6,4 +6,4 @@
 
 ### Classes
 
-- [UpdateAdoptionDto](../classes/adoption_dto_update_adoption_dto.UpdateAdoptionDto.md)
+- [CreateAdoptionDto](../classes/adoption_dto_update_adoption_dto.UpdateAdoptionDto.md)
