@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { UserType } from './type/user.type';
 import { PermissionEnum as Perm } from '@prisma/client';
 import { RoleService } from 'src/role/role.service';
-import { RoleType } from './type/role.type';
+import { RoleType } from '../role/type/role.type';
 
 const DEFAULT_ROLE_FOR_NEW_USER = 'USER';
 

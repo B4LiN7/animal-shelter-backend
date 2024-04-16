@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoleDto } from './dto/create.role.dto';
 import { PermissionEnum as Permission } from '@prisma/client';
+import { RoleType } from './type/role.type';
 
 @Injectable()
 export class RoleService {
@@ -13,7 +14,7 @@ export class RoleService {
       data: dto,
     });
   }
-  async getRoles() {
+  async getRoles(): Promise<RoleType[]> {
     return this.prisma.role.findMany();
   }
   private async getRole(roleId: string) {

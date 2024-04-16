@@ -124,10 +124,13 @@ export class PetService {
           reason: `The adoption automatically rejected because '${existingPet?.name}' is ${status}.`,
         },
       });
-    }
-    if (adoptedPet && status !== Status.ADOPTED) {
+    } else if (runningAdoptionForPet && status !== Status.ADOPTING) {
       throw new BadRequestException(
-        `Pet with ID ${id} has been adopted, to modify status change or delete the adoption status first.`,
+        `Pet ${id} has a running adoption, to modify pet's status change or delete the adoption status first.`,
+      );
+    } else if (adoptedPet && status !== Status.ADOPTED) {
+      throw new BadRequestException(
+        `Pet ${id} has been adopted, to modify pet's status change or delete the adoption status first.`,
       );
     }
 
