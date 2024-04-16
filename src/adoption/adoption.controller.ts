@@ -14,11 +14,12 @@ import {
 import { AdoptionService } from './adoption.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateAdoptionDto } from './dto/update.adoption.dto';
+import { CreateAdoptionDto } from './dto/create.adoption.dto';
 import { PermissionGuard } from '../auth/guard/permission.guard';
 import { PermissionEnum as Perm } from '@prisma/client';
 import { Permissions } from 'src/auth/decorator/permisson.decorator';
 import { SearchAdoptionDto } from './dto/search.adoption.dto';
+import { UpdateAdoptionDto } from './dto/update.adoption.dto';
 
 @Controller('adoption')
 @UseGuards(AuthGuard('jwt-access-token'), PermissionGuard)
@@ -28,8 +29,11 @@ export class AdoptionController {
   /* For users. Get, start and cancel adoption process */
   @Get('my')
   @Permissions(Perm.START_ADOPTION)
-  getMyAdoptionProcesses(@Req() req: Request) {
-    return this.adoptionService.getMyAdoptionProcesses(req);
+  getMyAdoptionProcesses(
+    @Req() req: Request,
+    @Query() search: SearchAdoptionDto,
+  ) {
+    return this.adoptionService.getMyAdoptionProcesses(req, search);
   }
   @Post('pet/:petId')
   @HttpCode(200)
@@ -57,14 +61,17 @@ export class AdoptionController {
   @Post()
   @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
-  createAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
+  createAdoptionProcess(@Body() dto: CreateAdoptionDto) {
     return this.adoptionService.setAdoption(dto);
   }
-  @Put()
+  @Put(':adoptionId')
   @HttpCode(200)
   @Permissions(Perm.SET_ADOPTION)
-  setAdoptionProcess(@Body() dto: UpdateAdoptionDto) {
-    return this.adoptionService.finishAdoptionProcess(dto);
+  setAdoptionProcess(
+    @Param('adoptionId') adoptionId: string,
+    @Body() dto: UpdateAdoptionDto,
+  ) {
+    return this.adoptionService.updateAdoptionProcess(adoptionId, dto);
   }
   @Delete(':adoptionId')
   @Permissions(Perm.SET_ADOPTION)

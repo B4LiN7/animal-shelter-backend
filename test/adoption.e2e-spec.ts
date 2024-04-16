@@ -122,12 +122,10 @@ describe('Adoption (e2e)', () => {
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200);
       await request(app.getHttpServer())
-        .put(`/adoption`)
+        .put(`/adoption/${adoption.body.adoptionId}`)
         .send({
           status: 'APPROVED',
-          reason: 'test',
-          userId: adoption.body.userId,
-          petId: adoption.body.petId,
+          reason: 'test'
         })
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200);

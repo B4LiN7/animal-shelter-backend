@@ -474,6 +474,12 @@ async function addAdoptions(
         status: 'PENDING',
       },
     });
+    await prisma.petStatus.create({
+      data: {
+        petId: pet.petId,
+        status: 'ADOPTING',
+      },
+    });
     console.log(
       `Adoption created for pet ID ${pet.petId} and user ID ${randomUser.userId}.`,
     );

@@ -181,7 +181,7 @@ Set the adoption status for a pet
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `dto` | [`UpdateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) | The adoption DTO which contains the pet ID, user ID and the new status |
+| `dto` | [`CreateAdoptionDto`](adoption_dto_update_adoption_dto.UpdateAdoptionDto.md) | The adoption DTO which contains the pet ID, user ID and the new status |
 
 #### Returns
 
