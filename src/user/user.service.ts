@@ -72,6 +72,9 @@ export class UserService {
         updatedAt: true,
       },
     });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
     const roles = await this.userHelper.getUserRoleNames(user.userId);
     return { ...user, roles };
   }
