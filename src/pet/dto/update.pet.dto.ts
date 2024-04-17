@@ -2,7 +2,6 @@ import { PetSexEnum as Sex, PetStatusEnum as Status } from '@prisma/client';
 import { IsArray, IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsDateInPast } from './create.pet.dto'
-import { IsEnumAndTransform, PetStatusDtoEnum } from './pet-status.validator';
 
 export class UpdatePetDto {
   @IsOptional()
@@ -28,8 +27,7 @@ export class UpdatePetDto {
   sex: Sex;
 
   @IsOptional()
-  @IsString()
-  @IsEnumAndTransform(PetStatusDtoEnum, Status)
+  @IsEnum(Status)
   status: Status;
 
   @IsOptional()

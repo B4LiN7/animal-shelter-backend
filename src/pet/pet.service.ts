@@ -87,17 +87,8 @@ export class PetService {
     const existingPet = await this.prisma.pet.findUnique({
       where: { petId: id },
     });
-    if (
-      !existingPet &&
-      (pet.breedId === undefined ||
-        pet.birthDate === undefined ||
-        pet.sex === undefined)
-    ) {
-      throw new BadRequestException(
-        `Pet with ID ${id} does not exist, try to create a new pet, breedId or/and birthDate is missing`,
-      );
-    } else if (!existingPet) {
-      return await this.createPet(dto);
+    if (!existingPet) {
+      throw new NotFoundException(`Pet ${id} does not exist`);
     }
 
     const petAdoptions = await this.prisma.adoption.findMany({
@@ -131,6 +122,10 @@ export class PetService {
     } else if (adoptedPet && status !== Status.ADOPTED) {
       throw new BadRequestException(
         `Pet ${id} has been adopted, to modify pet's status change or delete the adoption status first.`,
+      );
+    } else if ((!adoptedPet && status === Status.ADOPTED) || (!runningAdoptionForPet && status === Status.ADOPTING)) {
+      throw new BadRequestException(
+        `To adopt a pet, please use the adoption endpoints.`,
       );
     }
 
