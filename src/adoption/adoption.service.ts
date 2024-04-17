@@ -186,6 +186,38 @@ export class AdoptionService {
       throw new NotFoundException(`Adoption with ID ${adoptionId} not found`);
     }
 
+    if (dto.status === AdoptionStatus.APPROVED) {
+      const adoptionForPet = await this.prisma.adoption.findFirst({
+        where: {
+          petId: adoption.petId,
+          status: AdoptionStatus.APPROVED,
+        },
+      });
+      if (adoptionForPet) {
+        throw new ForbiddenException(
+          `Pet with ID ${adoption.petId} is already adopted.`,
+        );
+      }
+
+      const runningAdoptionForPet = await this.prisma.adoption.findFirst({
+        where: {
+          petId: adoption.petId,
+          status: AdoptionStatus.PENDING,
+        },
+      });
+      if (runningAdoptionForPet) {
+        await this.prisma.adoption.update({
+          where: {
+            adoptionId: runningAdoptionForPet.adoptionId,
+          },
+          data: {
+            status: AdoptionStatus.REJECTED,
+            reason: `Another adoption process has been approved`,
+          },
+        });
+      }
+    }
+
     const updAdoption = await this.prisma.adoption.update({
       where: {
         adoptionId: adoptionId,
