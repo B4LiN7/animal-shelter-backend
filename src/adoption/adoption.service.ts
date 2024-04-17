@@ -202,6 +202,7 @@ export class AdoptionService {
       const runningAdoptionForPet = await this.prisma.adoption.findFirst({
         where: {
           petId: adoption.petId,
+          userId: { not: adoption.userId },
           status: AdoptionStatus.PENDING,
         },
       });
