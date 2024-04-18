@@ -173,6 +173,12 @@ export class AdoptionService {
     return deletedAdoption;
   }
 
+  /**
+   * Update the adoption process
+   * @param adoptionId - The ID of the adoption
+   * @param dto - The adoption DTO which contains the new status
+   * @returns {Promise<AdoptionType>} - The modified adoption process
+   */
   async updateAdoptionProcess(
     adoptionId: string,
     dto: UpdateAdoptionDto,

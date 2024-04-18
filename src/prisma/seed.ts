@@ -144,6 +144,7 @@ async function addUsers(addUserCount: number, addIfFound: boolean = false) {
         username: faker.internet.userName(),
         hashedPassword: await hashPassword('password'),
         name: faker.person.fullName(),
+        profileImageUrl: faker.image.avatar(),
       },
     });
     await prisma.userRole.create({
@@ -283,6 +284,13 @@ async function addBreeds(addBreedCount: number, addIfFound: boolean = false) {
   }
 }
 
+function getRandomImages(imageCount: number = 3) {
+  let images: string[] = [];
+  for (let i = 0; i < imageCount; i++) {
+    images.push(faker.image.url( { width: 300, height: 300 } ));
+  }
+  return images;
+}
 async function addPets(addPetCount: number, addIfFound: boolean = false) {
   console.log('Adding pets...');
 
@@ -308,7 +316,8 @@ async function addPets(addPetCount: number, addIfFound: boolean = false) {
         name: faker.person.firstName(),
         breedId: randomBreed.breedId,
         birthDate: faker.date.past({ years: 10 }),
-        description: 'A friendly pet looking for a loving home.',
+        description: faker.lorem.sentence(),
+        imageUrls: getRandomImages(),
       },
     });
     await prisma.petStatus.create({
