@@ -125,10 +125,47 @@ describe('Adoption (e2e)', () => {
         .put(`/adoption/${adoption.body.adoptionId}`)
         .send({
           status: 'APPROVED',
-          reason: 'test'
+          reason: 'test',
         })
         .set('Authorization', `Bearer ${token.accessToken}`)
         .expect(200);
+    });
+
+    it('should return the pet to shelter', async () => {
+      const token = await loginUser();
+      const petId = await getPet();
+      const adoption = await request(app.getHttpServer())
+        .post(`/adoption/pet/${petId}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      await request(app.getHttpServer())
+        .put(`/adoption/${adoption.body.adoptionId}`)
+        .send({
+          status: 'APPROVED',
+          reason: 'test',
+        })
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      await request(app.getHttpServer())
+        .get(`/pet/${petId}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe('ADOPTED');
+        });
+      await request(app.getHttpServer())
+        .put(`/adoption/${adoption.body.adoptionId}`)
+        .send({
+          status: 'RETURNED',
+          reason: 'test',
+        })
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .expect(200);
+      await request(app.getHttpServer())
+        .get(`/pet/${petId}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe('INSHELTER');
+        });
     });
   });
 

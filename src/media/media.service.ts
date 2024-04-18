@@ -71,6 +71,15 @@ export class MediaService {
    * @returns - status of the upload
    */
   async uploadSingleFile(file: Express.Multer.File, res: Response) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return {
+        status: 'failed',
+        file: file.originalname,
+        size: file.size + ' bytes',
+        message:
+          'Only image files are allowed! You can upload jpg, jpeg, png, or gif files.',
+      };
+    }
     const uploadFile = await this.uploadFile(file);
     if (uploadFile.status === 'success') {
       res.status(200).json(uploadFile);
