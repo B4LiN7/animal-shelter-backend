@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import * as path from 'path';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { MediaUploadResType } from './type/response.type';
 import { existsSync, readdir } from 'fs';
 import { unlink } from 'fs/promises';
@@ -111,6 +111,13 @@ export class MediaService {
     const filePath = path.resolve('public', 'uploads', newFileName);
 
     try {
+      const directory = path.dirname(filePath);
+      try {
+        await mkdir(directory, { recursive: true });
+      } catch (err) {
+        if (err.code !== 'EEXIST') throw err;
+      }
+
       await writeFile(filePath, file.buffer);
 
       this.logger.log(
