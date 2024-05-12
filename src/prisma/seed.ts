@@ -21,6 +21,7 @@ async function addRoles() {
       name: 'VET',
       permissions: [
         Perm.SET_ADOPTION,
+        Perm.GET_ADOPTION,
         Perm.CREATE_BREED,
         Perm.CREATE_PET,
         Perm.CREATE_SPECIES,
@@ -285,9 +286,9 @@ async function addBreeds(addBreedCount: number, addIfFound: boolean = false) {
 }
 
 function getRandomImages(imageCount: number = 3) {
-  let images: string[] = [];
+  const images: string[] = [];
   for (let i = 0; i < imageCount; i++) {
-    images.push(faker.image.url( { width: 300, height: 300 } ));
+    images.push(faker.image.url({ width: 300, height: 300 }));
   }
   return images;
 }
