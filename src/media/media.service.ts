@@ -111,12 +111,7 @@ export class MediaService {
     const filePath = path.resolve('public', 'uploads', newFileName);
 
     try {
-      const directory = path.dirname(filePath);
-      try {
-        await mkdir(directory, { recursive: true });
-      } catch (err) {
-        if (err.code !== 'EEXIST') throw err;
-      }
+      await this.makeDirIfNotExists(filePath);
 
       await writeFile(filePath, file.buffer);
 
@@ -142,6 +137,19 @@ export class MediaService {
         size: file.size + ' bytes',
         message: `Error uploading file: ${err}`,
       };
+    }
+  }
+
+  /**
+   * Make directory if it does not exist
+   * @param filePath - path of the directory
+   */
+  async makeDirIfNotExists(filePath: string) {
+    const directory = path.dirname(filePath);
+    try {
+      await mkdir(directory, { recursive: true });
+    } catch (err) {
+      if (err.code !== 'EEXIST') throw err;
     }
   }
 
